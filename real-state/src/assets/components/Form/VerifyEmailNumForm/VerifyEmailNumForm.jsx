@@ -9,7 +9,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { PinInput, PinInputField } from '@chakra-ui/react';
-
+import { Link } from 'react-router-dom';
 
 export default function VerifyEmailNumForm() {
   return (
@@ -56,16 +56,18 @@ export default function VerifyEmailNumForm() {
           </Center>
         </FormControl>
         <Stack spacing={6}>
-            
+          
+        <Link to="/resetpass"> 
           <Button
             bg={'blue.400'}
             color={'white'}
+            justifyContent={'center'}
             _hover={{
               bg: 'blue.500',
             }}>
             Verify
           </Button>
-          
+        </Link>  
         </Stack>
         
       </Stack>

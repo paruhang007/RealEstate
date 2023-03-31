@@ -135,7 +135,7 @@ import {
                 <Text align={'center'}>
                   Already a user? 
                 </Text>
-                <Link to="/"><Text color={'blue.400'}> Login </Text></Link>
+                <Link to="/login"><Text color={'blue.400'}> Login </Text></Link>
               </Stack>
             </Stack>
             </form>
