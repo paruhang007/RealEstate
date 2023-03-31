@@ -1,11 +1,12 @@
+import Hero from "../components/Dashboard/Hero";
 import NavBar from "../components/Dashboard/Navbar";
+import HeroPage from "./PropertyPage";
 
 
 const HomePage = () =>{
     return(
         <div>
-           
-            <h1>Home Page</h1>
+            <Hero/>
         </div>
 
     )

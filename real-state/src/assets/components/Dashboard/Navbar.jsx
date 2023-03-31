@@ -64,10 +64,16 @@ export default function NavBar() {
                   md: "inline-flex",
                 }}
               >
-                <Button variant="ghost">Features</Button>
-                <Button variant="ghost">Pricing</Button>
-                <Button variant="ghost">Blog</Button>
-                <Button variant="ghost">Company</Button>
+                <Link href="/">
+                <Button variant="ghost">Home</Button>
+                </Link>
+
+                <Link href="/property">
+                <Button variant="ghost">Property</Button>
+                </Link>
+
+                <Button variant="ghost">Unit Calculator</Button>
+                <Button variant="ghost">EMI Calculator</Button>
                 <Button variant="ghost">Sign in</Button>
               </HStack>
               <Button colorScheme="purple" size="sm">
@@ -116,16 +122,16 @@ export default function NavBar() {
                   />
   
                   <Button w="full" variant="ghost">
-                    Features
+                    Home
                   </Button>
                   <Button w="full" variant="ghost">
-                    Pricing
+                    Property
                   </Button>
                   <Button w="full" variant="ghost">
-                    Blog
+                    Unit Calculator
                   </Button>
                   <Button w="full" variant="ghost">
-                    Company
+                    EMI Calculator
                   </Button>
                   <Button w="full" variant="ghost">
                     Sign in
@@ -135,7 +141,6 @@ export default function NavBar() {
             </HStack>
           </Flex>
         </chakra.header>
-        
         <Outlet />
         <Footer />
       </React.Fragment>

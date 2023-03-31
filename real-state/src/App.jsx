@@ -5,6 +5,7 @@ import VerifyEmailNumberPage from "./assets/pages/VerifyEmailNumberPage";
 import ResetPassPage from "./assets/pages/ResetPassPage";
 import HomePage from "./assets/pages/HomePage";
 import Navbar from "./assets/components/Dashboard/Navbar";
+import Property from "./assets/components/Dashboard/Property";
 
 import React from "react";
 import {
@@ -28,6 +29,8 @@ const App = () => {
         },
         {
           // all the other routes the user can navigate to like about us, contact us, etc.
+          path: "/property",
+          element: <Property/>
         }
       ] 
     },
@@ -51,7 +54,6 @@ const App = () => {
       path: "/resetpass",
       element: <ResetPassPage/>
     }
-    
       
    ]
   )
