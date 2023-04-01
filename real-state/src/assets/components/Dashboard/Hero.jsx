@@ -5,7 +5,13 @@ import {
     Text,
     VStack,
     useBreakpointValue,
+    InputGroup,
+    InputLeftElement,
+    Input,
   } from '@chakra-ui/react';
+import { AiOutlineSearch } from 'react-icons/ai';
+
+  
   
   export default function Hero() {
     return (
@@ -13,7 +19,7 @@ import {
         w={'full'}
         h={'100vh'}
         backgroundImage={
-          'url(https://images.unsplash.com/photo-1600267175161-cfaa711b4a81?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80)'
+          'url(https://imgdrop.imgix.net/1afd9b4404c54cd5bd4d3737eec0d70d.jpg)'
         }
         backgroundSize={'cover'}
         backgroundPosition={'center center'}>
@@ -28,8 +34,8 @@ import {
               fontWeight={700}
               lineHeight={1.2}
               fontSize={useBreakpointValue({ base: '3xl', md: '4xl' })}>
-              Lorem ipsum dolor sit amet consectetur adipiscing elit sed do
-              eiusmod tempor
+              Find yourselves amazing properties
+              Here with us at GharJagga
             </Text>
             <Stack direction={'row'}>
               <Button
@@ -46,9 +52,24 @@ import {
                 _hover={{ bg: 'whiteAlpha.500' }}>
                 Show me more
               </Button>
+
+              
+            {/* search bar */}
+            </Stack>
+              <InputGroup>
+                <InputLeftElement pointerEvents="none" color={'white'}>
+                  <AiOutlineSearch />
+                </InputLeftElement>
+                <Input type="tel" placeholder="Search..." color={'white'} />
+              </InputGroup>
+
+            <Stack>
+
             </Stack>
           </Stack>
         </VStack>
       </Flex>
+
+
     );
   }

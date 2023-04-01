@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Image,
 } from '@chakra-ui/react';
 
 const Logo = (props) => {
@@ -49,9 +50,11 @@ export default function Footer() {
           <Stack spacing={6}>
             <Box>
               <Logo color={useColorModeValue('gray.700', 'white')} />
+              {/* <Image src="../assets/images/logo.png" alt="GharJagga Logo" /> */}
             </Box>
             <Text fontSize={'sm'}>
-              © 2022 Chakra Templates. All rights reserved
+              © 2023 GharJagga.com 
+              All rights reserved
             </Text>
           </Stack>
           <Stack align={'flex-start'}>

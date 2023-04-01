@@ -1,8 +1,8 @@
 
-const ForgotPassPage = () =>{
-    return <>
-        <Footer/>
-    </>
-}
+// const ForgotPassPage = () =>{
+//     return <>
+//         <Footer/>
+//     </>
+// }
 
-export default ForgotPassPage;
+// export default ForgotPassPage;

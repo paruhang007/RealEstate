@@ -18,7 +18,6 @@ import{
 
     import { Outlet } from 'react-router-dom';
     import Footer from './Footer';
-    // add the remaining imports here
 
    import {  AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
     import React from 'react';
@@ -72,8 +71,14 @@ export default function NavBar() {
                 <Button variant="ghost">Property</Button>
                 </Link>
 
+                <Link href="/unitconvert">
                 <Button variant="ghost">Unit Calculator</Button>
+                </Link>
+
+                <Link href="/emical">
                 <Button variant="ghost">EMI Calculator</Button>
+                </Link>
+
                 <Button variant="ghost">Sign in</Button>
               </HStack>
               <Button colorScheme="purple" size="sm">
@@ -144,5 +149,7 @@ export default function NavBar() {
         <Outlet />
         <Footer />
       </React.Fragment>
+
+
     );
   };
