@@ -14,6 +14,7 @@ import{
     HStack,
     VStack,
     CloseButton,
+    Image,
     } from '@chakra-ui/react';
 
     import { Outlet } from 'react-router-dom';
@@ -40,18 +41,20 @@ export default function NavBar() {
         >
           <Flex alignItems="center" justifyContent="space-between" mx="auto">
             <Flex>
+            <Image src="/images/LOGO-sm.png" alt="logo" />
               <chakra.a
                 href="/"
-                title="Choc Home Page"
+                title=" Home Page"
                 display="flex"
                 alignItems="center"
               >
                 
-                <VisuallyHidden>Choc</VisuallyHidden>
+                <VisuallyHidden>GharJgga</VisuallyHidden>
               </chakra.a>
               <chakra.h1 fontSize="xl" fontWeight="medium" ml="2">
-                Choc
+              GharJgga.com
               </chakra.h1>
+              
             </Flex>
             <HStack display="flex" alignItems="center" spacing={1}>
               <HStack

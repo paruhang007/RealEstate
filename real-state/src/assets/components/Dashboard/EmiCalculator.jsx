@@ -63,7 +63,7 @@ export default function EmiCalculator(){
       </Flex>
       <Box>
         <Image
-          src="https://images.unsplash.com/photo-1531548731165-c6ae86ff6491?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80"
+        src="images/emi.png"
           alt="emi image"
           fit="cover"
           w="full"
@@ -73,6 +73,8 @@ export default function EmiCalculator(){
         />
       </Box>
     </SimpleGrid>
+
+    
   );
 };
 

@@ -6,17 +6,17 @@ import { BsFillHouseAddFill } from "react-icons/bs";
 
 export default function AddProp(){
   return (
-    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={0}>
+    <SimpleGrid columns={{ base: 1, md: 2 }} spacing={0} >
       <Flex bg="brand.400">
         <Image
-          src="https://images.unsplash.com/photo-1525130413817-d45c1d127c42?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=750&q=80"
-          alt="3 women looking at a laptop"
+          src="/images/uplode.png"
+          alt="man looking at a laptop"
           fit="cover"
           w="full"
           h={{ base: 64, md: "full" }}
-          bg="gray.100"
+          // bg="gray.100"
           loading="lazy"
-          opacity={0.4}
+        
         />
       </Flex>
       <Flex
