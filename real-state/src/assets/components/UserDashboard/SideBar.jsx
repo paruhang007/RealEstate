@@ -25,8 +25,8 @@ import { Outlet, NavLink, useLocation } from "react-router-dom";
 const LinkItems = [
   { name: "Profile", icon: FiHome, path: "/profile" },
   { name: "Add properties", icon: FiCompass, path: "/addproperty" },
-  { name: "My properties", icon: FiTrendingUp },
-  { name: "Favourites", icon: FiStar },
+  { name: "My properties", icon: FiTrendingUp, path: "/myproperties" },
+  { name: "Favourites", icon: FiStar, path: "/favourite" },
   { name: "Change Password", icon: FiSettings, path: "/changepass" },
 ];
 
@@ -57,7 +57,7 @@ export default function Sidebar({ children }) {
           </Drawer>
           {/* mobilenav */}
 
-          <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} />
+          {/* <MobileNav display={{ base: "flex", md: "none" }} onOpen={onOpen} /> */}
         </Flex>
         <Flex w={"100%"}>
           <Outlet />
@@ -132,29 +132,29 @@ const NavItem = ({ icon, children, ...rest }) => {
   );
 };
 
-const MobileNav = ({ onOpen, ...rest }) => {
-  return (
-    <Flex
-      ml={{ base: 0, md: 60 }}
-      px={{ base: 4, md: 24 }}
-      height="20"
-      alignItems="center"
-      bg={useColorModeValue("white", "gray.900")}
-      borderBottomWidth="1px"
-      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      justifyContent="flex-start"
-      {...rest}
-    >
-      <IconButton
-        variant="outline"
-        onClick={onOpen}
-        aria-label="open menu"
-        icon={<FiMenu />}
-      />
+// const MobileNav = ({ onOpen, ...rest }) => {
+//   return (
+//     <Flex
+//       ml={{ base: 0, md: 60 }}
+//       px={{ base: 4, md: 24 }}
+//       height="20"
+//       alignItems="center"
+//       bg={useColorModeValue("white", "gray.900")}
+//       borderBottomWidth="1px"
+//       borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+//       justifyContent="flex-start"
+//       {...rest}
+//     >
+//       <IconButton
+//         variant="outline"
+//         onClick={onOpen}
+//         aria-label="open menu"
+//         icon={<FiMenu />}
+//       />
 
-      <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
-        Logo
-      </Text>
-    </Flex>
-  );
-};
+//       <Text fontSize="2xl" ml="8" fontFamily="monospace" fontWeight="bold">
+//         Logo
+//       </Text>
+//     </Flex>
+//   );
+// };

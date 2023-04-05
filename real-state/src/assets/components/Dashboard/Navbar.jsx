@@ -108,8 +108,16 @@ export default function NavBar() {
                   >
                     Add Property
                   </MenuItem>
-                  <MenuItem>My Property</MenuItem>
-                  <MenuItem>Favourite</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/myproperties");
+                    }}
+                  >My Property</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate("/favourite");
+                    }}
+                  >Favourite</MenuItem>
 
                   <MenuItem
                     onClick={() => {

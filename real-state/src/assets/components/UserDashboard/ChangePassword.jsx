@@ -31,8 +31,8 @@ export default function ChangePassword() {
           boxShadow={"lg"}
           p={8}
         >
-          <Text fontSize={"lg"} color={"gray.600"}>
-            Change your password
+          <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"}>
+            Let's change your password
           </Text>
 
           <Stack spacing={4} mt={4}>

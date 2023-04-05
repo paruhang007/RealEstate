@@ -11,6 +11,7 @@ import EmiCalculator from "./assets/components/Dashboard/EmiCalculator";
 import AddProperty from "./assets/components/UserDashboard/AddProperty";
 import UserProfile from "./assets/components/UserDashboard/UserProfile";
 import ChangePassword from "./assets/components/UserDashboard/ChangePassword";
+import Favourite from "./assets/components/UserDashboard/Favourite";
 
 import React from "react";
 import {
@@ -22,6 +23,7 @@ import {
 } from "react-router-dom";
 import Sidebar from "./assets/components/UserDashboard/SideBar";
 import UseDashPage from "./assets/pages/UserDashPage";
+import MyProperties from "./assets/components/UserDashboard/MyProperties";
 
 const App = () => {
   const routes = createBrowserRouter([
@@ -62,11 +64,19 @@ const App = () => {
               path: "/changepass",
               element: <ChangePassword />,
             },
-
             {
               path: "/addproperty",
               element: <AddProperty />,
             },
+            {
+              path: "/favourite",
+              element: <Favourite />,
+            },
+            {
+              path: "/myproperties",
+              element: <MyProperties />,
+            },
+
           ],
         },
 

@@ -93,7 +93,7 @@ export default function AddProp() {
               onClick={() => {
                 const data = localStorage.getItem("token");
                 if (data) {
-                  navigate("/addprop");
+                  navigate("/addproperty");
                 } else {
                   onOpen();
                 }

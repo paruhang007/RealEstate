@@ -19,7 +19,9 @@ import {
   Select,
   NumberInputField,
   NumberInput,
+  FormControl,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 function Smbox({ title, desc, }) {
   return (
@@ -32,7 +34,30 @@ function Smbox({ title, desc, }) {
   )
 }
 
+
+
+
+
+
+
+
 export default function UnitConverter() {
+  const [num1, setNum1] = useState("");
+  const [val, setval] = useState("");
+  const [result, setResult] = useState("");
+
+  const divide = () => {
+
+    // Convert the inputs from strings to numbers
+    const parsedNum1 = parseFloat(num1);
+    const parsedVal = val;
+
+
+    const result = parsedNum1 / 4;
+    setResult(result);
+
+  };
+
   return (
     // hero section starts here
     <SimpleGrid
@@ -100,51 +125,78 @@ export default function UnitConverter() {
 
 
       <Box bg="gray.100">
-        <Flex direction='column' m={5} mt={10} bg="gray.500" align='center'>
+        <Flex direction='column' m={5} mt={10} align='center'>
 
           <Heading fontSize='34px' ml={7}>Calculate</Heading>
-          <Flex direction="column" alignItems='center' mt={10}>
+          <Flex direction="column" alignItems='center' mt={10} w={'100%'}>
 
             <Box width='60%' >
-              <NumberInput precision={2}  >
-                <NumberInputField placeholder="Enter value" h={20} />
+              <FormControl id="number1">
+                <NumberInput precision={2} >
+                  <NumberInputField
+                    placeholder="Enter value" h={20} borderWidth='2px' borderColor={'blue.200'}
+                    type="number1"
+                    value={num1}
+                    onChange={(e) => setNum1(e.target.value)}
+                  />
 
-              </NumberInput>
+                </NumberInput>
+              </FormControl>
             </Box>
 
             <Box width='60%' >
-              <Select placeholder='Select option' h={14}>
-                <option value='option1'>Option 1</option>
-                <option value='option2'>Option 2</option>
-                <option value='option3'>Option 3</option>
-              </Select>
+              <FormControl id="value1">
+                <Select placeholder='Select option' h={14} borderWidth='2px' borderColor={'blue.200'}
+                  type="value1"
+                  value={val}
+                  onChange={(e) => setval(e.target.value)}
+                >
+                  <option value='option1'>Ropani</option>
+                  <option value='option2'>Anna</option>
+                  <option value='option3'>Paisa</option>
+                  <option value='option1'>Daam</option>
+                  <option value='option2'>Bigha</option>
+                  <option value='option3'>Kattha</option>
+                  <option value='option1'>Dhur</option>
+                  <option value='option2'>Meter </option>
+                  <option value='option3'>Feet</option>
+                </Select>
+              </FormControl>
             </Box>
 
           </Flex>
 
           <Heading fontSize='24px' mt={10}>Equals</Heading>
 
-          <Flex direction="column" alignItems='center' mt={10}>
+          <Flex direction="column" alignItems='center' mt={10} w={'100%'}>
 
             <Box width='60%' >
-              <NumberInput precision={2}  >
-                <NumberInputField placeholder="Enter value" h={20} />
-
-              </NumberInput>
+              {/* <NumberInput precision={2}  >
+                <NumberInputField placeholder="Enter value" h={20} borderWidth='2px' borderColor={'blue.200'} value={result} />
+                <p>The result of the division is: {result}</p>
+              </NumberInput> */}
+              <Input precision={2} h={20} borderWidth='2px' borderColor={'blue.200'} value={result}>
+              </Input>
             </Box>
 
             <Box width='60%' >
-              <Select placeholder='Select option' h={14}>
-                <option value='option1'>Option 1</option>
-                <option value='option2'>Option 2</option>
-                <option value='option3'>Option 3</option>
+              <Select placeholder='Select option' h={14} borderWidth='2px' borderColor={'blue.200'} >
+                <option value='option1'>Ropani</option>
+                <option value='option2'>Anna</option>
+                <option value='option3'>Paisa</option>
+                <option value='option1'>Daam</option>
+                <option value='option2'>Bigha</option>
+                <option value='option3'>Kattha</option>
+                <option value='option1'>Dhur</option>
+                <option value='option2'>Meter </option>
+                <option value='option3'>Feet</option>
               </Select>
             </Box>
 
           </Flex>
 
-          <Button colorScheme='teal' size='lg' mt={10}>
-            Button
+          <Button onClick={divide} colorScheme='teal' size='lg' my={10} >
+            Calculate
           </Button>
 
         </Flex>
@@ -202,7 +254,7 @@ export default function UnitConverter() {
         </Stack>
       </Flex>
 
-    </SimpleGrid>
+    </SimpleGrid >
 
 
 
