@@ -1,2 +1,2 @@
-import { Express } from "express";
-import mongoose from "mongoose";
+const express = require("express");
+const app = express();

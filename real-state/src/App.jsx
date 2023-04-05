@@ -8,6 +8,9 @@ import Navbar from "./assets/components/Dashboard/Navbar";
 import Property from "./assets/components/Dashboard/Property";
 import UnitConverter from "./assets/components/Dashboard/UnitConverter";
 import EmiCalculator from "./assets/components/Dashboard/EmiCalculator";
+import AddProperty from "./assets/components/UserDashboard/AddProperty";
+import UserProfile from "./assets/components/UserDashboard/UserProfile";
+import ChangePassword from "./assets/components/UserDashboard/ChangePassword";
 
 import React from "react";
 import {
@@ -15,74 +18,87 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  RouterProvider
+  RouterProvider,
 } from "react-router-dom";
-
+import Sidebar from "./assets/components/UserDashboard/SideBar";
+import UseDashPage from "./assets/pages/UserDashPage";
 
 const App = () => {
-
-  const routes = createBrowserRouter(
-    [
-      { element: <Navbar/>, 
-       children: [
+  const routes = createBrowserRouter([
+    {
+      element: <Navbar />,
+      children: [
         {
           path: "/",
-          element: <HomePage/>
+          element: <HomePage />,
         },
         {
           // all the other routes the user can navigate to like about us, contact us, etc.
           path: "/property",
-          element: <Property/>
+          element: <Property />,
         },
         {
           // all the other routes the user can navigate to like about us, contact us, etc.
           path: "/unitconvert",
-          element: <UnitConverter/>
+          element: <UnitConverter />,
         },
         {
           // all the other routes the user can navigate to like about us, contact us, etc.
           path: "/emical",
-          element: <EmiCalculator/>
-        }
-      ] 
+          element: <EmiCalculator />,
+        },
+        {
+          element: <Sidebar />,
+          children: [
+            {
+              path: "/dashboard",
+              element: <UseDashPage />,
+            },
+            {
+              path: "/profile",
+              element: <UserProfile />,
+            },
+            {
+              path: "/changepass",
+              element: <ChangePassword />,
+            },
+
+            {
+              path: "/addproperty",
+              element: <AddProperty />,
+            },
+          ],
+        },
+
+        {
+          path: "/userprofile",
+          element: <AddProperty />,
+        },
+      ],
     },
     {
       path: "/login",
-      element: <LoginPage/> 
+      element: <LoginPage />,
     },
     {
       path: "/signup",
-      element: <SignUpPage/>
+      element: <SignUpPage />,
     },
     {
       path: "/forpass",
-      element: <ForgotPassPage/>
+      element: <ForgotPassPage />,
     },
     {
       path: "/verify",
-      element: <VerifyEmailNumberPage/>
+      element: <VerifyEmailNumberPage />,
     },
     {
       path: "/resetpass",
-      element: <ResetPassPage/>
-    }
-      
-   ]
-  )
+      element: <ResetPassPage />,
+    },
+  ]);
 
-  // <div className="App">
-  //     <Routes>
-  //       <Route path="/" element={<HomePage/>}/>
-  //       <Route path="/login" element={<LoginPage/>}/>
-  //       <Route path="/signup" element={<SignUpPage/>}/>
-  //       <Route path="/forpass" element={<ForgotPassPage/>}/>
-  //       <Route path="/verify" element={<VerifyEmailNumberPage/>}/>
-  //       <Route path="/resetpass" element={<ResetPassPage/>}/>
-  //     </Routes>
-  //   </div>
-  return (
-    <RouterProvider router={routes}/>
-  );
-}
+  return <RouterProvider router={routes} />;
+};
 
-export default App
+export default App;
