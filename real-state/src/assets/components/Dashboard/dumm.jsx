@@ -1,26 +1,67 @@
-// Feet conversion starts here
-else if (parsedVal1 == 'Feet' && parsedVal2 == 'Ropani') {
-    const result = (parsedNum1) / (16 * 4 * 4 * 21.39);
-    setResult(result);
-} else if (parsedVal1 == 'Feet' && parsedVal2 == 'Anna') {
-    const result = (parsedNum1) / (4 * 4 * 21.39);
-    setResult(result);
-} else if (parsedVal1 == 'Feet' && parsedVal2 == 'Paisa') {
-    const result = (parsedNum1) / (4 * 21.39);
-    setResult(result);
-} else if (parsedVal1 == 'Feet' && parsedVal2 == 'Daam') {
-    const result = (parsedNum1) / 21.39;
-    setResult(result);
-} else if (parsedVal1 == 'Feet' && parsedVal2 == 'Bigha') {
-    const result = (parsedNum1) / 6772 * 21.39;
-    setResult(result);
-} else if (parsedVal1 == 'Feet' && parsedVal2 == 'kattha') {
-    const result = (parsedNum1) / 338.6 * 21.39;
-    setResult(result);
-} else if (parsedVal1 == 'Feet' && parsedVal2 == 'Dhur') {
-    const result = parsedNum1 / 16.93 * 21.39;
-    setResult(result);
-} else if (parsedVal1 == 'Feet' && parsedVal2 == 'Meter') {
-    const result = parsedNum1 / 3.28084;
-    setResult(result);
+import React from "react";
+import { chakra, Flex, Icon } from "@chakra-ui/react";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+
+export default function App() {
+    const PagButton = (props) => {
+        const activeStyle = {
+            bg: "brand.600",
+            _dark: { bg: "brand.500" },
+            color: "white"
+        };
+        return (
+            <chakra.button
+                mx={1}
+                px={4}
+                py={2}
+                rounded="md"
+                bg="white"
+                _dark={{ bg: "gray.800" }}
+                color="gray.700"
+                opacity={props.disabled && 0.6}
+                _hover={!props.disabled && activeStyle}
+                cursor={props.disabled && "not-allowed"}
+                {...(props.active && activeStyle)}
+                display={props.p && !props.active && { base: "none", sm: "block" }}
+            >
+                {props.children}
+            </chakra.button>
+        );
+    };
+    return (
+        <Flex
+            bg="#edf3f8"
+            _dark={{ bg: "#3e3e3e" }}
+            p={50}
+            w="full"
+            alignItems="center"
+            justifyContent="center"
+        >
+            <Flex>
+                <PagButton>
+                    <Icon
+                        as={IoIosArrowBack}
+                        color="gray.700"
+                        _dark={{ color: "gray.200" }}
+                        boxSize={4}
+                    />
+                </PagButton>
+                <PagButton p>1</PagButton>
+                <PagButton p active>
+                    2
+                </PagButton>
+                <PagButton p>3</PagButton>
+                <PagButton p>4</PagButton>
+                <PagButton p>5</PagButton>
+                <PagButton>
+                    <Icon
+                        as={IoIosArrowForward}
+                        color="gray.700"
+                        _dark={{ color: "gray.200" }}
+                        boxSize={4}
+                    />
+                </PagButton>
+            </Flex>
+        </Flex>
+    );
 }

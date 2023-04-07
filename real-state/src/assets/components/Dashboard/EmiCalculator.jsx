@@ -3,13 +3,11 @@ import {
   chakra,
   Box,
   Flex,
-  VisuallyHidden,
   SimpleGrid,
   Button,
   Image,
   FormControl,
   FormLabel,
-  FormHelperText,
   NumberInput,
   NumberInputField,
   Heading,
@@ -65,6 +63,9 @@ export default function EmiCalculator() {
 
       const totalInterest = (result * time) - principal;
       const totalPayable = (result * time);
+
+      // totalInterest.toLocaleString("en-US")
+      // totalPayable.toLocaleString("en-US")
 
       setResult(result.toFixed(3));
       setResult2(totalInterest.toFixed(3))

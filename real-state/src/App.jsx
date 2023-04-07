@@ -12,6 +12,8 @@ import AddProperty from "./assets/components/UserDashboard/AddProperty";
 import UserProfile from "./assets/components/UserDashboard/UserProfile";
 import ChangePassword from "./assets/components/UserDashboard/ChangePassword";
 import Favourite from "./assets/components/UserDashboard/Favourite";
+import SearchProp from "./assets/components/Dashboard/SearchProp";
+import Detail from "./assets/components/Dashboard/Detail";
 
 import React from "react";
 import {
@@ -83,6 +85,14 @@ const App = () => {
         {
           path: "/userprofile",
           element: <AddProperty />,
+        },
+        {
+          path: "/search",
+          element: <SearchProp />,
+        },
+        {
+          path: "/detail",
+          element: <Detail />,
         },
       ],
     },
