@@ -45,273 +45,273 @@ export default function UnitConverter() {
 
     if (parsedVal1 == 'Ropani' && parsedVal2 == 'Ropani') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Anna' && parsedVal2 == 'Anna') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Paisa') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Daam' && parsedVal2 == 'Daam') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Bigha') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Kattha') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Dhur' && parsedVal2 == 'Dhur') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Meter' && parsedVal2 == 'Meter') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Feet' && parsedVal2 == 'Feet') {
       const result = parsedNum1;
-      setResult(result);
+      setResult(result.toFixed(3));
 
       // ropani conversion starts here
     } else if (parsedVal1 == 'Ropani' && parsedVal2 == 'Anna') {
       const result = parsedNum1 * 16;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Ropani' && parsedVal2 == 'Paisa') {
       const result = parsedNum1 * 16 * 4;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Ropani' && parsedVal2 == 'Daam') {
       const result = parsedNum1 * 16 * 4 * 4;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Ropani' && parsedVal2 == 'Bigha') {
       const result = (parsedNum1 * 16 * 4 * 4 * 1.99) / 6772;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Ropani' && parsedVal2 == 'Kattha') {
       const result = (parsedNum1 * 16 * 4 * 4 * 1.99) / 338.6;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Ropani' && parsedVal2 == 'Dhur') {
       const result = (parsedNum1 * 16 * 4 * 4 * 1.99) / 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Ropani' && parsedVal2 == 'Meter') {
       const result = parsedNum1 * 16 * 4 * 4 * 1.99;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Ropani' && parsedVal2 == 'Feet') {
       const result = parsedNum1 * 16 * 4 * 4 * 21.39;
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
     // Anna conversion starts here
     else if (parsedVal1 == 'Anna' && parsedVal2 == 'Ropani') {
       const result = parsedNum1 / 16;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Anna' && parsedVal2 == 'Paisa') {
       const result = parsedNum1 * 4;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Anna' && parsedVal2 == 'Daam') {
       const result = parsedNum1 * 4 * 4;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Anna' && parsedVal2 == 'Bigha') {
       const result = (parsedNum1 * 4 * 4 * 1.99) / 6772;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Anna' && parsedVal2 == 'Kattha') {
       const result = (parsedNum1 * 4 * 4 * 1.99) / 338.6;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Anna' && parsedVal2 == 'Dhur') {
       const result = (parsedNum1 * 4 * 4 * 1.99) / 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Anna' && parsedVal2 == 'Meter') {
       const result = parsedNum1 * 4 * 4 * 1.99;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Anna' && parsedVal2 == 'Feet') {
       const result = parsedNum1 * 4 * 4 * 21.39;
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
     // Paisa conversion starts here
     else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Ropani') {
       const result = parsedNum1 / (16 * 4);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Anna') {
       const result = parsedNum1 / 4;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Daam') {
       const result = parsedNum1 * 4;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Bigha') {
       const result = (parsedNum1 * 4 * 1.99) / 6772;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Kattha') {
       const result = (parsedNum1 * 4 * 1.99) / 338.6;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Dhur') {
       const result = (parsedNum1 * 4 * 1.99) / 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Meter') {
       const result = parsedNum1 * 4 * 1.99;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Paisa' && parsedVal2 == 'Feet') {
       const result = parsedNum1 * 4 * 21.39;
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
     // Daam conversion starts here
     else if (parsedVal1 == 'Daam' && parsedVal2 == 'Ropani') {
       const result = parsedNum1 / (16 * 4 * 4);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Daam' && parsedVal2 == 'Anna') {
       const result = parsedNum1 / (16 * 4);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Daam' && parsedVal2 == 'Paisa') {
       const result = parsedNum1 / 4;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Daam' && parsedVal2 == 'Bigha') {
       const result = (parsedNum1 * 1.99) / 6772;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Daam' && parsedVal2 == 'Kattha') {
       const result = (parsedNum1 * 1.99) / 338.6;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Daam' && parsedVal2 == 'Dhur') {
       const result = (parsedNum1 * 1.99) / 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Daam' && parsedVal2 == 'Meter') {
       const result = parsedNum1 * 1.99;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Daam' && parsedVal2 == 'Feet') {
       const result = parsedNum1 * 21.39;
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
     // Bigha conversion starts here
     else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Ropani') {
       const result = (parsedNum1 * 6772) / (16 * 4 * 4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Anna') {
       const result = (parsedNum1 * 6772) / (4 * 4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Paisa') {
       const result = (parsedNum1 * 6772) / (4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Daam') {
       const result = (parsedNum1 * 6772) / 1.99;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Kattha') {
       const result = (parsedNum1 * 6772) / 338.6;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Dhur') {
       const result = (parsedNum1 * 6772) / 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Meter') {
       const result = parsedNum1 * 6772;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Bigha' && parsedVal2 == 'Feet') {
       const result = (parsedNum1 * 20 * 20 * 182.25);
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
     // Kattha conversion starts here
     else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Ropani') {
       const result = (parsedNum1 * 338.6) / (16 * 4 * 4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Anna') {
       const result = (parsedNum1 * 338.6) / (4 * 4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Paisa') {
       const result = (parsedNum1 * 338.6) / (4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Daam') {
       const result = (parsedNum1 * 338.6) / 1.99;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Bigha') {
       const result = (parsedNum1 * 338.6) / 6772;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Dhur') {
       const result = (parsedNum1 * 338.6) / 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Meter') {
       const result = parsedNum1 * 338.6;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Kattha' && parsedVal2 == 'Feet') {
       const result = (parsedNum1 * 20 * 182.25);
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
     // Dhur conversion starts here
     else if (parsedVal1 == 'Dhur' && parsedVal2 == 'Ropani') {
       const result = (parsedNum1 * 16.93) / (16 * 4 * 4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Dhur' && parsedVal2 == 'Anna') {
       const result = (parsedNum1 * 16.93) / (4 * 4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Dhur' && parsedVal2 == 'Paisa') {
       const result = (parsedNum1 * 16.93) / (4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Dhur' && parsedVal2 == 'Daam') {
       const result = (parsedNum1 * 16.93) / 1.99;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Dhur' && parsedVal2 == 'Bigha') {
       const result = (parsedNum1 * 16.93) / 6772;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Dhur' && parsedVal2 == 'kattha') {
       const result = (parsedNum1 * 16.93) / 338.6;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Dhur' && parsedVal2 == 'Meter') {
       const result = parsedNum1 * 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Dhur' && parsedVal2 == 'Feet') {
       const result = parsedNum1 * 182.25;
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
     // Meter conversion starts here
     else if (parsedVal1 == 'Meter' && parsedVal2 == 'Ropani') {
       const result = (parsedNum1) / (16 * 4 * 4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Meter' && parsedVal2 == 'Anna') {
       const result = (parsedNum1) / (4 * 4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Meter' && parsedVal2 == 'Paisa') {
       const result = (parsedNum1) / (4 * 1.99);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Meter' && parsedVal2 == 'Daam') {
       const result = (parsedNum1) / 1.99;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Meter' && parsedVal2 == 'Bigha') {
       const result = (parsedNum1) / 6772;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Meter' && parsedVal2 == 'kattha') {
       const result = (parsedNum1) / 338.6;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Meter' && parsedVal2 == 'Dhur') {
       const result = parsedNum1 / 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Meter' && parsedVal2 == 'Feet') {
       const result = (parsedNum1 * 185.25) / 16.93;
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
     // Feet conversion starts here
     else if (parsedVal1 == 'Feet' && parsedVal2 == 'Ropani') {
       const result = (parsedNum1) / (16 * 4 * 4 * 21.39);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Feet' && parsedVal2 == 'Anna') {
       const result = (parsedNum1) / (4 * 4 * 21.39);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Feet' && parsedVal2 == 'Paisa') {
       const result = (parsedNum1) / (4 * 21.39);
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Feet' && parsedVal2 == 'Daam') {
       const result = (parsedNum1) / 21.39;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Feet' && parsedVal2 == 'Bigha') {
       const result = (parsedNum1) / 6772 * 21.39;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Feet' && parsedVal2 == 'kattha') {
       const result = (parsedNum1) / 338.6 * 21.39;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Feet' && parsedVal2 == 'Dhur') {
       const result = parsedNum1 / 16.93 * 21.39;
-      setResult(result);
+      setResult(result.toFixed(3));
     } else if (parsedVal1 == 'Feet' && parsedVal2 == 'Meter') {
       const result = (parsedNum1 * 16.93) / 185.25;
-      setResult(result);
+      setResult(result.toFixed(3));
     }
 
 
@@ -398,6 +398,7 @@ export default function UnitConverter() {
                 <NumberInput precision={2} >
                   <NumberInputField
                     placeholder="Enter value" h={20} borderWidth='2px' borderColor={'blue.200'}
+                    fontWeight={'bold'}
                     type="number1"
                     value={num1}
                     onChange={(e) => setNum1(e.target.value)}
@@ -411,6 +412,7 @@ export default function UnitConverter() {
               <FormControl id="value1">
                 <Select placeholder='Select option' h={14} borderWidth='2px' borderColor={'blue.200'}
                   type="value1"
+                  fontWeight={'bold'}
                   value={val1}
                   onChange={(e) => setval1(e.target.value)}
                 >
@@ -438,7 +440,7 @@ export default function UnitConverter() {
                 <NumberInputField placeholder="Enter value" h={20} borderWidth='2px' borderColor={'blue.200'} value={result} />
                 <p>The result of the division is: {result}</p>
               </NumberInput> */}
-              <Input placeholder=" Answer " h={20} borderWidth='2px' borderColor={'blue.200'} value={result}>
+              <Input placeholder=" Answer " fontWeight={'bold'} h={20} borderWidth='2px' borderColor={'blue.200'} value={result} precision={2}>
               </Input>
             </Box>
 
@@ -446,6 +448,7 @@ export default function UnitConverter() {
               <FormControl id="value2">
                 <Select placeholder='Select option' h={14} borderWidth='2px' borderColor={'blue.200'}
                   type="value2"
+                  fontWeight={'bold'}
                   value={val2}
                   onChange={(e) => setval2(e.target.value)}
                 >
