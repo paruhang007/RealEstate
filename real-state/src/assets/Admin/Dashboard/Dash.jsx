@@ -35,10 +35,13 @@ import { Outlet, NavLink, useLocation } from "react-router-dom";
 
 const LinkItems = [
     { name: 'Home', icon: FiHome },
-    { name: 'Properties', icon: FiTrendingUp },
-    { name: 'Users', icon: FiCompass, path: "/allusers" },
+    { name: 'Properties', icon: FiTrendingUp, path: "allproperties" },
+    { name: 'Users', icon: FiCompass, path: "allusers" },
+    { name: 'Services', icon: FiSettings, path: "allservices" },
     { name: 'Chat', icon: FiStar },
-    { name: 'Reset Password', icon: FiSettings },
+    { name: 'Reset Password', icon: FiSettings, path: "adminreset" },
+
+
 ];
 
 export default function Dash({ children, }) {
@@ -106,7 +109,13 @@ const SidebarContent = ({ onClose, ...rest }) => {
                 <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
             </Flex>
             {LinkItems.map((link) => (
-                <NavItem key={link.name} icon={link.icon}>
+                <NavItem
+                    as={NavLink}
+                    key={link.name}
+                    icon={link.icon}
+                    to={link.path}
+                    isActive={link.path === location.pathname}
+                >
                     {link.name}
                 </NavItem>
             ))}

@@ -33,15 +33,15 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { useDisclosure } from '@chakra-ui/react'
 
-export default function AllUsers() {
-    const { isOpen, onOpen, onClose } = useDisclosure()
 
+export default function AllProperty() {
+    const { isOpen, onOpen, onClose } = useDisclosure()
     return (
         <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
 
             <Box m={2} w={'full'} >
                 <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"} ml={5}>
-                    Users
+                    All Properties
                 </Text>
                 <Flex m={5} gap={5}>
 
@@ -55,9 +55,19 @@ export default function AllUsers() {
 
                     <Box w={'20%'}>
                         <Select placeholder="Catogery" isrequired  >
-                            <option value="Rent">Verified </option>
-                            <option value="Sale">UnVerified </option>
-
+                            <option value="Rent">Rent </option>
+                            <option value="Sale">Sale </option>
+                            <option value="Lease">Lease </option>
+                        </Select>
+                    </Box>
+                    <Box w={'25%'} >
+                        <Select placeholder="Property Type" isrequired>
+                            <option value="Land">Land </option>
+                            <option value="Flat">Flat </option>
+                            <option value="House">House </option>
+                            <option value="Apartment">Apartment </option>
+                            <option value="Office space">Office space </option>
+                            <option value="Shop space">Shop space </option>
                         </Select>
                     </Box>
                 </Flex>
@@ -66,11 +76,11 @@ export default function AllUsers() {
                     <Table size='sm'>
                         <Thead>
                             <Tr>
+                                <Th>Property ID</Th>
                                 <Th>User ID</Th>
-                                <Th>User Name</Th>
-                                <Th>Phone Number</Th>
-                                <Th>Email</Th>
-                                <Th>User Status</Th>
+                                <Th>Property Name</Th>
+                                <Th>Property Type</Th>
+                                <Th>Status</Th>
                                 <Th>Action</Th>
 
                             </Tr>
@@ -90,16 +100,17 @@ export default function AllUsers() {
                                             aria-label='Call Sage'
                                             fontSize='20px'
                                             icon={<AiOutlineEdit />}
+                                            // oepning model
                                             onClick={onOpen} />
 
                                         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
                                             <ModalOverlay />
                                             <ModalContent>
-                                                <ModalHeader>Verify User </ModalHeader>
+                                                <ModalHeader>Verify Property </ModalHeader>
                                                 <ModalCloseButton />
                                                 <ModalBody>
                                                     <Text fontWeight='bold' mb='1rem'>
-                                                        Do you want to verify the User?
+                                                        Do you want to verify the Property?
                                                     </Text>
 
                                                 </ModalBody>
@@ -115,6 +126,7 @@ export default function AllUsers() {
                                                 </ModalFooter>
                                             </ModalContent>
                                         </Modal>
+
                                         <IconButton
                                             variant='outline'
                                             colorScheme='teal'
@@ -126,11 +138,11 @@ export default function AllUsers() {
                                         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
                                             <ModalOverlay />
                                             <ModalContent>
-                                                <ModalHeader>Delete User </ModalHeader>
+                                                <ModalHeader>Delete Property </ModalHeader>
                                                 <ModalCloseButton />
                                                 <ModalBody>
                                                     <Text fontWeight='bold' mb='1rem'>
-                                                        Do you want to Delete the User?
+                                                        Do you want to Delete the Property?
                                                     </Text>
 
                                                 </ModalBody>
@@ -151,11 +163,11 @@ export default function AllUsers() {
                         </Tbody>
                         <Tfoot>
                             <Tr>
+                                <Th>Property ID</Th>
                                 <Th>User ID</Th>
-                                <Th>User Name</Th>
-                                <Th>Phone Number</Th>
-                                <Th>Email</Th>
-                                <Th>User Status</Th>
+                                <Th>Property Name</Th>
+                                <Th>Property Type</Th>
+                                <Th>Status</Th>
                                 <Th>Action</Th>
                             </Tr>
                         </Tfoot>

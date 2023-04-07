@@ -19,6 +19,9 @@ import MyProperties from "./assets/components/UserDashboard/MyProperties";
 import LoginAdminPage from "./assets/Admin/LoginAdminPage";
 import DashAdmin from "./assets/Admin/DashAdmin";
 import AllUsers from "./assets/Admin/Dashboard/AllUsers";
+import AllProperty from "./assets/Admin/Dashboard/AllProperty";
+import ChangePassAdmin from "./assets/Admin/Dashboard/ChangePassAdmin";
+import AllServices from "./assets/Admin/Dashboard/AllServices";
 
 import React from "react";
 import {
@@ -134,6 +137,19 @@ const App = () => {
           path: "allusers",
           element: <AllUsers />,
         },
+        {
+          path: "allproperties",
+          element: <AllProperty />,
+        },
+        {
+          path: "adminreset",
+          element: <ChangePassAdmin />,
+        },
+        {
+          path: "allservices",
+          element: <AllServices />,
+        },
+
       ],
 
     },

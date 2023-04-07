@@ -33,7 +33,9 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { useDisclosure } from '@chakra-ui/react'
 
-export default function AllUsers() {
+
+export default function AllServices() {
+
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     return (
@@ -41,7 +43,7 @@ export default function AllUsers() {
 
             <Box m={2} w={'full'} >
                 <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"} ml={5}>
-                    Users
+                    All Services
                 </Text>
                 <Flex m={5} gap={5}>
 
@@ -57,20 +59,20 @@ export default function AllUsers() {
                         <Select placeholder="Catogery" isrequired  >
                             <option value="Rent">Verified </option>
                             <option value="Sale">UnVerified </option>
-
                         </Select>
                     </Box>
+
                 </Flex>
 
                 <TableContainer m={5}>
                     <Table size='sm'>
                         <Thead>
                             <Tr>
+                                <Th>Service ID</Th>
                                 <Th>User ID</Th>
-                                <Th>User Name</Th>
-                                <Th>Phone Number</Th>
-                                <Th>Email</Th>
-                                <Th>User Status</Th>
+                                <Th>Service Name</Th>
+                                <Th>Service Type</Th>
+                                <Th>Status</Th>
                                 <Th>Action</Th>
 
                             </Tr>
@@ -90,16 +92,17 @@ export default function AllUsers() {
                                             aria-label='Call Sage'
                                             fontSize='20px'
                                             icon={<AiOutlineEdit />}
+                                            // oepning model
                                             onClick={onOpen} />
 
                                         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
                                             <ModalOverlay />
                                             <ModalContent>
-                                                <ModalHeader>Verify User </ModalHeader>
+                                                <ModalHeader>Verify Service </ModalHeader>
                                                 <ModalCloseButton />
                                                 <ModalBody>
                                                     <Text fontWeight='bold' mb='1rem'>
-                                                        Do you want to verify the User?
+                                                        Do you want to verify the service?
                                                     </Text>
 
                                                 </ModalBody>
@@ -115,6 +118,8 @@ export default function AllUsers() {
                                                 </ModalFooter>
                                             </ModalContent>
                                         </Modal>
+
+
                                         <IconButton
                                             variant='outline'
                                             colorScheme='teal'
@@ -126,11 +131,11 @@ export default function AllUsers() {
                                         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
                                             <ModalOverlay />
                                             <ModalContent>
-                                                <ModalHeader>Delete User </ModalHeader>
+                                                <ModalHeader>Delete Service </ModalHeader>
                                                 <ModalCloseButton />
                                                 <ModalBody>
                                                     <Text fontWeight='bold' mb='1rem'>
-                                                        Do you want to Delete the User?
+                                                        Do you want to Delete the service?
                                                     </Text>
 
                                                 </ModalBody>
@@ -151,11 +156,11 @@ export default function AllUsers() {
                         </Tbody>
                         <Tfoot>
                             <Tr>
+                                <Th>Service ID</Th>
                                 <Th>User ID</Th>
-                                <Th>User Name</Th>
-                                <Th>Phone Number</Th>
-                                <Th>Email</Th>
-                                <Th>User Status</Th>
+                                <Th>Service Name</Th>
+                                <Th>Service Type</Th>
+                                <Th>Status</Th>
                                 <Th>Action</Th>
                             </Tr>
                         </Tfoot>
