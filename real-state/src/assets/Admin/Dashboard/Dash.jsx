@@ -30,27 +30,29 @@ import {
     FiBell,
     FiChevronDown,
 } from 'react-icons/fi';
-
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 
 
 const LinkItems = [
     { name: 'Home', icon: FiHome },
-    { name: 'Trending', icon: FiTrendingUp },
-    { name: 'Explore', icon: FiCompass },
-    { name: 'Favourites', icon: FiStar },
-    { name: 'Settings', icon: FiSettings },
+    { name: 'Properties', icon: FiTrendingUp },
+    { name: 'Users', icon: FiCompass, path: "/allusers" },
+    { name: 'Chat', icon: FiStar },
+    { name: 'Reset Password', icon: FiSettings },
 ];
 
-export default function Dash({
-    children,
-}) {
+export default function Dash({ children, }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const location = useLocation();
     return (
-        <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
+        <Box minH="100vh" bg={useColorModeValue('red.100', 'gray.900')} >
+
             <SidebarContent
                 onClose={() => onClose}
                 display={{ base: 'none', md: 'block' }}
+                bg={useColorModeValue('green.100', 'gray.900')}
             />
+
             <Drawer
                 autoFocus={false}
                 isOpen={isOpen}
@@ -58,16 +60,28 @@ export default function Dash({
                 onClose={onClose}
                 returnFocusOnClose={false}
                 onOverlayClick={onClose}
-                size="full">
-                <DrawerContent>
+                size="full"
+            >
+                <DrawerContent >
                     <SidebarContent onClose={onClose} />
                 </DrawerContent>
+
             </Drawer>
+
             {/* mobilenav */}
-            <MobileNav onOpen={onOpen} />
-            <Box ml={{ base: 0, md: 60 }} p="4">
+            <MobileNav onOpen={onOpen} bg={'orange.200'} />
+
+
+            <Box ml={{ base: 0, md: 60 }} p="4" >
                 {children}
+                <Box w={"100%"}>
+                    <Outlet />
+                </Box>
             </Box>
+
+
+
+
         </Box>
     );
 }

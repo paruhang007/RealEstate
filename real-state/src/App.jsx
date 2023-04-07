@@ -13,7 +13,12 @@ import ChangePassword from "./assets/components/UserDashboard/ChangePassword";
 import Favourite from "./assets/components/UserDashboard/Favourite";
 import SearchProp from "./assets/components/Dashboard/SearchProp";
 import Detail from "./assets/components/Dashboard/Detail";
-
+import Sidebar from "./assets/components/UserDashboard/SideBar";
+import UseDashPage from "./assets/pages/UserDashPage";
+import MyProperties from "./assets/components/UserDashboard/MyProperties";
+import LoginAdminPage from "./assets/Admin/LoginAdminPage";
+import DashAdmin from "./assets/Admin/DashAdmin";
+import AllUsers from "./assets/Admin/Dashboard/AllUsers";
 
 import React from "react";
 import {
@@ -23,14 +28,15 @@ import {
   Routes,
   RouterProvider,
 } from "react-router-dom";
-import Sidebar from "./assets/components/UserDashboard/SideBar";
-import UseDashPage from "./assets/pages/UserDashPage";
-import MyProperties from "./assets/components/UserDashboard/MyProperties";
+
 
 const App = () => {
   const routes = createBrowserRouter([
+    // routing for the dashboard
     {
       element: <Navbar />,
+
+      // all the routes the user can navigate to
       children: [
         {
           path: "/",
@@ -38,15 +44,15 @@ const App = () => {
         },
 
         {
-          // all the other routes the user can navigate to like about us, contact us, etc.
           path: "/unitconvert",
           element: <UnitConverter />,
         },
         {
-          // all the other routes the user can navigate to like about us, contact us, etc.
           path: "/emical",
           element: <EmiCalculator />,
         },
+
+        // routing for the user dashboard
         {
           element: <Sidebar />,
           children: [
@@ -92,6 +98,8 @@ const App = () => {
         },
       ],
     },
+
+    // routing for the login, signup, forgot password, verify email, reset password for user
     {
       path: "/login",
       element: <LoginPage />,
@@ -112,6 +120,24 @@ const App = () => {
       path: "/resetpass",
       element: <ResetPassPage />,
     },
+
+    // routing for the admin dashboard
+    {
+      path: "/loginadmin",
+      element: <LoginAdminPage />,
+    },
+    {
+      path: "/admindash",
+      element: <DashAdmin />,
+      children: [
+        {
+          path: "allusers",
+          element: <AllUsers />,
+        },
+      ],
+
+    },
+
   ]);
 
   return <RouterProvider router={routes} />;
