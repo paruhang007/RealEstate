@@ -17,9 +17,12 @@ import {
     Td,
     Tfoot,
     useColorModeValue,
+    IconButton,
 
 } from "@chakra-ui/react";
 import { AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineEdit } from 'react-icons/ai'
+import { AiOutlineDelete } from 'react-icons/ai'
 
 
 export default function MyProperties() {
@@ -76,13 +79,30 @@ export default function MyProperties() {
                             <Tr>
                                 <Td>inches</Td>
                                 <Td>millimetres (mm)</Td>
-                                <Td isNumeric>25.4</Td>
+                                <Td >25.4</Td>
+                                <Td>inches</Td>
+                                <Td>millimetres (mm)</Td>
+                                <Td >
+                                    <Flex gap={4}>
+                                        <IconButton
+                                            variant='outline'
+                                            colorScheme='teal'
+                                            aria-label='Call Sage'
+                                            fontSize='20px'
+                                            icon={<AiOutlineEdit />}
+                                        // onClick={ }
+                                        />
+                                        <IconButton
+                                            variant='outline'
+                                            colorScheme='teal'
+                                            aria-label='Call Sage'
+                                            fontSize='20px'
+                                            icon={<AiOutlineDelete />}
+                                        />
+                                    </Flex>
+                                </Td>
                             </Tr>
-                            <Tr>
-                                <Td>feet</Td>
-                                <Td>centimetres (cm)</Td>
-                                <Td isNumeric>30.48</Td>
-                            </Tr>
+
                         </Tbody>
                         <Tfoot>
                             <Tr>

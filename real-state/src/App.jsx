@@ -5,7 +5,6 @@ import VerifyEmailNumberPage from "./assets/pages/VerifyEmailNumberPage";
 import ResetPassPage from "./assets/pages/ResetPassPage";
 import HomePage from "./assets/pages/HomePage";
 import Navbar from "./assets/components/Dashboard/Navbar";
-import Property from "./assets/components/Dashboard/Property";
 import UnitConverter from "./assets/components/Dashboard/UnitConverter";
 import EmiCalculator from "./assets/components/Dashboard/EmiCalculator";
 import AddProperty from "./assets/components/UserDashboard/AddProperty";
@@ -14,6 +13,7 @@ import ChangePassword from "./assets/components/UserDashboard/ChangePassword";
 import Favourite from "./assets/components/UserDashboard/Favourite";
 import SearchProp from "./assets/components/Dashboard/SearchProp";
 import Detail from "./assets/components/Dashboard/Detail";
+
 
 import React from "react";
 import {
@@ -36,11 +36,7 @@ const App = () => {
           path: "/",
           element: <HomePage />,
         },
-        {
-          // all the other routes the user can navigate to like about us, contact us, etc.
-          path: "/property",
-          element: <Property />,
-        },
+
         {
           // all the other routes the user can navigate to like about us, contact us, etc.
           path: "/unitconvert",

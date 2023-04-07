@@ -81,7 +81,7 @@ export default function NavBar() {
                 <Button variant="ghost">Home</Button>
               </NavLink>
 
-              <NavLink to="/property">
+              <NavLink to="/search">
                 <Button variant="ghost">Property</Button>
               </NavLink>
 
