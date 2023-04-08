@@ -14,12 +14,11 @@ import {
   CheckboxGroup,
   Checkbox,
   Textarea,
+
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { useMemo } from "react";
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+
 
 
 export default function AddProperty() {
@@ -30,6 +29,68 @@ export default function AddProperty() {
 
   // if (!isloaded) return <div>"Loading Maps"</div>;
   // return <Map />;
+
+  const [propName, setPropName] = useState("");
+  const [propState, setPropState] = useState("");
+  const [propDist, setPropDist] = useState("");
+  const [propMuni, setPropMuni] = useState("");
+  const [propWard, setPropWard] = useState("");
+  const [propStreet, setPropStreet] = useState("");
+  const [propFace, setPropFace] = useState("");
+  const [propRoad, setPropRoad] = useState("");
+  const [propArea, setPropArea] = useState("");
+  const [propDesc, setPropDesc] = useState("");
+  const [propPrice, setPropPrice] = useState("");
+
+
+  const [selectedFor, setSelectedFor] = useState('');
+  const [selectedPropertyType, setSelectedPropertyType] = useState('');
+  const [selectedPropertyUnit, setSelectedPropertyUnit] = useState('');
+  const [selectedPayment, setSelectedPayment] = useState('');
+
+
+  // handle select change for "For"
+  function handleForSelectChange(event) {
+    setSelectedFor(event.target.value);
+  }
+
+  // handle select change for "Property Type"
+  function handlePropertyTypeSelectChange(event) {
+    setSelectedPropertyType(event.target.value);
+  }
+
+  // handle select change for "Unit Type"
+  function handleForSelectUnit(event) {
+    setSelectedPropertyUnit(event.target.value);
+  }
+
+  // handle select change for "Unit Type"
+  function handleForPayment(event) {
+    setSelectedPayment(event.target.value);
+  }
+
+
+  // use state for checkbox
+  const [checkboxValues, setCheckboxValues] = useState({
+    Drainage: false,
+    Drinking: false,
+    parking: false,
+    Dining: false,
+    Kitchen: false,
+    Bedroom: false,
+    Earth: false,
+  });
+
+  // handle checkbox change
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+    setCheckboxValues({
+      ...checkboxValues,
+      [value]: checked,
+    });
+  };
+
+
 
 
   return (
@@ -56,27 +117,27 @@ export default function AddProperty() {
             <Box>
               <FormControl id="firstName" isRequired>
                 <FormLabel>Property Name / Title</FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropName(e.target.value)} />
               </FormControl>
             </Box>
           </HStack>
 
           <HStack gap={5} align={"center"} mt={5}>
             <Box>
-              <Select placeholder="For" isrequired>
-                <option value="Rent">Rent </option>
-                <option value="Sale">Sale </option>
-                <option value="Lease">Lease </option>
+              <Select placeholder="For" isrequired value={selectedFor} onChange={handleForSelectChange}>
+                <option value="Rent">Rent</option>
+                <option value="Sale">Sale</option>
+                <option value="Lease">Lease</option>
               </Select>
             </Box>
             <Box>
-              <Select placeholder="Property Type" isrequired>
-                <option value="Land">Land </option>
-                <option value="Flat">Flat </option>
-                <option value="House">House </option>
-                <option value="Apartment">Apartment </option>
-                <option value="Office space">Office space </option>
-                <option value="Shop space">Shop space </option>
+              <Select placeholder="Property Type" isrequired value={selectedPropertyType} onChange={handlePropertyTypeSelectChange}>
+                <option value="Land">Land</option>
+                <option value="Flat">Flat</option>
+                <option value="House">House</option>
+                <option value="Apartment">Apartment</option>
+                <option value="Office space">Office space</option>
+                <option value="Shop space">Shop space</option>
               </Select>
             </Box>
           </HStack>
@@ -88,32 +149,32 @@ export default function AddProperty() {
             <Box>
               <FormControl id="state" isRequired>
                 <FormLabel>State/Province</FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropState(e.target.value)} />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="district" isRequired>
                 <FormLabel>District </FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropDist(e.target.value)} />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="municipality" isRequired>
                 <FormLabel>Municipality</FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropMuni(e.target.value)} />
               </FormControl>
             </Box>
 
             <Box>
               <FormControl id="ward" isRequired>
                 <FormLabel>Ward Number</FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropWard(e.target.value)} />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="tol" isRequired>
                 <FormLabel>Area / Street name</FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropStreet(e.target.value)} />
               </FormControl>
             </Box>
           </HStack>
@@ -125,23 +186,23 @@ export default function AddProperty() {
             <Box>
               <FormControl id="face" isRequired>
                 <FormLabel>Facing</FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropFace(e.target.value)} />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="road" isRequired>
                 <FormLabel>Road Size </FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropRoad(e.target.value)} />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="area" isRequired>
                 <FormLabel>Area</FormLabel>
-                <Input type="text" placeholder="Mention Unit" />
+                <Input type="text" placeholder="Mention Unit" onChange={(e) => setPropArea(e.target.value)} />
               </FormControl>
             </Box>
             <Box>
-              <Select placeholder="Unit Type" isrequired mt={7}>
+              <Select placeholder="Unit Type" isrequired mt={7} value={selectedPropertyUnit} onChange={handleForSelectUnit}>
                 <option value="Rent">Hilly Area </option>
                 <option value="Sale">Terai Area </option>
                 <option value="Lease">Standard sq meter/ft </option>
@@ -155,14 +216,57 @@ export default function AddProperty() {
 
           <Box mt={5}>
             <CheckboxGroup colorScheme="green">
+
               <Stack spacing={[5]} direction={["column", "row"]}>
-                <Checkbox value="Drainage">Drainage</Checkbox>
-                <Checkbox value="Drinking">Drinking Water</Checkbox>
-                <Checkbox value="parking">Parking</Checkbox>
-                <Checkbox value="Dining ">Dining Room</Checkbox>
-                <Checkbox value="Kitchen">Kitchen</Checkbox>
-                <Checkbox value="Bedrom">Bedroom</Checkbox>
-                <Checkbox value="Earth">Earthquake Resistance</Checkbox>
+                <Checkbox
+                  value="Drainage"
+                  isChecked={checkboxValues.Drainage}
+                  onChange={handleCheckboxChange}
+                >
+                  Drainage
+                </Checkbox>
+                <Checkbox
+                  value="Drinking"
+                  isChecked={checkboxValues.Drinking}
+                  onChange={handleCheckboxChange}
+                >
+                  Drinking Water
+                </Checkbox>
+                <Checkbox
+                  value="parking"
+                  isChecked={checkboxValues.parking}
+                  onChange={handleCheckboxChange}
+                >
+                  Parking
+                </Checkbox>
+                <Checkbox
+                  value="Dining"
+                  isChecked={checkboxValues.Dining}
+                  onChange={handleCheckboxChange}
+                >
+                  Dining Room
+                </Checkbox>
+                <Checkbox
+                  value="Kitchen"
+                  isChecked={checkboxValues.Kitchen}
+                  onChange={handleCheckboxChange}
+                >
+                  Kitchen
+                </Checkbox>
+                <Checkbox
+                  value="Bedrom"
+                  isChecked={checkboxValues.Bedrom}
+                  onChange={handleCheckboxChange}
+                >
+                  Bedroom
+                </Checkbox>
+                <Checkbox
+                  value="Earth"
+                  isChecked={checkboxValues.Earth}
+                  onChange={handleCheckboxChange}
+                >
+                  Earthquake Resistance
+                </Checkbox>
               </Stack>
             </CheckboxGroup>
           </Box>
@@ -174,6 +278,7 @@ export default function AddProperty() {
               _placeholder={{ color: "gray.500" }}
               type="text"
               h={25}
+              onChange={(e) => setPropDesc(e.target.value)}
             />
           </FormControl>
 
@@ -185,11 +290,11 @@ export default function AddProperty() {
             <Box>
               <FormControl id="price" isRequired>
                 <FormLabel>Enter Price </FormLabel>
-                <Input type="text" />
+                <Input type="text" onChange={(e) => setPropPrice(e.target.value)} />
               </FormControl>
             </Box>
             <Box>
-              <Select placeholder="Unit Type" isrequired mt={7}>
+              <Select placeholder="Payment" isrequired mt={7} value={selectedPayment} onChange={handleForPayment}>
                 <option value="Rent">Per Month </option>
                 <option value="Sale">Per Year </option>
                 <option value="Lease">For Sale </option>

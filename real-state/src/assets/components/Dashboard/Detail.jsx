@@ -36,9 +36,38 @@ import {
 } from "@chakra-ui/react";
 import { MdLocalShipping } from 'react-icons/md';
 import { GoLocation } from 'react-icons/go'
-
+import { useEffect, useState } from "react";
 
 export default function SearchProp() {
+
+    const [product, setProduct] = useState({});
+
+    const loadData = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/getPack', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "id": "642d1b386e941d8d67492b69",
+                    "packId": "6431146aee3ad9d90330cd75"
+                }),
+            });
+            const data = await response.json();
+            console.log(data);
+            setProduct(data.data[0])
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+
     return (
         <Grid templateColumns='repeat(7, 1fr)' gap={2} py={5} px={10} bg="gray.100">
             <GridItem colStart={1} colEnd={6} >
@@ -50,7 +79,9 @@ export default function SearchProp() {
                                 lineHeight={1.1}
                                 fontWeight={400}
                                 fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
-                                Morden Style Home
+                                {
+                                    product.packName
+                                }
                             </Heading>
                             <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
                                 <GoLocation /> 1234 Main Street, Los Angeles, CA 90025

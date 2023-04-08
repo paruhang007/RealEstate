@@ -99,7 +99,7 @@ export default function Service() {
 
                     <Flex w={"full"} minH={"100vh"} bg={useColorModeValue("white", "gray.700")} direction={"column"}>
 
-                        <SimpleGrid minChildWidth='200px' spacing='40px' m={5}>
+                        <SimpleGrid minChildWidth='250px' spacing='40px' m={5}>
 
                             <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} >
                                 <Image src={property.imageUrl} alt={property.imageAlt} />
