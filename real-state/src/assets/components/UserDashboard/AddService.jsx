@@ -42,11 +42,47 @@ export default function AddService() {
         setSelectedServiceType(event.target.value);
     }
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        try {
+            const response = fetch("http://localhost:5000/addService", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                },
+                body: JSON.stringify({
+                    serName,
+                    serState,
+                    serDist,
+                    serMuni,
+                    serWard,
+                    serStreet,
+                    serOname,
+                    serPhone,
+                    serEmail,
+                    serProd,
+                    serDesc,
+                    selectedServiceType,
+                    id: "642d1b386e941d8d67492b69"
+                }),
+
+            })
+        }
+
+        catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <Flex
             minH={"100vh"}
             bg={useColorModeValue("gray.50", "gray.800")}
             w={"full"}
+            as={"form"}
+            onSubmit={handleSubmit}
         >
             <Stack spacing={8} w={"full"}>
                 <Box
@@ -64,9 +100,9 @@ export default function AddService() {
                     </Text>
                     <HStack gap={5} align={"center"} mt={5} >
                         <Box>
-                            <FormControl id="firstName" isRequired >
+                            <FormControl id="firstName" i>
                                 <FormLabel>Service Name / Title</FormLabel>
-                                <Input type="text" onChange={(e) => setSerName(e.target.value)} />
+                                <Input type="text" onChange={(e) => setSerName(e.target.value)} isRequired />
                             </FormControl>
                         </Box>
                     </HStack>
@@ -74,7 +110,7 @@ export default function AddService() {
                     <HStack gap={5} align={"center"} mt={5}>
 
                         <Box>
-                            <Select placeholder="Service Type" isrequired value={selectedServiceType} onChange={handleServiceTypeSelectChange}>
+                            <Select placeholder="Service Type" isRequired value={selectedServiceType} onChange={handleServiceTypeSelectChange}>
                                 <option value="Hardware">Hardware Store</option>
                                 <option value="Plumber">Plumber</option>
                                 <option value="Constructions">Constructions</option>
@@ -202,6 +238,7 @@ export default function AddService() {
                                 _hover={{
                                     bg: "blue.500",
                                 }}
+                                type="submit"
                             >
                                 Submit
                             </Button>

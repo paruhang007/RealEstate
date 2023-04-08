@@ -90,7 +90,41 @@ export default function AddProperty() {
     });
   };
 
-
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    try {
+      const response = fetch("http://localhost:5000/addPack", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/jason",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          propName,
+          propState,
+          propDist,
+          propMuni,
+          propWard,
+          propStreet,
+          propFace,
+          propRoad,
+          propArea,
+          propDesc,
+          propPrice,
+          selectedFor,
+          selectedPropertyType,
+          selectedPropertyUnit,
+          selectedPayment,
+          checkboxValues,
+          id: "642d1b386e941d8d67492b69"
+        }),
+      })
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
 
 
   return (
@@ -98,6 +132,8 @@ export default function AddProperty() {
       minH={"100vh"}
       bg={useColorModeValue("gray.50", "gray.800")}
       w={"full"}
+      as={"form"}
+      onSubmit={handleSubmit}
     >
       <Stack spacing={8} w={"full"}>
         <Box
@@ -322,6 +358,7 @@ export default function AddProperty() {
                 _hover={{
                   bg: "blue.500",
                 }}
+                type="submit"
               >
                 Submit
               </Button>

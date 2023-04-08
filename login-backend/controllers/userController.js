@@ -72,29 +72,49 @@ const otp = async (req, res) => {
 
 // CRUD OPERATIONS for package
 const addPack = async (req, res) => {
-    const { packName, packFor, packType, packState, packdistrict, packMuni, packWard, PackStreet, packFace, packRoad, PackArea, packValidity, packPrice, packUnit, packDescription, id } = req.body;
+    const {
+        propName,
+        propState,
+        propDist,
+        propMuni,
+        propWard,
+        propStreet,
+        propFace,
+        propRoad,
+        propArea,
+        propDesc,
+        propPrice,
+        selectedFor,
+        selectedPropertyType,
+        selectedPropertyUnit,
+        selectedPayment,
+        checkboxValues,
+        id
+    } = req.body;
     console.log(req.body);
     try {
         const user = await User.findById({ _id: id });
         if (!user) {
             return res.json({ error: "User not found" });
         }
+
         user.package.push({
-            packName,
-            packFor,
-            packType,
-            packState,
-            packdistrict,
-            packMuni,
-            packWard,
-            PackStreet,
-            packFace,
-            packRoad,
-            PackArea,
-            packDescription,
-            packPrice,
-            packUnit,
-            packValidity,
+            propName,
+            propState,
+            propDist,
+            propMuni,
+            propWard,
+            propStreet,
+            propFace,
+            propRoad,
+            propArea,
+            propDesc,
+            propPrice,
+            selectedFor,
+            selectedPropertyType,
+            selectedPropertyUnit,
+            selectedPayment,
+            checkboxValues,
 
         });
         await user.save();
@@ -102,11 +122,31 @@ const addPack = async (req, res) => {
     }
     catch (error) {
         console.log(error);
+        res.send({ status: "error" });
     }
 }
 
 const editPack = async (req, res) => {
-    const { packName, packPrice, packValidity, packDescription, id, packId } = req.body;
+    const {
+        propName,
+        propState,
+        propDist,
+        propMuni,
+        propWard,
+        propStreet,
+        propFace,
+        propRoad,
+        propArea,
+        propDesc,
+        propPrice,
+        selectedFor,
+        selectedPropertyType,
+        selectedPropertyUnit,
+        selectedPayment,
+        checkboxValues,
+        id,
+        packId
+    } = req.body;
     console.log(req.body);
     try {
         const user = await User.findById({ _id: id });
@@ -115,10 +155,22 @@ const editPack = async (req, res) => {
         }
         const pack = user.package.id(packId);
 
-        pack.packName = packName;
-        pack.packPrice = packPrice;
-        pack.packValidity = packValidity;
-        pack.packDescription = packDescription;
+        pack.propName = propName;
+        pack.propState = propState;
+        pack.propDist = propDist;
+        pack.propMuni = propMuni;
+        pack.propWard = propWard;
+        pack.propStreet = propStreet;
+        pack.propFace = propFace;
+        pack.propRoad = propRoad;
+        pack.propArea = propArea;
+        pack.propDesc = propDesc;
+        pack.propPrice = propPrice;
+        pack.selectedFor = selectedFor;
+        pack.selectedPropertyType = selectedPropertyType;
+        pack.selectedPropertyUnit = selectedPropertyUnit;
+        pack.selectedPayment = selectedPayment;
+        pack.checkboxValues = checkboxValues;
 
         await user.save();
         res.send({ status: "ok" });
@@ -136,8 +188,27 @@ const getPack = async (req, res) => {
         if (!user) {
             return res.json({ error: "User not found" });
         }
+        // here creating a pack variable and filtering the service array of package object and comparing with the packId and if it matches then it will return the object
+
         const pack = user.package.filter((pack) => pack._id == packId);
         res.send({ status: "ok", data: pack });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+// Get all packages
+const getPackAll = async (req, res) => {
+    const { id } = req.body;
+    console.log(req.body);
+    try {
+        const user = await User.findById({ _id: id });
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+
+        res.send({ status: "ok", data: user.package });
     }
     catch (error) {
         console.log(error);
@@ -163,7 +234,22 @@ const deletePack = async (req, res) => {
 
 // CRUD OPERATIONS for service 
 const addService = async (req, res) => {
-    const { serviceName, serviceType, serviceState, serviceDis, serviceMuni, serviceWard, serviceSreet, servicePro, serviceDesc } = req.body;
+    const {
+        serName,
+        serState,
+        serDist,
+        serMuni,
+        serWard,
+        serStreet,
+        serOname,
+        serPhone,
+        serEmail,
+        serProd,
+        serDesc,
+        selectedServiceType,
+        id,
+
+    } = req.body;
     console.log(req.body);
     try {
         const user = await User.findById({ _id: id });
@@ -171,13 +257,109 @@ const addService = async (req, res) => {
             return res.json({ error: "User not found" });
         }
         user.service.push({
+            serName,
+            serState,
+            serDist,
+            serMuni,
+            serWard,
+            serStreet,
+            serOname,
+            serPhone,
+            serEmail,
+            serProd,
+            serDesc,
+            selectedServiceType,
+
 
         });
+        await user.save();
+        res.send({ status: "ok" });
+    }
+    catch (error) {
+        console.log(error);
+        res.send({ status: "error" });
+    }
+}
+
+const editService = async (req, res) => {
+    const {
+        serName,
+        serState,
+        serDist,
+        serMuni,
+        serWard,
+        serStreet,
+        serOname,
+        serPhone,
+        serEmail,
+        serProd,
+        serDesc,
+        selectedServiceType,
+        id,
+        servId,
+    } = req.body;
+    console.log(req.body);
+    try {
+        const user = await User.findById({ _id: id });
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+        const pack = user.service.id(servId);
+
+        pack.serName = serName;
+        pack.serState = serState;
+        pack.serDist = serDist;
+        pack.serMuni = serMuni;
+        pack.serWard = serWard;
+        pack.serStreet = serStreet;
+        pack.serOname = serOname;
+        pack.serPhone = serPhone;
+        pack.serEmail = serEmail;
+        pack.serProd = serProd;
+        pack.serDesc = serDesc;
+        pack.selectedServiceType = selectedServiceType;
+
+        await user.save();
+        res.send({ status: "ok" });
     }
     catch (error) {
         console.log(error);
     }
 }
+
+const getService = async (req, res) => {
+    const { id, servId } = req.body;
+    console.log(req.body);
+    try {
+        const user = await User.findById({ _id: id });
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+        // here creating a serv variable and filtering the service array of service object and comparing with the servId and if it matches then it will return the object
+        const serv = user.service.filter((serv) => serv._id == servId);
+        res.send({ status: "ok", data: serv });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+const deleteService = async (req, res) => {
+    const { id, servId } = req.body;
+    try {
+        const user = await User.findById({ _id: id });
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+        user.service.id(servId).remove();
+        await user.save();
+        res.send({ status: "ok" });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 module.exports = {
@@ -189,4 +371,7 @@ module.exports = {
     getPack,
     deletePack,
     addService,
+    editService,
+    getService,
+    deleteService,
 };
