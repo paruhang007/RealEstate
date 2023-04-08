@@ -18,14 +18,24 @@ import {
     Tfoot,
     useColorModeValue,
     IconButton,
+    Button,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
 
 } from "@chakra-ui/react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
+import { useDisclosure } from '@chakra-ui/react'
 
 
 export default function MyProperties() {
+    const { isOpen, onOpen, onClose } = useDisclosure()
     return (
         <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
 
@@ -90,15 +100,59 @@ export default function MyProperties() {
                                             aria-label='Call Sage'
                                             fontSize='20px'
                                             icon={<AiOutlineEdit />}
-                                        // onClick={ }
-                                        />
+                                            onClick={onOpen} />
+
+                                        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+                                            <ModalOverlay />
+                                            <ModalContent>
+                                                <ModalHeader>Edit Property </ModalHeader>
+                                                <ModalCloseButton />
+                                                <ModalBody>
+                                                    <Text fontWeight='bold' mb='1rem'>
+                                                        Do you want to Edit the Property?
+                                                    </Text>
+
+                                                </ModalBody>
+
+                                                <ModalFooter>
+                                                    <Button colorScheme='blue' mr={3} >
+                                                        Edit
+                                                    </Button>
+
+                                                    <Button variant='ghost' onClick={onClose} >Close</Button>
+                                                </ModalFooter>
+                                            </ModalContent>
+                                        </Modal>
+
                                         <IconButton
                                             variant='outline'
                                             colorScheme='teal'
                                             aria-label='Call Sage'
                                             fontSize='20px'
                                             icon={<AiOutlineDelete />}
+                                            onClick={onOpen}
                                         />
+                                        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+                                            <ModalOverlay />
+                                            <ModalContent>
+                                                <ModalHeader>Delete Property </ModalHeader>
+                                                <ModalCloseButton />
+                                                <ModalBody>
+                                                    <Text fontWeight='bold' mb='1rem'>
+                                                        Do you want to Delete the Property?
+                                                    </Text>
+
+                                                </ModalBody>
+
+                                                <ModalFooter>
+                                                    <Button colorScheme='blue' mr={3} >
+                                                        Delete
+                                                    </Button>
+
+                                                    <Button variant='ghost' onClick={onClose} >Close</Button>
+                                                </ModalFooter>
+                                            </ModalContent>
+                                        </Modal>
                                     </Flex>
                                 </Td>
                             </Tr>

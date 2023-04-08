@@ -85,6 +85,10 @@ export default function NavBar() {
                 <Button variant="ghost">Property</Button>
               </NavLink>
 
+              <NavLink to="/service">
+                <Button variant="ghost">Services</Button>
+              </NavLink>
+
               <NavLink to="/unitconvert">
                 <Button variant="ghost">Unit Calculator</Button>
               </NavLink>

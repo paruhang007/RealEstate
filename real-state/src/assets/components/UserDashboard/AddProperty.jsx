@@ -18,8 +18,20 @@ import {
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useMemo } from "react";
+import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+
 
 export default function AddProperty() {
+
+  // const { isloaded } = useLoadScript({
+  //   googleMapApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
+  // });
+
+  // if (!isloaded) return <div>"Loading Maps"</div>;
+  // return <Map />;
+
+
   return (
     <Flex
       minH={"100vh"}

@@ -38,7 +38,7 @@ const LinkItems = [
     { name: 'Properties', icon: FiTrendingUp, path: "allproperties" },
     { name: 'Users', icon: FiCompass, path: "allusers" },
     { name: 'Services', icon: FiSettings, path: "allservices" },
-    { name: 'Chat', icon: FiStar },
+    { name: 'Chat', icon: FiStar, path: "adminchat" },
     { name: 'Reset Password', icon: FiSettings, path: "adminreset" },
 
 

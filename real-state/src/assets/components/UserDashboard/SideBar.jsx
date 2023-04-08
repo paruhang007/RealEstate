@@ -25,8 +25,10 @@ import { Outlet, NavLink, useLocation } from "react-router-dom";
 const LinkItems = [
   { name: "Profile", icon: FiHome, path: "/profile" },
   { name: "Add properties", icon: FiCompass, path: "/addproperty" },
+  { name: "Add Services", icon: FiCompass, path: "/addservice" },
   { name: "My properties", icon: FiTrendingUp, path: "/myproperties" },
   { name: "Favourites", icon: FiStar, path: "/favourite" },
+  { name: "Chat", icon: FiCompass, path: "/userchat" },
   { name: "Change Password", icon: FiSettings, path: "/changepass" },
 ];
 

@@ -7,6 +7,7 @@ import HomePage from "./assets/pages/HomePage";
 import Navbar from "./assets/components/Dashboard/Navbar";
 import UnitConverter from "./assets/components/Dashboard/UnitConverter";
 import EmiCalculator from "./assets/components/Dashboard/EmiCalculator";
+import Service from "./assets/components/Dashboard/Service";
 import AddProperty from "./assets/components/UserDashboard/AddProperty";
 import UserProfile from "./assets/components/UserDashboard/UserProfile";
 import ChangePassword from "./assets/components/UserDashboard/ChangePassword";
@@ -16,6 +17,7 @@ import Detail from "./assets/components/Dashboard/Detail";
 import Sidebar from "./assets/components/UserDashboard/SideBar";
 import UseDashPage from "./assets/pages/UserDashPage";
 import MyProperties from "./assets/components/UserDashboard/MyProperties";
+import AddService from "./assets/components/UserDashboard/AddService";
 import LoginAdminPage from "./assets/Admin/LoginAdminPage";
 import DashAdmin from "./assets/Admin/DashAdmin";
 import AllUsers from "./assets/Admin/Dashboard/AllUsers";
@@ -54,6 +56,10 @@ const App = () => {
           path: "/emical",
           element: <EmiCalculator />,
         },
+        {
+          path: "/service",
+          element: <Service />,
+        },
 
         // routing for the user dashboard
         {
@@ -82,6 +88,10 @@ const App = () => {
             {
               path: "/myproperties",
               element: <MyProperties />,
+            },
+            {
+              path: "/addservice",
+              element: <AddService />,
             },
 
           ],
@@ -123,6 +133,8 @@ const App = () => {
       path: "/resetpass",
       element: <ResetPassPage />,
     },
+
+
 
     // routing for the admin dashboard
     {
