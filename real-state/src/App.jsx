@@ -17,6 +17,7 @@ import Detail from "./assets/components/Dashboard/Detail";
 import Sidebar from "./assets/components/UserDashboard/SideBar";
 import UseDashPage from "./assets/pages/UserDashPage";
 import MyProperties from "./assets/components/UserDashboard/MyProperties";
+import MyServices from "./assets/components/UserDashboard/MyServices";
 import AddService from "./assets/components/UserDashboard/AddService";
 import LoginAdminPage from "./assets/Admin/LoginAdminPage";
 import DashAdmin from "./assets/Admin/DashAdmin";
@@ -88,6 +89,10 @@ const App = () => {
             {
               path: "/myproperties",
               element: <MyProperties />,
+            },
+            {
+              path: "/myservices",
+              element: <MyServices />,
             },
             {
               path: "/addservice",

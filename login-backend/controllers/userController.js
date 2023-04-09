@@ -13,7 +13,7 @@ const login = async (req, res) => {
         return res.json({ error: "User not found" });
     }
     if (bcrypt.compare(password, user.password)) {
-        const token = jwt.sign({ email: user.email }, JWT_SECRET);
+        const token = jwt.sign({ id: user._id }, JWT_SECRET);
         console.log(user);
 
         if (res.status(201)) {
@@ -374,4 +374,5 @@ module.exports = {
     editService,
     getService,
     deleteService,
+    getPackAll,
 };

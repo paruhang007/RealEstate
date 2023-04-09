@@ -27,6 +27,7 @@ const LinkItems = [
   { name: "Add properties", icon: FiCompass, path: "/addproperty" },
   { name: "Add Services", icon: FiCompass, path: "/addservice" },
   { name: "My properties", icon: FiTrendingUp, path: "/myproperties" },
+  { name: "My Services", icon: FiTrendingUp, path: "/myservices" },
   { name: "Favourites", icon: FiStar, path: "/favourite" },
   { name: "Chat", icon: FiCompass, path: "/userchat" },
   { name: "Change Password", icon: FiSettings, path: "/changepass" },

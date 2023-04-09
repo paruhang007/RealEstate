@@ -239,9 +239,9 @@ export default function AddProperty() {
             </Box>
             <Box>
               <Select placeholder="Unit Type" isrequired mt={7} value={selectedPropertyUnit} onChange={handleForSelectUnit}>
-                <option value="Rent">Hilly Area </option>
-                <option value="Sale">Terai Area </option>
-                <option value="Lease">Standard sq meter/ft </option>
+                <option value="Hilly Area">Hilly Area </option>
+                <option value="Terai Area">Terai Area </option>
+                <option value="Standard sq meter/ft">Standard sq meter/ft </option>
               </Select>
             </Box>
           </HStack>
@@ -331,9 +331,9 @@ export default function AddProperty() {
             </Box>
             <Box>
               <Select placeholder="Payment" isrequired mt={7} value={selectedPayment} onChange={handleForPayment}>
-                <option value="Rent">Per Month </option>
-                <option value="Sale">Per Year </option>
-                <option value="Lease">For Sale </option>
+                <option value="Per Month">Per Month </option>
+                <option value="Per Year">Per Year </option>
+                <option value="For Sale">For Sale </option>
               </Select>
             </Box>
           </HStack>
