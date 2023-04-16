@@ -34,29 +34,54 @@ import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { useDisclosure } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
+import jwt_decode from 'jwt-decode';
 
 
 export default function MyServices() {
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
 
-    const [property, setProperty] = useState({});
+
+    const [service, setService] = useState([]);
+    const [selectedServiceType, setSelectedServiceType] = useState(service);
+
+    const handelsort = (e) => {
+        const select = e.target.value;
+        console.log(select);
+
+
+        // sorting the services according to the service type selected 
+        setSelectedServiceType(
+            select !== "all"
+                ? service.filter((serv) => {
+                    return serv.selectedServiceType === select;
+                })
+                : service
+        );
+    };
+
+
+    // getting the token from local storage
+    const data = localStorage.getItem('token');
+    // decoding the token which is actually holding the user id     
+    const user = jwt_decode(data);
 
     const loaddata = async () => {
         try {
-            const response = await fetch('http://localhost:5000/getPackAll', {
+            const response = await fetch('http://localhost:5000/getServiceAll', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "id": "642d1b386e941d8d67492b69",
+                    "id": user.id,
                 }),
             });
-            const data = await response.json();
-            console.log(data);
-            console.log(data.length);
-            console.log(Array.map);
-            // setProperty(data.data[0])
+            const serv = await response.json();
+            setService(serv.data);
+            console.log(serv.data);
+            setSelectedServiceType(serv.data);
+
         }
         catch (err) {
             console.log(err);
@@ -83,22 +108,25 @@ export default function MyServices() {
                         <Input type="tel" placeholder="Search..." color={'black'} w={'50%'} />
                     </InputGroup>
 
-
-                    <Box w={'20%'}>
-                        <Select placeholder="Catogery" isrequired  >
-                            <option value="Rent">Rent </option>
-                            <option value="Sale">Sale </option>
-                            <option value="Lease">Lease </option>
-                        </Select>
-                    </Box>
-                    <Box w={'25%'} >
-                        <Select placeholder="Property Type" isrequired>
-                            <option value="Land">Land </option>
-                            <option value="Flat">Flat </option>
-                            <option value="House">House </option>
-                            <option value="Apartment">Apartment </option>
-                            <option value="Office space">Office space </option>
-                            <option value="Shop space">Shop space </option>
+                    <Box w={'25%'}
+                    >
+                        <Select onChange={(e) => {
+                            handelsort(e)
+                        }}
+                        >
+                            <option value="all">All</option>
+                            <option value="Hardware">Hardware Store</option>
+                            <option value="Plumber">Plumber</option>
+                            <option value="Constructions">Constructions</option>
+                            <option value="Electrician">Electrician</option>
+                            <option value="Carpet">Carpet Fitting</option>
+                            <option value="Marbles">Marbles and Tiles</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="Solar">Solar Heaters</option>
+                            <option value="Metal">Metal Work</option>
+                            <option value="Paint">Paint Store</option>
+                            <option value="Cleaning">Cleaning Service</option>
+                            <option value="Interior">Interior Design</option>
                         </Select>
                     </Box>
                 </Flex>
@@ -108,97 +136,92 @@ export default function MyServices() {
                         <Thead>
                             <Tr>
                                 <Th>ID</Th>
-                                <Th>Property</Th>
-                                <Th>Property Type</Th>
-                                <Th>Property Type</Th>
+                                <Th>Service</Th>
+                                <Th>Service Type</Th>
+                                <Th>Email</Th>
+                                <Th>Phnoe Number</Th>
                                 <Th>Status</Th>
                                 <Th>Action</Th>
 
                             </Tr>
                         </Thead>
                         <Tbody>
-                            <Tr>
-                                <Td>inches</Td>
-                                <Td>millimetres (mm)</Td>
-                                <Td >25.4</Td>
-                                <Td>inches</Td>
-                                <Td>millimetres (mm)</Td>
-                                <Td >
-                                    <Flex gap={4}>
-                                        <IconButton
-                                            variant='outline'
-                                            colorScheme='teal'
-                                            aria-label='Call Sage'
-                                            fontSize='20px'
-                                            icon={<AiOutlineEdit />}
-                                            onClick={onOpen} />
+                            {selectedServiceType.map((serv) => {
+                                return (
+                                    <Tr>
+                                        <Td>{serv._id}</Td>
+                                        <Td>{serv.serName}</Td>
+                                        <Td>{serv.selectedServiceType}</Td>
+                                        <Td>{serv.serEmail}</Td>
+                                        <Td>{serv.serPhone}</Td>
+                                        <Td>{serv.verifiedService ? "1" : "0"}</Td>
+                                        <Td >
+                                            <Flex gap={4}>
+                                                <IconButton
+                                                    variant='outline'
+                                                    colorScheme='teal'
+                                                    aria-label='Call Sage'
+                                                    fontSize='20px'
+                                                    icon={<AiOutlineEdit />}
+                                                    onClick={onEditOpen} />
 
-                                        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-                                            <ModalOverlay />
-                                            <ModalContent>
-                                                <ModalHeader>Edit Property </ModalHeader>
-                                                <ModalCloseButton />
-                                                <ModalBody>
-                                                    <Text fontWeight='bold' mb='1rem'>
-                                                        Do you want to Edit the Property?
-                                                    </Text>
+                                                <Modal blockScrollOnMount={false} isOpen={isEditOpen} onClose={onEditClose}>
+                                                    <ModalOverlay />
+                                                    <ModalContent>
+                                                        <ModalHeader>Edit Service </ModalHeader>
+                                                        <ModalCloseButton />
+                                                        <ModalBody>
+                                                            <Text fontWeight='bold' mb='1rem'>
+                                                                Do you want to Edit the Service?
+                                                            </Text>
 
-                                                </ModalBody>
+                                                        </ModalBody>
 
-                                                <ModalFooter>
-                                                    <Button colorScheme='blue' mr={3} >
-                                                        Edit
-                                                    </Button>
+                                                        <ModalFooter>
+                                                            <Button colorScheme='blue' mr={3} >
+                                                                Edit
+                                                            </Button>
 
-                                                    <Button variant='ghost' onClick={onClose} >Close</Button>
-                                                </ModalFooter>
-                                            </ModalContent>
-                                        </Modal>
+                                                            <Button variant='ghost' onClick={onEditClose} >Close</Button>
+                                                        </ModalFooter>
+                                                    </ModalContent>
+                                                </Modal>
 
-                                        <IconButton
-                                            variant='outline'
-                                            colorScheme='teal'
-                                            aria-label='Call Sage'
-                                            fontSize='20px'
-                                            icon={<AiOutlineDelete />}
-                                            onClick={onOpen}
-                                        />
-                                        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-                                            <ModalOverlay />
-                                            <ModalContent>
-                                                <ModalHeader>Delete Property </ModalHeader>
-                                                <ModalCloseButton />
-                                                <ModalBody>
-                                                    <Text fontWeight='bold' mb='1rem'>
-                                                        Do you want to Delete the Property?
-                                                    </Text>
+                                                <IconButton
+                                                    variant='outline'
+                                                    colorScheme='teal'
+                                                    aria-label='Call Sage'
+                                                    fontSize='20px'
+                                                    icon={<AiOutlineDelete />}
+                                                    onClick={onOpen}
+                                                />
+                                                <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+                                                    <ModalOverlay />
+                                                    <ModalContent>
+                                                        <ModalHeader>Delete Service </ModalHeader>
+                                                        <ModalCloseButton />
+                                                        <ModalBody>
+                                                            <Text fontWeight='bold' mb='1rem'>
+                                                                Do you want to Delete the Service?
+                                                            </Text>
 
-                                                </ModalBody>
+                                                        </ModalBody>
 
-                                                <ModalFooter>
-                                                    <Button colorScheme='blue' mr={3} >
-                                                        Delete
-                                                    </Button>
+                                                        <ModalFooter>
+                                                            <Button colorScheme='blue' mr={3} >
+                                                                Delete
+                                                            </Button>
 
-                                                    <Button variant='ghost' onClick={onClose} >Close</Button>
-                                                </ModalFooter>
-                                            </ModalContent>
-                                        </Modal>
-                                    </Flex>
-                                </Td>
-                            </Tr>
-
+                                                            <Button variant='ghost' onClick={onClose} >Close</Button>
+                                                        </ModalFooter>
+                                                    </ModalContent>
+                                                </Modal>
+                                            </Flex>
+                                        </Td>
+                                    </Tr>)
+                            })}
                         </Tbody>
-                        <Tfoot>
-                            <Tr>
-                                <Th>ID</Th>
-                                <Th>Property</Th>
-                                <Th>Property Type</Th>
-                                <Th>Property Type</Th>
-                                <Th>Status</Th>
-                                <Th>Action</Th>
-                            </Tr>
-                        </Tfoot>
+
                     </Table>
                 </TableContainer>
             </Box>

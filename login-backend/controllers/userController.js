@@ -71,6 +71,7 @@ const otp = async (req, res) => {
 }
 
 // CRUD OPERATIONS for package
+// Add package
 const addPack = async (req, res) => {
     const {
         propName,
@@ -126,6 +127,7 @@ const addPack = async (req, res) => {
     }
 }
 
+// Edit package
 const editPack = async (req, res) => {
     const {
         propName,
@@ -180,6 +182,7 @@ const editPack = async (req, res) => {
     }
 }
 
+// Get single package
 const getPack = async (req, res) => {
     const { id, packId } = req.body;
     console.log(req.body);
@@ -215,6 +218,7 @@ const getPackAll = async (req, res) => {
     }
 }
 
+// Delete package
 const deletePack = async (req, res) => {
     const { id, packId } = req.body;
     try {
@@ -233,6 +237,7 @@ const deletePack = async (req, res) => {
 
 
 // CRUD OPERATIONS for service 
+// Add service
 const addService = async (req, res) => {
     const {
         serName,
@@ -281,6 +286,7 @@ const addService = async (req, res) => {
     }
 }
 
+// Edit service
 const editService = async (req, res) => {
     const {
         serName,
@@ -327,6 +333,7 @@ const editService = async (req, res) => {
     }
 }
 
+// Get single service
 const getService = async (req, res) => {
     const { id, servId } = req.body;
     console.log(req.body);
@@ -344,6 +351,24 @@ const getService = async (req, res) => {
     }
 }
 
+// Get all services
+const getServiceAll = async (req, res) => {
+    const { id } = req.body;
+    console.log(req.body);
+    try {
+        const user = await User.findById({ _id: id });
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+
+        res.send({ status: "ok", data: user.service });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+// Delete service
 const deleteService = async (req, res) => {
     const { id, servId } = req.body;
     try {
@@ -361,7 +386,7 @@ const deleteService = async (req, res) => {
 }
 
 
-
+// Exporting all the functions
 module.exports = {
     login,
     register,
@@ -369,10 +394,12 @@ module.exports = {
     addPack,
     editPack,
     getPack,
+    getPackAll,
     deletePack,
     addService,
     editService,
     getService,
+    getServiceAll,
     deleteService,
-    getPackAll,
+
 };

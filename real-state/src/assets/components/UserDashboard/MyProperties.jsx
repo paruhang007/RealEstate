@@ -41,12 +41,15 @@ export default function MyProperties() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
 
+
+
     const [property, setProperty] = useState([]);
 
     const [selectedFor, setSelectedFor] = useState("all");
     const [selectedType, setSelectedType] = useState("all");
     const [selectedPropertyType, setSelectedPropertyType] = useState(property);
 
+    // Category filter
     const handlerCate = (e) => {
         const select = e.target.value;
         console.log(select);
@@ -74,6 +77,7 @@ export default function MyProperties() {
         setSelectedType(select);
     };
 
+    // for filter
     const handleLeige = (e) => {
         const select = e.target.value;
         setSelectedFor(select);
@@ -112,8 +116,11 @@ export default function MyProperties() {
     // }
 
 
+    // getting the token from local storage
     const data = localStorage.getItem('token');
+    // decoding the token which is actually holding the user id  
     const user = jwt_decode(data);
+
     const loaddata = async () => {
         try {
             const response = await fetch('http://localhost:5000/getPackAll', {
@@ -139,6 +146,31 @@ export default function MyProperties() {
         loaddata();
     }, []);
 
+
+    // set the property id to the state
+    const [propID, setPropID] = useState("");
+
+    const handelDel = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/deletePack', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "id": user.id,
+                    "packId": propID,
+                }),
+            });
+            const prop = await response.json();
+            console.log(prop);
+            loaddata();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
 
@@ -156,6 +188,7 @@ export default function MyProperties() {
                     </InputGroup>
 
 
+                    {/* for  */}
                     <Box w={'20%'}>
                         <Select onChange={(e) => {
                             handleLeige(e)
@@ -166,6 +199,8 @@ export default function MyProperties() {
                             <option value="Lease">Lease </option>
                         </Select>
                     </Box>
+
+                    {/* category */}
                     <Box w={'25%'} >
                         <Select isrequired onChange={(e) => {
                             handlerCate(e);
@@ -232,7 +267,7 @@ export default function MyProperties() {
                                                                 Edit
                                                             </Button>
 
-                                                            <Button variant='ghost' onClick={onClose} >Close</Button>
+                                                            <Button variant='ghost' onClick={onEditClose} >Close</Button>
                                                         </ModalFooter>
                                                     </ModalContent>
                                                 </Modal>
@@ -260,7 +295,9 @@ export default function MyProperties() {
                                                         </ModalBody>
 
                                                         <ModalFooter>
-                                                            <Button colorScheme='blue' mr={3} >
+                                                            {/* <Button colorScheme='blue' mr={3} onClick={handelDel(setPropID(prop._id))}> */}
+                                                            <Button colorScheme='blue' mr={3} onClick={handelDel}>
+
                                                                 Delete
                                                             </Button>
 
