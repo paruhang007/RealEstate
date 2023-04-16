@@ -45,10 +45,29 @@ export default function MyServices() {
     const [service, setService] = useState([]);
     const [selectedServiceType, setSelectedServiceType] = useState(service);
 
+    const [search, setSearch] = useState(false);
+
+    // search handler
+    const searchHandler = (e) => {
+        const search = e.target.value;
+        console.log(search);
+        setSearch(search);
+
+        if (search.length === 0) {
+            setSelectedServiceType(service);
+        } else {
+            setSelectedServiceType(
+                service.filter((serv) => {
+                    return serv.serName.toLowerCase().includes(search.toLowerCase()) || serv._id.toLowerCase().includes(search.toLowerCase());
+                })
+            );
+        }
+    };
+
+    // search handler
     const handelsort = (e) => {
         const select = e.target.value;
         console.log(select);
-
 
         // sorting the services according to the service type selected 
         setSelectedServiceType(
@@ -105,7 +124,7 @@ export default function MyServices() {
                         <InputLeftElement pointerEvents="none" color={'black'}>
                             <AiOutlineSearch />
                         </InputLeftElement>
-                        <Input type="tel" placeholder="Search..." color={'black'} w={'50%'} />
+                        <Input type="tel" onChange={(e) => searchHandler(e)} placeholder="Search using ID or Service Name..." color={'black'} w={'50%'} />
                     </InputGroup>
 
                     <Box w={'25%'}
@@ -136,7 +155,7 @@ export default function MyServices() {
                         <Thead>
                             <Tr>
                                 <Th>ID</Th>
-                                <Th>Service</Th>
+                                <Th>Service Name</Th>
                                 <Th>Service Type</Th>
                                 <Th>Email</Th>
                                 <Th>Phnoe Number</Th>

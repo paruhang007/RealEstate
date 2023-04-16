@@ -49,6 +49,25 @@ export default function MyProperties() {
     const [selectedType, setSelectedType] = useState("all");
     const [selectedPropertyType, setSelectedPropertyType] = useState(property);
 
+    const [search, setSearch] = useState(false);
+
+    // search handler
+    const searchHandler = (e) => {
+        const search = e.target.value;
+        console.log(search);
+        setSearch(search);
+
+        if (search.length === 0) {
+            setSelectedPropertyType(property);
+        } else {
+            setSelectedPropertyType(
+                property.filter((prop) => {
+                    return prop.propName.toLowerCase().includes(search.toLowerCase()) || prop._id.toLowerCase().includes(search.toLowerCase());
+                })
+            );
+        }
+    };
+
     // Category filter
     const handlerCate = (e) => {
         const select = e.target.value;
@@ -184,7 +203,7 @@ export default function MyProperties() {
                         <InputLeftElement pointerEvents="none" color={'black'}>
                             <AiOutlineSearch />
                         </InputLeftElement>
-                        <Input type="tel" placeholder="Search..." color={'black'} w={'50%'} />
+                        <Input type="tel" onChange={(e) => searchHandler(e)} placeholder="Search using ID or Property Name..." color={'black'} w={'50%'} />
                     </InputGroup>
 
 
@@ -221,7 +240,7 @@ export default function MyProperties() {
                         <Thead>
                             <Tr>
                                 <Th>ID</Th>
-                                <Th>Property</Th>
+                                <Th>Property Name</Th>
                                 <Th>Property Type</Th>
                                 <Th>Property Catogery</Th>
                                 <Th>Area</Th>
