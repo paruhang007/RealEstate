@@ -35,12 +35,13 @@ import { AiOutlineDelete } from 'react-icons/ai'
 import { useDisclosure } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import jwt_decode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function MyServices() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
-
+    const navigate = useNavigate();
 
     const [service, setService] = useState([]);
     const [selectedServiceType, setSelectedServiceType] = useState(service);
@@ -111,12 +112,37 @@ export default function MyServices() {
         loaddata();
     }, []);
 
+
+    // set the property id to the state
+    const [servID, setServID] = useState("");
+
+    const handelDel = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/deleteService', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "id": user.id,
+                    "servId": servID,
+                }),
+            });
+            const serv = await response.json();
+            console.log(serv);
+            loaddata();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
 
             <Box m={2} w={'full'} >
                 <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"} ml={5}>
-                    My property
+                    My Services
                 </Text>
                 <Flex w={'100%'} m={5} gap={5}>
 
@@ -182,29 +208,10 @@ export default function MyServices() {
                                                     aria-label='Call Sage'
                                                     fontSize='20px'
                                                     icon={<AiOutlineEdit />}
-                                                    onClick={onEditOpen} />
-
-                                                <Modal blockScrollOnMount={false} isOpen={isEditOpen} onClose={onEditClose}>
-                                                    <ModalOverlay />
-                                                    <ModalContent>
-                                                        <ModalHeader>Edit Service </ModalHeader>
-                                                        <ModalCloseButton />
-                                                        <ModalBody>
-                                                            <Text fontWeight='bold' mb='1rem'>
-                                                                Do you want to Edit the Service?
-                                                            </Text>
-
-                                                        </ModalBody>
-
-                                                        <ModalFooter>
-                                                            <Button colorScheme='blue' mr={3} >
-                                                                Edit
-                                                            </Button>
-
-                                                            <Button variant='ghost' onClick={onEditClose} >Close</Button>
-                                                        </ModalFooter>
-                                                    </ModalContent>
-                                                </Modal>
+                                                    onClick={() => {
+                                                        setServID(serv._id);
+                                                        onEditOpen();
+                                                    }} />
 
                                                 <IconButton
                                                     variant='outline'
@@ -212,29 +219,12 @@ export default function MyServices() {
                                                     aria-label='Call Sage'
                                                     fontSize='20px'
                                                     icon={<AiOutlineDelete />}
-                                                    onClick={onOpen}
+                                                    onClick={() => {
+                                                        setServID(serv._id);
+                                                        onOpen();
+                                                    }}
                                                 />
-                                                <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-                                                    <ModalOverlay />
-                                                    <ModalContent>
-                                                        <ModalHeader>Delete Service </ModalHeader>
-                                                        <ModalCloseButton />
-                                                        <ModalBody>
-                                                            <Text fontWeight='bold' mb='1rem'>
-                                                                Do you want to Delete the Service?
-                                                            </Text>
 
-                                                        </ModalBody>
-
-                                                        <ModalFooter>
-                                                            <Button colorScheme='blue' mr={3} >
-                                                                Delete
-                                                            </Button>
-
-                                                            <Button variant='ghost' onClick={onClose} >Close</Button>
-                                                        </ModalFooter>
-                                                    </ModalContent>
-                                                </Modal>
                                             </Flex>
                                         </Td>
                                     </Tr>)
@@ -244,6 +234,57 @@ export default function MyServices() {
                     </Table>
                 </TableContainer>
             </Box>
+
+            {/* model for edit icon */}
+            <Modal blockScrollOnMount={false} isOpen={isEditOpen} onClose={onEditClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Edit Service </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text fontWeight='bold' mb='1rem'>
+                            Do you want to Edit the Service?
+                        </Text>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={() => {
+                            navigate(`/editservice/${user.id}/${servID}`);
+                        }}>
+                            Edit
+                        </Button>
+
+                        <Button variant='ghost' onClick={onEditClose} >Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            {/* model for delete icon */}
+            <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Delete Service </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text fontWeight='bold' mb='1rem'>
+                            Do you want to Delete the Service?
+                        </Text>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={() => {
+                            handelDel();
+                        }}>
+
+                            Delete
+                        </Button>
+
+                        <Button variant='ghost' onClick={onClose} >Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
 
         </Flex>
     )

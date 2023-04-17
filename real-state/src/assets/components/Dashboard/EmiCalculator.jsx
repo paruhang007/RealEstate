@@ -26,7 +26,7 @@ import {
 import { Pie } from 'react-chartjs-2';
 
 // register the elements to use
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, PieController);
 
 export default function EmiCalculator() {
 
@@ -202,21 +202,22 @@ export default function EmiCalculator() {
         </Flex>
 
 
-        <Flex w={'100%'} align={'center'} >
-          <Box w={'50%'} m={5} mt={10}>
+        <Flex w={'100%'} align={'center'} bg={'red.100'} >
+          <Box w={'60%'} m={5} mt={10} bg={'green.100'} minh={'330px'}
+            minw={'330px'} >
 
             <Pie
 
               data={data}
               options={options}
-              h={'60%'}
-              w={'60%'}
+
             >
             </Pie>
 
+
           </Box>
 
-          <Box w={'50%'} m={5} mt={10}  >
+          <Box w={'40%'} m={5} mt={10} bg={'blue.100'} >
 
             <Box fontSize='20px' mt={8} pl={3}>
               <Heading fontSize='20px' mt={8} > Loan EMI </Heading>

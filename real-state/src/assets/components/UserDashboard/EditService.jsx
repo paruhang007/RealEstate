@@ -15,18 +15,109 @@ import {
     Checkbox,
     Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
+
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 
+export default function AddService() {
 
-export default function EditService() {
+    const [serName, setSerName] = useState("");
+    const [serState, setSerState] = useState("");
+    const [serDist, setSerDist] = useState("");
+    const [serMuni, setSerMuni] = useState("");
+    const [serWard, setSerWard] = useState("");
+    const [serStreet, setSerStreet] = useState("");
+    const [serOname, setSerOname] = useState("");
+    const [serPhone, setSerPhone] = useState("");
+    const [serEmail, setSerEmail] = useState("");
+    const [serProd, setSerProd] = useState("");
+    const [serDesc, setSerDesc] = useState("");
+
+    const [selectedServiceType, setSelectedServiceType] = useState('');
+
+    // handel service type select change
+    function handleServiceTypeSelectChange(event) {
+        setSelectedServiceType(event.target.value);
+    }
+
+    // for viewng the data from the database 
+    const navigate = useNavigate();
+    const [service, setService] = useState({});
+
+
+    const { id, servId } = useParams();
+
+    const loadData = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/getService", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "id": id,
+                    "servId": servId
+                }),
+            });
+            const data = await response.json();
+            console.log(data);
+            setService(data);
+        }
+
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        try {
+            const response = fetch("http://localhost:5000/addService", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                },
+                body: JSON.stringify({
+                    serName,
+                    serState,
+                    serDist,
+                    serMuni,
+                    serWard,
+                    serStreet,
+                    serOname,
+                    serPhone,
+                    serEmail,
+                    serProd,
+                    serDesc,
+                    selectedServiceType,
+                    id: "642d1b386e941d8d67492b69"
+                }),
+
+            })
+        }
+
+        catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <Flex
             minH={"100vh"}
             bg={useColorModeValue("gray.50", "gray.800")}
             w={"full"}
+            as={"form"}
+            onSubmit={handleSubmit}
         >
             <Stack spacing={8} w={"full"}>
                 <Box
@@ -35,18 +126,27 @@ export default function EditService() {
                     boxShadow={"lg"}
                     p={8}
                 >
-                    <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"}>
-                        Edit Service
-                    </Text>
+                    <Button
+                        loadingText="Submitting"
+                        size="lg"
+                        bg={"blue.400"}
+                        color={"white"}
+                        _hover={{
+                            bg: "blue.500",
+                        }}
+                        onClick={() => navigate("/myservices")}
+                    >
+                        Back
+                    </Button>
 
                     <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={5}>
-                        About Service
+                        Edit Service
                     </Text>
                     <HStack gap={5} align={"center"} mt={5} >
                         <Box>
-                            <FormControl id="firstName" isRequired >
+                            <FormControl id="firstName" i>
                                 <FormLabel>Service Name / Title</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serName} onChange={(e) => setSerName(e.target.value)} isRequired />
                             </FormControl>
                         </Box>
                     </HStack>
@@ -54,19 +154,19 @@ export default function EditService() {
                     <HStack gap={5} align={"center"} mt={5}>
 
                         <Box>
-                            <Select placeholder="Service Type" isrequired>
-                                <option value="Hardware">Hardware Store </option>
-                                <option value="Plumber">Plumber </option>
-                                <option value="Constructions">Constructions </option>
-                                <option value="Electrician">Electrician </option>
-                                <option value="Carpet">Carpet Fitting</option>
-                                <option value="Marbles">Marbles and Tiles </option>
-                                <option value="Furniture">Furniture </option>
-                                <option value="Solar">Solar Heaters </option>
-                                <option value="Metal">Metal Work </option>
-                                <option value="Paint">Paint Store</option>
-                                <option value="Cleaning">Cleaning Service </option>
-                                <option value="Interior">Interior Design </option>
+                            <Select placeholder="Service Type" isRequired value={selectedServiceType} onChange={handleServiceTypeSelectChange}>
+                                <option value="Hardware" selected={service.selectedServiceType === 'Hardware'}>Hardware Store</option>
+                                <option value="Plumber" selected={service.selectedServiceType === 'Plumber'}>Plumber</option>
+                                <option value="Constructions" selected={service.selectedServiceType === 'Constructions'}>Constructions</option>
+                                <option value="Electrician" selected={service.selectedServiceType === 'Electrician'}>Electrician</option>
+                                <option value="Carpet" selected={service.selectedServiceType === 'Carpet'}>Carpet Fitting</option>
+                                <option value="Marbles" selected={service.selectedServiceType === 'Marbles'}>Marbles and Tiles</option>
+                                <option value="Furniture" selected={service.selectedServiceType === 'Furniture'}>Furniture</option>
+                                <option value="Solar" selected={service.selectedServiceType === 'Solar'}>Solar Heaters</option>
+                                <option value="Metal" selected={service.selectedServiceType === 'Metal'}>Metal Work</option>
+                                <option value="Paint" selected={service.selectedServiceType === 'Paint'}>Paint Store</option>
+                                <option value="Cleaning" selected={service.selectedServiceType === 'Cleaning'}>Cleaning Service</option>
+                                <option value="Interior" selected={service.selectedServiceType === 'Interior'}>Interior Design</option>
                             </Select>
                         </Box>
                     </HStack>
@@ -78,32 +178,32 @@ export default function EditService() {
                         <Box>
                             <FormControl id="state" isRequired>
                                 <FormLabel>State/Province</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serState} onChange={(e) => setSerState(e.target.value)} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="district" isRequired>
                                 <FormLabel>District </FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serDist} onChange={(e) => setSerDist(e.target.value)} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="municipality" isRequired>
                                 <FormLabel>Municipality</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serMuni} onChange={(e) => setSerMuni(e.target.value)} />
                             </FormControl>
                         </Box>
 
                         <Box>
                             <FormControl id="ward" isRequired>
                                 <FormLabel>Ward Number</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serWard} onChange={(e) => setSerWard(e.target.value)} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="tol" isRequired>
                                 <FormLabel>Area / Street name</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serStreet} onChange={(e) => setSerStreet(e.target.value)} />
                             </FormControl>
                         </Box>
                     </HStack>
@@ -115,19 +215,19 @@ export default function EditService() {
                         <Box>
                             <FormControl id="name" isRequired>
                                 <FormLabel>Owner name</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serOname} onChange={(e) => setSerOname(e.target.value)} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="number" isRequired>
                                 <FormLabel>Phone Number </FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serPhone} onChange={(e) => setSerPhone(e.target.value)} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="email" isRequired>
                                 <FormLabel>Email</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={service.serEmail} onChange={(e) => setSerEmail(e.target.value)} />
                             </FormControl>
                         </Box>
 
@@ -137,23 +237,28 @@ export default function EditService() {
 
 
 
-                    <FormControl id="oldpassword" isRequired mt={7}>
+                    <FormControl id="Description" isRequired mt={7}>
                         <FormLabel>Products and Services</FormLabel>
                         <Textarea
                             placeholder="Description"
                             _placeholder={{ color: "gray.500" }}
                             type="text"
                             h={25}
+                            defaultValue={service.serProd}
+                            onChange={(e) => setSerProd(e.target.value)}
+
                         />
                     </FormControl>
 
-                    <FormControl id="oldpassword" isRequired mt={7}>
+                    <FormControl id="Description" isRequired mt={7}>
                         <FormLabel>Description</FormLabel>
                         <Textarea
                             placeholder="Description"
                             _placeholder={{ color: "gray.500" }}
                             type="text"
                             h={25}
+                            defaultValue={service.serDesc}
+                            onChange={(e) => setSerDesc(e.target.value)}
                         />
                     </FormControl>
 
@@ -179,8 +284,9 @@ export default function EditService() {
                                 _hover={{
                                     bg: "blue.500",
                                 }}
+                                type="submit"
                             >
-                                Submit
+                                Update
                             </Button>
                         </Stack>
                         <Stack pt={6}></Stack>

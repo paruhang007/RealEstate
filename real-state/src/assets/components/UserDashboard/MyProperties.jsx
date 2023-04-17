@@ -299,6 +299,7 @@ export default function MyProperties() {
                 </TableContainer>
             </Box>
 
+            {/* model for edit icon */}
             <Modal blockScrollOnMount={false} isOpen={isEditOpen} onClose={onEditClose}>
                 <ModalOverlay />
                 <ModalContent>
@@ -313,7 +314,7 @@ export default function MyProperties() {
 
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={() => {
-                            navigate(`/editProperty/${user.id}/${propID}`);
+                            navigate(`/editproperty/${user.id}/${propID}`);
                         }}>
                             Edit
                         </Button>
@@ -323,6 +324,7 @@ export default function MyProperties() {
                 </ModalContent>
             </Modal>
 
+            {/* model for delete icon */}
             <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>

@@ -19,10 +19,11 @@ import {
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import jwt_decode from 'jwt-decode';
-
+import { useNavigate } from 'react-router-dom';
 
 
 export default function AddProperty() {
+  const navigate = useNavigate();
 
   // const { isloaded } = useLoadScript({
   //   googleMapApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
@@ -127,6 +128,7 @@ export default function AddProperty() {
           id: user.id,
         }),
       })
+
     }
     catch (error) {
       console.log(error);
