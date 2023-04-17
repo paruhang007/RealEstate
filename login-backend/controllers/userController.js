@@ -149,9 +149,11 @@ const editPack = async (req, res) => {
         id,
         packId
     } = req.body;
+
     console.log(req.body);
+
     try {
-        const user = await User.findById({ _id: id });
+        const user = await User.findOne({ _id: id });
         if (!user) {
             return res.json({ error: "User not found" });
         }
@@ -175,7 +177,7 @@ const editPack = async (req, res) => {
         pack.checkboxValues = checkboxValues;
 
         await user.save();
-        res.send({ status: "ok" });
+        res.send({ status: "updated" });
     }
     catch (error) {
         console.log(error);

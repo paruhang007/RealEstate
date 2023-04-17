@@ -35,11 +35,13 @@ import { AiOutlineDelete } from 'react-icons/ai'
 import { useDisclosure } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import jwt_decode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function MyProperties() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+    const navigate = useNavigate();
 
 
 
@@ -48,6 +50,7 @@ export default function MyProperties() {
     const [selectedFor, setSelectedFor] = useState("all");
     const [selectedType, setSelectedType] = useState("all");
     const [selectedPropertyType, setSelectedPropertyType] = useState(property);
+    const [editProp, setEditProp] = useState("");
 
     const [search, setSearch] = useState(false);
 
@@ -190,6 +193,8 @@ export default function MyProperties() {
         }
     }
 
+
+
     return (
         <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
 
@@ -267,63 +272,22 @@ export default function MyProperties() {
                                                     aria-label='Call Sage'
                                                     fontSize='20px'
                                                     icon={<AiOutlineEdit />}
-                                                    onClick={onEditOpen} />
-
-                                                <Modal blockScrollOnMount={false} isOpen={isEditOpen} onClose={onEditClose}>
-                                                    <ModalOverlay />
-                                                    <ModalContent>
-                                                        <ModalHeader>Edit Property </ModalHeader>
-                                                        <ModalCloseButton />
-                                                        <ModalBody>
-                                                            <Text fontWeight='bold' mb='1rem'>
-                                                                Do you want to Edit the Property?
-                                                            </Text>
-
-                                                        </ModalBody>
-
-                                                        <ModalFooter>
-                                                            <Button colorScheme='blue' mr={3} >
-                                                                Edit
-                                                            </Button>
-
-                                                            <Button variant='ghost' onClick={onEditClose} >Close</Button>
-                                                        </ModalFooter>
-                                                    </ModalContent>
-                                                </Modal>
-
-
-
+                                                    onClick={() => {
+                                                        setPropID(prop._id);
+                                                        onEditOpen();
+                                                    }} />
                                                 <IconButton
                                                     variant='outline'
                                                     colorScheme='teal'
                                                     aria-label='Call Sage'
                                                     fontSize='20px'
                                                     icon={<AiOutlineDelete />}
-                                                    onClick={onOpen}
+                                                    onClick={() => {
+                                                        setPropID(prop._id);
+                                                        onOpen();
+                                                    }}
                                                 />
-                                                <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-                                                    <ModalOverlay />
-                                                    <ModalContent>
-                                                        <ModalHeader>Delete Property </ModalHeader>
-                                                        <ModalCloseButton />
-                                                        <ModalBody>
-                                                            <Text fontWeight='bold' mb='1rem'>
-                                                                Do you want to Delete the Property?
-                                                            </Text>
 
-                                                        </ModalBody>
-
-                                                        <ModalFooter>
-                                                            {/* <Button colorScheme='blue' mr={3} onClick={handelDel(setPropID(prop._id))}> */}
-                                                            <Button colorScheme='blue' mr={3} onClick={handelDel}>
-
-                                                                Delete
-                                                            </Button>
-
-                                                            <Button variant='ghost' onClick={onClose} >Close</Button>
-                                                        </ModalFooter>
-                                                    </ModalContent>
-                                                </Modal>
                                             </Flex>
                                         </Td>
                                     </Tr>)
@@ -334,6 +298,55 @@ export default function MyProperties() {
                     </Table>
                 </TableContainer>
             </Box>
+
+            <Modal blockScrollOnMount={false} isOpen={isEditOpen} onClose={onEditClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Edit Property </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text fontWeight='bold' mb='1rem'>
+                            Do you want to Edit the Property?
+                        </Text>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={() => {
+                            navigate(`/editProperty/${user.id}/${propID}`);
+                        }}>
+                            Edit
+                        </Button>
+
+                        <Button variant='ghost' onClick={onEditClose} >Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Delete Property </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text fontWeight='bold' mb='1rem'>
+                            Do you want to Delete the Property?
+                        </Text>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={() => {
+                            handelDel();
+                        }}>
+
+                            Delete
+                        </Button>
+
+                        <Button variant='ghost' onClick={onClose} >Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
 
         </Flex>
     )

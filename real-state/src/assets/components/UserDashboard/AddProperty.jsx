@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import jwt_decode from 'jwt-decode';
 
 
 
@@ -90,6 +91,12 @@ export default function AddProperty() {
     });
   };
 
+  // getting the token from local storage
+  const data = localStorage.getItem('token');
+  // decoding the token which is actually holding the user id  
+  const user = jwt_decode(data);
+  console.log(user);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     try {
@@ -117,7 +124,7 @@ export default function AddProperty() {
           selectedPropertyUnit,
           selectedPayment,
           checkboxValues,
-          id: "642d1b386e941d8d67492b69"
+          id: user.id,
         }),
       })
     }
@@ -290,8 +297,8 @@ export default function AddProperty() {
                   Kitchen
                 </Checkbox>
                 <Checkbox
-                  value="Bedrom"
-                  isChecked={checkboxValues.Bedrom}
+                  value="Bedroom"
+                  isChecked={checkboxValues.Bedroom}
                   onChange={handleCheckboxChange}
                 >
                   Bedroom

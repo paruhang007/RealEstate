@@ -15,11 +15,14 @@ import {
     Checkbox,
     Textarea,
 } from "@chakra-ui/react";
-import { useState } from "react";
+
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useMemo } from "react";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
 
 
 export default function EditProperty() {
@@ -31,12 +34,142 @@ export default function EditProperty() {
     // if (!isloaded) return <div>"Loading Maps"</div>;
     // return <Map />;
 
+    const [propName, setPropName] = useState("");
+    const [propState, setPropState] = useState("");
+    const [propDist, setPropDist] = useState("");
+    const [propMuni, setPropMuni] = useState("");
+    const [propWard, setPropWard] = useState("");
+    const [propStreet, setPropStreet] = useState("");
+    const [propFace, setPropFace] = useState("");
+    const [propRoad, setPropRoad] = useState("");
+    const [propArea, setPropArea] = useState("");
+    const [propDesc, setPropDesc] = useState("");
+    const [propPrice, setPropPrice] = useState("");
+
+
+    const [selectedFor, setSelectedFor] = useState('');
+    const [selectedPropertyType, setSelectedPropertyType] = useState('');
+    const [selectedPropertyUnit, setSelectedPropertyUnit] = useState('');
+    const [selectedPayment, setSelectedPayment] = useState('');
+
+    // handle select change for "For"
+    function handleForSelectChange(event) {
+        setSelectedFor(event.target.value);
+    }
+
+    // handle select change for "Property Type"
+    function handlePropertyTypeSelectChange(event) {
+        setSelectedPropertyType(event.target.value);
+    }
+
+    // handle select change for "Unit Type"
+    function handleForSelectUnit(event) {
+        setSelectedPropertyUnit(event.target.value);
+    }
+
+    // handle select change for "Unit Type"
+    function handleForPayment(event) {
+        setSelectedPayment(event.target.value);
+    }
+
+    // use state for checkbox
+    const [checkboxValues, setCheckboxValues] = useState({
+        Drainage: false,
+        Drinking: false,
+        parking: false,
+        Dining: false,
+        Kitchen: false,
+        Bedroom: false,
+        Earth: false,
+    });
+
+    // handle checkbox change
+    const handleCheckboxChange = (event) => {
+        const { value, checked } = event.target;
+        setCheckboxValues({
+            ...checkboxValues,
+            [value]: checked,
+        });
+    };
+
+
+    // for viewng the data from the database 
+    const navigate = useNavigate();
+    const [product, setProduct] = useState({});
+    const [selectedData, setSelectedData] = useState({});
+
+    const { id, packId } = useParams();
+
+    const loadData = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/getPack", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "id": id,
+                    "packId": packId
+                }),
+            });
+            const data = await response.json();
+            console.log(data.data[0]);
+            console.log(data.data[0].checkboxValues);
+            setProduct(data.data[0]);
+            setSelectedData(data.data[0].checkboxValues[0]);
+
+
+        }
+
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    // useEffect(() => {
+    //     console.log(selectedData);
+
+    // }, [product, selectedData]);
+
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log(product);
+        const object = {
+            id,
+            packId,
+            ...product,
+        }
+        console.log(object);
+        try {
+            const response = fetch("http://localhost:5000/editPack", {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+
+                body: JSON.stringify(
+                    object
+                ),
+            })
+            console.log(response);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <Flex
             minH={"100vh"}
             bg={useColorModeValue("gray.50", "gray.800")}
             w={"full"}
+            as={"form"}
+            onSubmit={handleSubmit}
         >
             <Stack spacing={8} w={"full"}>
                 <Box
@@ -45,38 +178,56 @@ export default function EditProperty() {
                     boxShadow={"lg"}
                     p={8}
                 >
+
+                    <Button
+                        loadingText="Submitting"
+                        size="lg"
+                        bg={"blue.400"}
+                        color={"white"}
+                        _hover={{
+                            bg: "blue.500",
+                        }}
+                        onClick={() => navigate("/myproperties")}
+                    >
+                        Back
+                    </Button>
+
                     <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"}>
                         Edit property
                     </Text>
 
-                    <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={5}>
-                        About Property
-                    </Text>
+
                     <HStack gap={5} align={"center"} mt={5}>
                         <Box>
                             <FormControl id="firstName" isRequired>
                                 <FormLabel>Property Name / Title</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={product.propName} onChange={(e) => {
+                                    setProduct({ ...product, propName: e.target.value })
+                                }} />
                             </FormControl>
                         </Box>
                     </HStack>
 
-                    <HStack gap={5} align={"center"} mt={5}>
+                    <HStack gap={5} align={"center"} mt={5} >
                         <Box>
-                            <Select placeholder="For" isrequired>
-                                <option value="Rent">Rent </option>
-                                <option value="Sale">Sale </option>
-                                <option value="Lease">Lease </option>
+                            <Select placeholder="For" isrequired value={selectedFor} onChange={(e) => {
+                                setProduct({ ...product, selectedFor: e.target.value })
+                            }}>
+                                <option value="Rent" selected={product.selectedFor === 'Rent'}>Rent </option>
+                                <option value="Sale" selected={product.selectedFor === 'Sale'}>Sale </option>
+                                <option value="Lease" selected={product.selectedFor === 'Lease'}>Lease </option>
                             </Select>
                         </Box>
                         <Box>
-                            <Select placeholder="Property Type" isrequired>
-                                <option value="Land">Land </option>
-                                <option value="Flat">Flat </option>
-                                <option value="House">House </option>
-                                <option value="Apartment">Apartment </option>
-                                <option value="Office space">Office space </option>
-                                <option value="Shop space">Shop space </option>
+                            <Select placeholder="Property Type" isrequired value={selectedPropertyType} onChange={(e) => {
+                                setProduct({ ...product, selectedPropertyType: e.target.value })
+                            }}>
+                                <option value="Land" selected={product.selectedPropertyType === 'Land'}>Land </option>
+                                <option value="Flat" selected={product.selectedPropertyType === 'Flat'}>Flat </option>
+                                <option value="House" selected={product.selectedPropertyType === 'House'}>House </option>
+                                <option value="Apartment" selected={product.selectedPropertyType === 'Apartment'}>Apartment </option>
+                                <option value="Office space" selected={product.selectedPropertyType === 'Office space'}>Office space </option>
+                                <option value="Shop space" selected={product.selectedPropertyType === 'Shop space'}>Shop space </option>
                             </Select>
                         </Box>
                     </HStack>
@@ -88,32 +239,42 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="state" isRequired>
                                 <FormLabel>State/Province</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" value={product.propState} onChange={(e) => {
+                                    setProduct({ ...product, propState: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="district" isRequired>
                                 <FormLabel>District </FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={product.propDist} onChange={(e) => setProduct(
+                                    { ...product, propDist: e.target.value }
+                                )} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="municipality" isRequired>
                                 <FormLabel>Municipality</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={product.propMuni} onChange={(e) => setPropMuni(
+                                    { ...product, propMuni: e.target.value }
+                                )} />
                             </FormControl>
                         </Box>
 
                         <Box>
                             <FormControl id="ward" isRequired>
                                 <FormLabel>Ward Number</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={product.propWard} onChange={(e) => setPropWard(
+                                    { ...product, propWard: e.target.value }
+                                )} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="tol" isRequired>
                                 <FormLabel>Area / Street name</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={product.propStreet} onChange={(e) => setPropStreet(
+                                    { ...product, propStreet: e.target.value }
+                                )} />
                             </FormControl>
                         </Box>
                     </HStack>
@@ -125,26 +286,32 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="face" isRequired>
                                 <FormLabel>Facing</FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={product.propFace} onChange={(e) => setPropFace(
+                                    { ...product, propFace: e.target.value }
+                                )} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="road" isRequired>
                                 <FormLabel>Road Size </FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={product.propRoad} onChange={(e) => setPropRoad(
+                                    { ...product, propRoad: e.target.value }
+                                )} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="area" isRequired>
                                 <FormLabel>Area</FormLabel>
-                                <Input type="text" placeholder="Mention Unit" />
+                                <Input type="text" placeholder="Mention Unit" defaultValue={product.propArea} onChange={(e) => setPropArea(
+                                    { ...product, propArea: e.target.value }
+                                )} />
                             </FormControl>
                         </Box>
                         <Box>
-                            <Select placeholder="Unit Type" isrequired mt={7}>
-                                <option value="Rent">Hilly Area </option>
-                                <option value="Sale">Terai Area </option>
-                                <option value="Lease">Standard sq meter/ft </option>
+                            <Select placeholder="Unit Type" isrequired mt={7} value={selectedPropertyUnit} onChange={handleForSelectUnit}>
+                                <option value="Hilly Area" selected={product.selectedPropertyUnit === 'Hilly Area'}>Hilly Area </option>
+                                <option value="Terai Area" selected={product.selectedPropertyUnit === 'Terai Area'}>Terai Area </option>
+                                <option value="Standard sq meter/ft " selected={product.selectedPropertyUnit === 'Standard sq meter/ft '}>Standard sq meter/ft </option>
                             </Select>
                         </Box>
                     </HStack>
@@ -154,17 +321,56 @@ export default function EditProperty() {
                     </Text>
 
                     <Box mt={5}>
-                        <CheckboxGroup colorScheme="green">
-                            <Stack spacing={[5]} direction={["column", "row"]}>
-                                <Checkbox value="Drainage">Drainage</Checkbox>
-                                <Checkbox value="Drinking">Drinking Water</Checkbox>
-                                <Checkbox value="parking">Parking</Checkbox>
-                                <Checkbox value="Dining ">Dining Room</Checkbox>
-                                <Checkbox value="Kitchen">Kitchen</Checkbox>
-                                <Checkbox value="Bedrom">Bedroom</Checkbox>
-                                <Checkbox value="Earth">Earthquake Resistance</Checkbox>
-                            </Stack>
-                        </CheckboxGroup>
+                        <Checkbox value="Drainage" defaultChecked={
+                            selectedData["Drainage"]
+                        }
+                            isChecked={checkboxValues.Drainage}
+                            onChange={handleCheckboxChange}
+
+                        >Drainage</Checkbox>
+
+                        <Checkbox value="Drinking" defaultChecked={
+                            selectedData["Drinking"]
+                        }
+                            isChecked={checkboxValues.Drinking}
+
+                        >Drinking Water</Checkbox>
+
+                        <Checkbox value="parking" defaultChecked={
+                            selectedData["parking"]
+                        }
+                            isChecked={checkboxValues.parking}
+                            onChange={handleCheckboxChange}
+                        >Parking</Checkbox>
+
+                        <Checkbox value="Dining " defaultChecked={
+                            selectedData["Dining"]
+                        }
+                            isChecked={checkboxValues.Dining}
+                            onChange={handleCheckboxChange}
+                        >Dining Room</Checkbox>
+
+                        <Checkbox value="Kitchen" defaultChecked={
+                            selectedData["Kitchen"]
+                        }
+                            isChecked={checkboxValues.Kitchen}
+                            onChange={handleCheckboxChange}
+                        >Kitchen</Checkbox>
+
+                        <Checkbox value="Bedroom" defaultChecked={
+                            selectedData["Bedroom"]
+                        }
+                            isChecked={checkboxValues.Bedrom}
+                            onChange={handleCheckboxChange}
+                        >Bedroom</Checkbox>
+
+                        <Checkbox value="Earth" defaultChecked={
+                            selectedData["Earth"]
+                        }
+                            isChecked={checkboxValues.Earth}
+                            onChange={handleCheckboxChange}
+                        >Earthquake Resistance</Checkbox>
+
                     </Box>
 
                     <FormControl id="oldpassword" isRequired mt={7}>
@@ -174,6 +380,10 @@ export default function EditProperty() {
                             _placeholder={{ color: "gray.500" }}
                             type="text"
                             h={25}
+                            defaultValue={product.propDesc}
+                            onChange={(e) => setPropDesc(
+                                { ...product, propDesc: e.target.value }
+                            )}
                         />
                     </FormControl>
 
@@ -185,14 +395,16 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="price" isRequired>
                                 <FormLabel>Enter Price </FormLabel>
-                                <Input type="text" />
+                                <Input type="text" defaultValue={product.propPrice} onChange={(e) => setPropPrice(
+                                    { ...product, propPrice: e.target.value }
+                                )} />
                             </FormControl>
                         </Box>
                         <Box>
-                            <Select placeholder="Unit Type" isrequired mt={7}>
-                                <option value="Rent">Per Month </option>
-                                <option value="Sale">Per Year </option>
-                                <option value="Lease">For Sale </option>
+                            <Select placeholder="Unit Type" isrequired mt={7} value={selectedPayment} onChange={handleForPayment}>
+                                <option value="Per Month" selected={product.selectedPropertyUnit === 'Per Month'}>Per Month </option>
+                                <option value="Per Year" selected={product.selectedPropertyUnit === 'Per Year'}>Per Year </option>
+                                <option value="For Sale" selected={product.selectedPropertyUnit === 'For Sale'}>For Sale </option>
                             </Select>
                         </Box>
                     </HStack>
@@ -217,14 +429,15 @@ export default function EditProperty() {
                                 _hover={{
                                     bg: "blue.500",
                                 }}
+                                type="submit"
                             >
-                                Submit
+                                Update
                             </Button>
                         </Stack>
                         <Stack pt={6}></Stack>
                     </Stack>
                 </Box>
             </Stack>
-        </Flex>
+        </Flex >
     );
 }
