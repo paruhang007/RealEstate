@@ -63,8 +63,8 @@ export default function AddService() {
                 }),
             });
             const data = await response.json();
-            console.log(data);
-            setService(data);
+            console.log(data.data[0]);
+            setService(data.data[0]);
         }
 
         catch (err) {
@@ -77,33 +77,29 @@ export default function AddService() {
     }, []);
 
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        console.log(service);
+        const object = {
+            id,
+            servId,
+            ...service,
+        }
+        console.log(object);
         try {
-            const response = fetch("http://localhost:5000/addService", {
-                method: "POST",
+            const response = await fetch("http://localhost:5000/editService", {
+                method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    Accept: "application/json",
-                    "Access-Control-Allow-Origin": "*",
+
                 },
                 body: JSON.stringify({
-                    serName,
-                    serState,
-                    serDist,
-                    serMuni,
-                    serWard,
-                    serStreet,
-                    serOname,
-                    serPhone,
-                    serEmail,
-                    serProd,
-                    serDesc,
-                    selectedServiceType,
-                    id: "642d1b386e941d8d67492b69"
+                    ...object
                 }),
 
             })
+            const data = await response.json();
+            console.log(data);
         }
 
         catch (error) {
@@ -146,7 +142,9 @@ export default function AddService() {
                         <Box>
                             <FormControl id="firstName" i>
                                 <FormLabel>Service Name / Title</FormLabel>
-                                <Input type="text" defaultValue={service.serName} onChange={(e) => setSerName(e.target.value)} isRequired />
+                                <Input type="text" defaultValue={service.serName} onChange={(e) => {
+                                    setService({ ...service, serName: e.target.value });
+                                }} isRequired />
                             </FormControl>
                         </Box>
                     </HStack>
@@ -154,7 +152,9 @@ export default function AddService() {
                     <HStack gap={5} align={"center"} mt={5}>
 
                         <Box>
-                            <Select placeholder="Service Type" isRequired value={selectedServiceType} onChange={handleServiceTypeSelectChange}>
+                            <Select placeholder="Service Type" isrequired value={selectedServiceType} onChange={(e) => {
+                                setService({ ...service, selectedServiceType: e.target.value })
+                            }}>
                                 <option value="Hardware" selected={service.selectedServiceType === 'Hardware'}>Hardware Store</option>
                                 <option value="Plumber" selected={service.selectedServiceType === 'Plumber'}>Plumber</option>
                                 <option value="Constructions" selected={service.selectedServiceType === 'Constructions'}>Constructions</option>
@@ -178,32 +178,42 @@ export default function AddService() {
                         <Box>
                             <FormControl id="state" isRequired>
                                 <FormLabel>State/Province</FormLabel>
-                                <Input type="text" defaultValue={service.serState} onChange={(e) => setSerState(e.target.value)} />
+                                <Input type="text" defaultValue={service.serState} onChange={(e) => {
+                                    setService({ ...service, serState: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="district" isRequired>
                                 <FormLabel>District </FormLabel>
-                                <Input type="text" defaultValue={service.serDist} onChange={(e) => setSerDist(e.target.value)} />
+                                <Input type="text" defaultValue={service.serDist} onChange={(e) => {
+                                    setService({ ...service, serDist: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="municipality" isRequired>
                                 <FormLabel>Municipality</FormLabel>
-                                <Input type="text" defaultValue={service.serMuni} onChange={(e) => setSerMuni(e.target.value)} />
+                                <Input type="text" defaultValue={service.serMuni} onChange={(e) => {
+                                    setService({ ...service, serMuni: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
 
                         <Box>
                             <FormControl id="ward" isRequired>
                                 <FormLabel>Ward Number</FormLabel>
-                                <Input type="text" defaultValue={service.serWard} onChange={(e) => setSerWard(e.target.value)} />
+                                <Input type="text" defaultValue={service.serWard} onChange={(e) => {
+                                    setService({ ...service, serWard: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="tol" isRequired>
                                 <FormLabel>Area / Street name</FormLabel>
-                                <Input type="text" defaultValue={service.serStreet} onChange={(e) => setSerStreet(e.target.value)} />
+                                <Input type="text" defaultValue={service.serStreet} onChange={(e) => {
+                                    setService({ ...service, serStreet: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
                     </HStack>
@@ -215,19 +225,25 @@ export default function AddService() {
                         <Box>
                             <FormControl id="name" isRequired>
                                 <FormLabel>Owner name</FormLabel>
-                                <Input type="text" defaultValue={service.serOname} onChange={(e) => setSerOname(e.target.value)} />
+                                <Input type="text" defaultValue={service.serOname} onChange={(e) => {
+                                    setService({ ...service, serOname: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="number" isRequired>
                                 <FormLabel>Phone Number </FormLabel>
-                                <Input type="text" defaultValue={service.serPhone} onChange={(e) => setSerPhone(e.target.value)} />
+                                <Input type="text" defaultValue={service.serPhone} onChange={(e) => {
+                                    setService({ ...service, serPhone: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
                         <Box>
                             <FormControl id="email" isRequired>
                                 <FormLabel>Email</FormLabel>
-                                <Input type="text" defaultValue={service.serEmail} onChange={(e) => setSerEmail(e.target.value)} />
+                                <Input type="text" defaultValue={service.serEmail} onChange={(e) => {
+                                    setService({ ...service, serEmail: e.target.value });
+                                }} />
                             </FormControl>
                         </Box>
 
@@ -245,7 +261,9 @@ export default function AddService() {
                             type="text"
                             h={25}
                             defaultValue={service.serProd}
-                            onChange={(e) => setSerProd(e.target.value)}
+                            onChange={(e) => {
+                                setService({ ...service, serProd: e.target.value });
+                            }}
 
                         />
                     </FormControl>
@@ -258,7 +276,9 @@ export default function AddService() {
                             type="text"
                             h={25}
                             defaultValue={service.serDesc}
-                            onChange={(e) => setSerDesc(e.target.value)}
+                            onChange={(e) => {
+                                setService({ ...service, serDesc: e.target.value });
+                            }}
                         />
                     </FormControl>
 

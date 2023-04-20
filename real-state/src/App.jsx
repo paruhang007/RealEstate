@@ -105,7 +105,7 @@ const App = () => {
               element: <EditProperty />,
             },
             {
-              path: "/editservice/:id/:servkId",
+              path: "/editservice/:id/:servId",
               element: <EditService />,
             },
 

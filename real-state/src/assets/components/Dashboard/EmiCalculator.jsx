@@ -202,14 +202,20 @@ export default function EmiCalculator() {
         </Flex>
 
 
-        <Flex w={'100%'} align={'center'} bg={'red.100'} >
-          <Box w={'60%'} m={5} mt={10} bg={'green.100'} minh={'330px'}
+        <Flex w={'100%'} align={'center'}  >
+          <Box w={'60%'} m={5} mt={10} minh={'330px'}
             minw={'330px'} >
 
             <Pie
+              width={100}
+              height={100}
 
               data={data}
               options={options}
+              style={{
+                minWidth: '400px',
+                minHeight: '400px',
+              }}
 
             >
             </Pie>
@@ -217,7 +223,7 @@ export default function EmiCalculator() {
 
           </Box>
 
-          <Box w={'40%'} m={5} mt={10} bg={'blue.100'} >
+          <Box w={'40%'} m={5} mt={10}  >
 
             <Box fontSize='20px' mt={8} pl={3}>
               <Heading fontSize='20px' mt={8} > Loan EMI </Heading>

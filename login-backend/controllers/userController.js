@@ -306,27 +306,26 @@ const editService = async (req, res) => {
         id,
         servId,
     } = req.body;
-    console.log(req.body);
     try {
-        const user = await User.findById({ _id: id });
+        console.log(req.body);
+        const user = await User.findOne({ _id: id });
         if (!user) {
             return res.json({ error: "User not found" });
         }
-        const pack = user.service.id(servId);
-
-        pack.serName = serName;
-        pack.serState = serState;
-        pack.serDist = serDist;
-        pack.serMuni = serMuni;
-        pack.serWard = serWard;
-        pack.serStreet = serStreet;
-        pack.serOname = serOname;
-        pack.serPhone = serPhone;
-        pack.serEmail = serEmail;
-        pack.serProd = serProd;
-        pack.serDesc = serDesc;
-        pack.selectedServiceType = selectedServiceType;
-
+        const serv = user.service.id(servId);
+        serv.serName = serName;
+        serv.serState = serState;
+        serv.serDist = serDist;
+        serv.serMuni = serMuni;
+        serv.serWard = serWard;
+        serv.serStreet = serStreet;
+        serv.serOname = serOname;
+        serv.serPhone = serPhone;
+        serv.serEmail = serEmail;
+        serv.serProd = serProd;
+        serv.serDesc = serDesc;
+        serv.selectedServiceType = selectedServiceType;
+        console.log(serv);
         await user.save();
         res.send({ status: "ok" });
     }

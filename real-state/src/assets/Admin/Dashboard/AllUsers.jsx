@@ -32,9 +32,79 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
 import { useDisclosure } from '@chakra-ui/react'
+import { useState, useEffect } from 'react'
+import jwt_decode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function AllUsers() {
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+    const navigate = useNavigate();
+
+    const [allUsers, setAllUser] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(allUsers);
+
+    const [search, setSearch] = useState(false);
+
+
+    // search handler
+    const searchHandler = (e) => {
+        const search = e.target.value;
+        console.log(search);
+        setSearch(search);
+
+        if (search.length === 0) {
+            setSelectedUser(allUsers);
+        } else {
+            setSelectedUser(
+                allUsers.filter((serv) => {
+                    return allUsers.serName.toLowerCase().includes(search.toLowerCase()) || serv._id.toLowerCase().includes(allUsers.toLowerCase());
+                })
+            );
+        }
+    };
+
+
+    // search handler
+    const handelsort = (e) => {
+        const select = e.target.value;
+        console.log(select);
+
+        // sorting the allUsers according to the allUsers type selected 
+        setSelectedUser(
+            select !== "all"
+                ? allUsers.filter((serv) => {
+                    return serv.setSelectedUser === select;
+                })
+                : allUsers
+        );
+    };
+
+
+    const loaddata = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/getAllUsers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+
+            });
+            const userall = await response.json();
+            setAllUser(userall.data);
+            console.log(userall.data);
+            setSelectedUser(userall.data);
+
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        loaddata();
+    }, []);
 
     return (
         <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>

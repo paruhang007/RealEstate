@@ -255,7 +255,7 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="municipality" isRequired>
                                 <FormLabel>Municipality</FormLabel>
-                                <Input type="text" defaultValue={product.propMuni} onChange={(e) => setPropMuni(
+                                <Input type="text" defaultValue={product.propMuni} onChange={(e) => setProduct(
                                     { ...product, propMuni: e.target.value }
                                 )} />
                             </FormControl>
@@ -264,7 +264,7 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="ward" isRequired>
                                 <FormLabel>Ward Number</FormLabel>
-                                <Input type="text" defaultValue={product.propWard} onChange={(e) => setPropWard(
+                                <Input type="text" defaultValue={product.propWard} onChange={(e) => setProduct(
                                     { ...product, propWard: e.target.value }
                                 )} />
                             </FormControl>
@@ -272,7 +272,7 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="tol" isRequired>
                                 <FormLabel>Area / Street name</FormLabel>
-                                <Input type="text" defaultValue={product.propStreet} onChange={(e) => setPropStreet(
+                                <Input type="text" defaultValue={product.propStreet} onChange={(e) => setProduct(
                                     { ...product, propStreet: e.target.value }
                                 )} />
                             </FormControl>
@@ -286,7 +286,7 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="face" isRequired>
                                 <FormLabel>Facing</FormLabel>
-                                <Input type="text" defaultValue={product.propFace} onChange={(e) => setPropFace(
+                                <Input type="text" defaultValue={product.propFace} onChange={(e) => setProduct(
                                     { ...product, propFace: e.target.value }
                                 )} />
                             </FormControl>
@@ -294,7 +294,7 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="road" isRequired>
                                 <FormLabel>Road Size </FormLabel>
-                                <Input type="text" defaultValue={product.propRoad} onChange={(e) => setPropRoad(
+                                <Input type="text" defaultValue={product.propRoad} onChange={(e) => setProduct(
                                     { ...product, propRoad: e.target.value }
                                 )} />
                             </FormControl>
@@ -302,13 +302,15 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="area" isRequired>
                                 <FormLabel>Area</FormLabel>
-                                <Input type="text" placeholder="Mention Unit" defaultValue={product.propArea} onChange={(e) => setPropArea(
+                                <Input type="text" placeholder="Mention Unit" defaultValue={product.propArea} onChange={(e) => setProduct(
                                     { ...product, propArea: e.target.value }
                                 )} />
                             </FormControl>
                         </Box>
                         <Box>
-                            <Select placeholder="Unit Type" isrequired mt={7} value={selectedPropertyUnit} onChange={handleForSelectUnit}>
+                            <Select placeholder="Unit Type" isrequired mt={7} value={selectedPropertyUnit} onChange={(e) => {
+                                setProduct({ ...product, selectedPropertyUnit: e.target.value })
+                            }}>
                                 <option value="Hilly Area" selected={product.selectedPropertyUnit === 'Hilly Area'}>Hilly Area </option>
                                 <option value="Terai Area" selected={product.selectedPropertyUnit === 'Terai Area'}>Terai Area </option>
                                 <option value="Standard sq meter/ft " selected={product.selectedPropertyUnit === 'Standard sq meter/ft '}>Standard sq meter/ft </option>
@@ -381,7 +383,7 @@ export default function EditProperty() {
                             type="text"
                             h={25}
                             defaultValue={product.propDesc}
-                            onChange={(e) => setPropDesc(
+                            onChange={(e) => setProduct(
                                 { ...product, propDesc: e.target.value }
                             )}
                         />
@@ -395,13 +397,15 @@ export default function EditProperty() {
                         <Box>
                             <FormControl id="price" isRequired>
                                 <FormLabel>Enter Price </FormLabel>
-                                <Input type="text" defaultValue={product.propPrice} onChange={(e) => setPropPrice(
+                                <Input type="text" defaultValue={product.propPrice} onChange={(e) => setProduct(
                                     { ...product, propPrice: e.target.value }
                                 )} />
                             </FormControl>
                         </Box>
                         <Box>
-                            <Select placeholder="Unit Type" isrequired mt={7} value={selectedPayment} onChange={handleForPayment}>
+                            <Select placeholder="Unit Type" isrequired mt={7} value={selectedPayment} onChange={(e) => {
+                                setProduct({ ...product, selectedPayment: e.target.value })
+                            }}>
                                 <option value="Per Month" selected={product.selectedPropertyUnit === 'Per Month'}>Per Month </option>
                                 <option value="Per Year" selected={product.selectedPropertyUnit === 'Per Year'}>Per Year </option>
                                 <option value="For Sale" selected={product.selectedPropertyUnit === 'For Sale'}>For Sale </option>
