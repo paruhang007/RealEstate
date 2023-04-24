@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import jwt_decode from 'jwt-decode';
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -42,6 +43,7 @@ export default function LoginForm() {
 
         if (data.status == "ok") {
           window.localStorage.setItem("token", data.data);
+
           navigate("/");
         }
       }

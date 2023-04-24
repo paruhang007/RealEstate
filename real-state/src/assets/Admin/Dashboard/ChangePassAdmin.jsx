@@ -16,13 +16,50 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import jwt_decode from 'jwt-decode';
 
 export default function ChangePassAdmin() {
+
+    const [oldPass, setOldPass] = useState("");
+    const [newPass, setNewPass] = useState("");
+    const [newPassConf, setNewPassConf] = useState("");
+
+    // getting the token from local storage
+    const data = localStorage.getItem('tokenAdmin');
+    // decoding the token which is actually holding the user id  
+    const user = jwt_decode(data);
+    console.log(user);
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        console.log('service called');
+        try {
+            const response = await fetch("http://localhost:5000/changeAdminPass", {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "id": user.id,
+                    "oldPass": oldPass,
+                    "newPass": newPass,
+                    "newPassConf": newPassConf,
+                }),
+            });
+            const data = await response.json();
+            console.log(data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <Flex
             minH={"100vh"}
             bg={useColorModeValue("gray.50", "gray.800")}
             w={"full"}
+            as={'form'}
+            onSubmit={handleSubmit}
         >
             <Stack spacing={8} w={"full"}>
                 <Box
@@ -32,7 +69,7 @@ export default function ChangePassAdmin() {
                     p={8}
                 >
                     <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"}>
-                        Change your password
+                        Let's change your password
                     </Text>
 
                     <Stack spacing={4} mt={4}>
@@ -42,6 +79,7 @@ export default function ChangePassAdmin() {
                                 placeholder="old password"
                                 _placeholder={{ color: "gray.500" }}
                                 type="password"
+                                onChange={(e) => setOldPass(e.target.value)}
                             />
                         </FormControl>
                         <FormControl id="newpassword" isRequired>
@@ -50,6 +88,7 @@ export default function ChangePassAdmin() {
                                 placeholder="new password"
                                 _placeholder={{ color: "gray.500" }}
                                 type="password"
+                                onChange={(e) => setNewPass(e.target.value)}
                             />
                         </FormControl>
                         <FormControl id="confirmpassword" isRequired>
@@ -58,6 +97,7 @@ export default function ChangePassAdmin() {
                                 placeholder="confirm new password"
                                 _placeholder={{ color: "gray.500" }}
                                 type="password"
+                                onChange={(e) => setNewPassConf(e.target.value)}
                             />
                         </FormControl>
                         <Stack spacing={10} pt={2}>
@@ -69,6 +109,7 @@ export default function ChangePassAdmin() {
                                 _hover={{
                                     bg: "blue.500",
                                 }}
+                                type="submit"
                             >
                                 update
                             </Button>

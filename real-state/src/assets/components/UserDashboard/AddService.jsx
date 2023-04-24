@@ -18,7 +18,7 @@ import {
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-
+import jwt_decode from 'jwt-decode';
 
 
 export default function AddService() {
@@ -41,6 +41,12 @@ export default function AddService() {
     function handleServiceTypeSelectChange(event) {
         setSelectedServiceType(event.target.value);
     }
+
+    // getting the token from local storage
+    const data = localStorage.getItem('token');
+    // decoding the token which is actually holding the user id  
+    const user = jwt_decode(data);
+    console.log(user);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -65,7 +71,7 @@ export default function AddService() {
                     serProd,
                     serDesc,
                     selectedServiceType,
-                    id: "642d1b386e941d8d67492b69"
+                    id: user.id,
                 }),
 
             })

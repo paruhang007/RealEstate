@@ -56,13 +56,15 @@ const login = async (req, res) => {
 
                         // create jwt token
                         const token = jwt.sign({
-                            id: user._id
+                            id: user._id,
+
 
                         }, JWT_SECRET, { expiresIn: "24h" });
 
                         return res.json({
                             status: "ok",
-                            data: token
+                            data: token,
+                            email: user.email,
                         });
 
                     })
@@ -111,9 +113,9 @@ const userGet = async (req, res) => {
         if (!user) {
             return res.json({ error: "User not found" });
         }
+        const { password, service, package, ...rest } = assign({}, user.toJSON());
 
-
-        res.send({ status: "ok", data: user });
+        res.send({ status: "ok", data: rest });
     }
 
     catch (error) {

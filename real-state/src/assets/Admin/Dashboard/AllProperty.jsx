@@ -38,13 +38,19 @@ import { useNavigate } from 'react-router-dom';
 
 export default function AllProperty() {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    // const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
-    // const navigate = useNavigate();
+    const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+    const navigate = useNavigate();
 
-    // const [allUsers, setAllUser] = useState([]);
-    // const [selectedUser, setSelectedUser] = useState(service);
 
-    // const [search, setSearch] = useState(false);
+
+    const [property, setProperty] = useState([]);
+
+    const [selectedFor, setSelectedFor] = useState("all");
+    const [selectedType, setSelectedType] = useState("all");
+    const [selectedPropertyType, setSelectedPropertyType] = useState(property);
+    const [editProp, setEditProp] = useState("");
+
+    const [search, setSearch] = useState(false);
 
 
     // // search handler
@@ -81,29 +87,28 @@ export default function AllProperty() {
     // };
 
 
-    // const loaddata = async () => {
-    //     try {
-    //         const response = await fetch('http://localhost:5000/getAllUsers', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
+    const loaddata = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/getAllProp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
 
-    //         });
-    //         const userall = await response.json();
-    //         setAllUser(userall.data);
-    //         console.log(userall.data);
-    //         setSelectedUser(userall.data);
+            });
+            const prop = await response.json();
+            setProperty(prop.data);
+            console.log(prop.data);
+            setSelectedPropertyType(prop.data);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
 
-    //     }
-    //     catch (err) {
-    //         console.log(err);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     loaddata();
-    // }, []);
+    useEffect(() => {
+        loaddata();
+    }, []);
 
 
 
@@ -234,14 +239,7 @@ export default function AllProperty() {
 
                         </Tbody>
                         <Tfoot>
-                            <Tr>
-                                <Th>Property ID</Th>
-                                <Th>User ID</Th>
-                                <Th>Property Name</Th>
-                                <Th>Property Type</Th>
-                                <Th>Status</Th>
-                                <Th>Action</Th>
-                            </Tr>
+
                         </Tfoot>
                     </Table>
                 </TableContainer>

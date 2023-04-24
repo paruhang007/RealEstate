@@ -32,7 +32,7 @@ export default function ChangePassword() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log('service called');
+
     try {
       const response = await fetch("http://localhost:5000/changeUserPass", {
         method: 'PATCH',

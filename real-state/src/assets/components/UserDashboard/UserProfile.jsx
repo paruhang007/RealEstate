@@ -45,7 +45,7 @@ export default function UserProfile() {
       });
       const data = await response.json();
 
-      setUserData(data.data);
+      setUserData(data.rest);
     }
 
     catch (err) {

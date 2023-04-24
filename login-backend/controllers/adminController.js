@@ -7,9 +7,75 @@ const jwt = require("jsonwebtoken");
 
 // FOR ADMIN PANEL 
 
-// get all users
+// admin login
+const adminlogin = async (req, res) => {
+    const { username, password } = req.body;
 
-// Get all packages
+    try {
+
+        Admin.findOne({ username })
+            .then(user => {
+                bcrypt.compare(password, user.password)
+                    .then(passwordCheck => {
+
+                        if (!passwordCheck) return res.status(400).send({ error: "Don't have Password" });
+
+                        // create jwt token
+                        const token = jwt.sign({
+                            id: user._id
+
+                        }, JWT_SECRET, { expiresIn: "24h" });
+
+                        return res.json({
+                            status: "ok",
+                            data: token
+                        });
+
+                    })
+                    .catch(error => {
+                        return res.status(400).send({ error: "Password does not Match" })
+                    })
+            })
+            .catch(error => {
+                return res.status(404).send({ error: "Username not Found" });
+            })
+
+    } catch (error) {
+        return res.status(500).send({ error });
+    }
+}
+
+
+// change password
+const changeAdminPass = async (req, res) => {
+    const { id, oldPass, newPass, newPassConf } = req.body;
+
+    try {
+        console.log(req.body);
+        const user = await Admin.findById(id);
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+        if (newPass !== newPassConf) {
+            return res.json({ error: "Password not matched" });
+        }
+        if (bcrypt.compare(oldPass, user.password)) {
+            const encryptPass = await bcrypt.hash(newPass, 10);
+            user.password = encryptPass;
+            await user.save();
+            res.send({ status: "ok" });
+        } else {
+            res.send({ status: "error could not change password" });
+
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+
+// get all users
 const getAllUser = async (req, res) => {
 
     try {
@@ -26,15 +92,65 @@ const getAllUser = async (req, res) => {
     }
 }
 
+// Delete User
+const deleteUser = async (req, res) => {
+    const { id } = req.body;
+    try {
+        const user = await User.findById({ _id: id });
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+        user.remove();
+        await user.save();
+        res.send({ status: "ok" });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
 
-// get all packages
 
+// get all properties
+const getAllProp = async (req, res) => {
+
+    try {
+        const user = await User.find();
+        console.log(user);
+        if (!user) {
+            return res.json({ error: "Packages not found" });
+        }
+
+        res.send({ status: "ok", data: user.email });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
 
 
 
 // get all services 
+const getAllService = async (req, res) => {
 
+    try {
+        const user = await User.find();
+        console.log(user);
+        if (!user) {
+            return res.json({ error: "Users not found" });
+        }
+        const serv = user.package.filter((serv) => serv._id == servId);
+        res.send({ status: "ok", data: serv });
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
 
 module.exports = {
-    getAllUsers,
+    adminlogin,
+    changeAdminPass,
+    getAllUser,
+    deleteUser,
+    getAllProp,
+    getAllService,
 };

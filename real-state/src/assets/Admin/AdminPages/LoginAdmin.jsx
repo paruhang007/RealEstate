@@ -4,7 +4,6 @@ import {
     FormControl,
     FormLabel,
     Input,
-    Checkbox,
     Stack,
     Button,
     Heading,
@@ -15,7 +14,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function LoginAdmin() {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
@@ -23,7 +22,7 @@ export default function LoginAdmin() {
         event.preventDefault();
 
         try {
-            const response = await fetch("http://localhost:5000/login", {
+            const response = await fetch("http://localhost:5000/adminlogin", {
                 method: "POST",
                 crossDomain: true,
                 headers: {
@@ -32,7 +31,7 @@ export default function LoginAdmin() {
                     "Access-Control-Allow-Origin": "*",
                 },
                 body: JSON.stringify({
-                    email: email,
+                    username: username,
                     password: password,
                 }),
             });
@@ -40,8 +39,8 @@ export default function LoginAdmin() {
                 const data = await response.json();
 
                 if (data.status == "ok") {
-                    window.localStorage.setItem("token", data.data);
-                    navigate("/");
+                    window.localStorage.setItem("tokenAdmin", data.data);
+                    navigate("/admindash");
                 }
             }
         } catch (err) {
@@ -70,13 +69,13 @@ export default function LoginAdmin() {
                     <form onSubmit={submitHandler}>
                         <Stack spacing={4}>
                             <FormControl id="email">
-                                <FormLabel>Email address</FormLabel>
+                                <FormLabel>User name </FormLabel>
                                 <Input
-                                    type="email"
+                                    type="text"
                                     onChange={(event) => {
-                                        setEmail(event.target.value);
+                                        setUsername(event.target.value);
                                     }}
-                                    value={email}
+                                    value={username}
                                 />
                             </FormControl>
                             <FormControl id="password">
