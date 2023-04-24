@@ -5,8 +5,8 @@ const UserDetailsSchema = new mongoose.Schema(
     fname: String,
     lname: String,
     email: { type: String, unique: true },
-    phone: String,
-    password: String,
+    phone: { type: Number, unique: true, required: true },
+    password: { type: String, unique: false, required: true },
 
     package: [{
       id: mongoose.Schema.Types.ObjectId,

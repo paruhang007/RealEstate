@@ -14,13 +14,17 @@ import {
   CheckboxGroup,
   Checkbox,
   Textarea,
+  IconButton,
+  SimpleGrid,
+  Icon
 
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-
+import { FiUploadCloud } from "react-icons/fi";
+import { MdOutlineSoupKitchen } from "react-icons/md";
 
 export default function AddProperty() {
   const navigate = useNavigate();
@@ -71,6 +75,39 @@ export default function AddProperty() {
     setSelectedPayment(event.target.value);
   }
 
+  // usestate for images 
+  const [images, setImages] = useState([]);
+  const [imageUrl, setImageUrl] = useState('');
+
+  // handle image upload by link 
+  async function addImageByLink(event) {
+    event.preventDefault();
+    console.log(imageUrl);
+    try {
+      const response = await post("http://localhost:5000/uplod_by_link", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          link: imageUrl,
+        }),
+      });
+      const filename = await response.json();
+      setImages(prev => {
+        return [...prev, filename];
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
+    setImageUrl('');
+
+  };
+
+
+  // handle image upload by file
+
 
   // use state for checkbox
   const [checkboxValues, setCheckboxValues] = useState({
@@ -91,6 +128,8 @@ export default function AddProperty() {
       [value]: checked,
     });
   };
+
+
 
   // getting the token from local storage
   const data = localStorage.getItem('token');
@@ -224,6 +263,41 @@ export default function AddProperty() {
             </Box>
           </HStack>
 
+          {/* for uploding images  */}
+          <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={7}>
+            Photos
+          </Text>
+          <Flex gap={4}>
+            <Input type='text' placeholder={'Add using a link....'} onChange={(e) => setImageUrl(e.target.value)} />
+            <Button
+              bg={"blue.400"}
+              color={"white"}
+              _hover={{
+                bg: "blue.500",
+              }}
+              onClick={addImageByLink}
+            >Add Photo</Button>
+          </Flex>
+
+
+          <Box mt={5}>
+
+
+            <SimpleGrid minChildWidth='120px' spacing='40px'>
+              {images.length > 0 && images.map(link => {
+                <Box  >
+                  {link}
+                </Box>
+              })
+              }
+
+              <Input type={'file'} py={1} ></Input>
+
+
+            </SimpleGrid>
+
+          </Box>
+
           <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={7}>
             Property Higlights
           </Text>
@@ -259,62 +333,60 @@ export default function AddProperty() {
             Amenities and Featurees
           </Text>
 
-          <Box mt={5}>
-            <CheckboxGroup colorScheme="green">
+          <SimpleGrid mt={5} columns={{ sm: 3, md: 4 }}>
 
-              <Stack spacing={[5]} direction={["column", "row"]}>
-                <Checkbox
-                  value="Drainage"
-                  isChecked={checkboxValues.Drainage}
-                  onChange={handleCheckboxChange}
-                >
-                  Drainage
-                </Checkbox>
-                <Checkbox
-                  value="Drinking"
-                  isChecked={checkboxValues.Drinking}
-                  onChange={handleCheckboxChange}
-                >
-                  Drinking Water
-                </Checkbox>
-                <Checkbox
-                  value="parking"
-                  isChecked={checkboxValues.parking}
-                  onChange={handleCheckboxChange}
-                >
-                  Parking
-                </Checkbox>
-                <Checkbox
-                  value="Dining"
-                  isChecked={checkboxValues.Dining}
-                  onChange={handleCheckboxChange}
-                >
-                  Dining Room
-                </Checkbox>
-                <Checkbox
-                  value="Kitchen"
-                  isChecked={checkboxValues.Kitchen}
-                  onChange={handleCheckboxChange}
-                >
-                  Kitchen
-                </Checkbox>
-                <Checkbox
-                  value="Bedroom"
-                  isChecked={checkboxValues.Bedroom}
-                  onChange={handleCheckboxChange}
-                >
-                  Bedroom
-                </Checkbox>
-                <Checkbox
-                  value="Earth"
-                  isChecked={checkboxValues.Earth}
-                  onChange={handleCheckboxChange}
-                >
-                  Earthquake Resistance
-                </Checkbox>
-              </Stack>
-            </CheckboxGroup>
-          </Box>
+            <Checkbox
+              value="Drainage"
+              isChecked={checkboxValues.Drainage}
+              onChange={handleCheckboxChange}
+            >
+              Drainage
+            </Checkbox>
+            <Checkbox
+              value="Drinking"
+              isChecked={checkboxValues.Drinking}
+              onChange={handleCheckboxChange}
+            >
+              Drinking Water
+            </Checkbox>
+            <Checkbox
+              value="parking"
+              isChecked={checkboxValues.parking}
+              onChange={handleCheckboxChange}
+            >
+              Parking
+            </Checkbox>
+            <Checkbox
+              value="Dining"
+              isChecked={checkboxValues.Dining}
+              onChange={handleCheckboxChange}
+            >
+              Dining Room
+            </Checkbox>
+            <Checkbox
+              value="Kitchen"
+              isChecked={checkboxValues.Kitchen}
+              onChange={handleCheckboxChange}
+            >
+              Kitchen
+            </Checkbox>
+            <Checkbox
+              value="Bedroom"
+              isChecked={checkboxValues.Bedroom}
+              onChange={handleCheckboxChange}
+            >
+              Bedroom
+            </Checkbox>
+            <Checkbox
+              value="Earth"
+              isChecked={checkboxValues.Earth}
+              onChange={handleCheckboxChange}
+            >
+              Earthquake Resistance
+            </Checkbox>
+
+
+          </SimpleGrid >
 
           <FormControl id="oldpassword" isRequired mt={7}>
             <FormLabel>Description</FormLabel>
@@ -376,6 +448,6 @@ export default function AddProperty() {
           </Stack>
         </Box>
       </Stack>
-    </Flex>
+    </Flex >
   );
 }

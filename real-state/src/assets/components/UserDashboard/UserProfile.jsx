@@ -15,13 +15,124 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
+import { useState, useEffect } from "react";
+import jwt_decode from 'jwt-decode';
 
 export default function UserProfile() {
+
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [userData, setUserData] = useState({});
+
+  // getting the token from local storage
+  const data = localStorage.getItem('token');
+  // decoding the token which is actually holding the user id  
+  const user = jwt_decode(data);
+
+  const loadData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/userGet", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "id": user.id,
+
+        }),
+      });
+      const data = await response.json();
+
+      setUserData(data.data);
+    }
+
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+
+
+  const [image, setImage] = useState("");
+
+  // function to add image
+  function convertToBase64(e) {
+
+    console.log('hello');
+    var reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = () => {
+      console.log(reader.result);  // convertToBase64 string
+      setImage(reader.result);
+    };
+    reader.onerror = error => {
+      console.log('Error: ', error);
+    };
+  }
+
+  // let base64 = '';
+  // const onChnage = (e) => {
+  //   const files = e.target.files;
+  //   const file = files[0];
+  //   getImageBase64(file);
+  // }
+
+  // const onLoad = (fileString) => {
+  //   this.base64 = fileString;
+  //   console.log(this.base64);
+  // }
+
+  // const getImageBase64 = (file) => {
+  //   let reader = new FileReader();
+  //   reader.readAsDataURL(file);
+  //   onLoad(reader.result)
+  // }
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log(userData);
+
+    const object = {
+
+      ...userData,
+    }
+    console.log(object);
+    try {
+      const response = await fetch('http://localhost:5000/userEdit', {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+
+        },
+        body: JSON.stringify({
+
+          ...userData
+        }),
+
+      })
+      const data = await response.json();
+      console.log(data);
+    }
+
+    catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Flex
       minH={"100vh"}
       w={"full"}
       bg={useColorModeValue("gray.50", "gray.800")}
+      as={'form'}
+      onSubmit={handleSubmit}
     >
       <Stack
         spacing={4}
@@ -36,7 +147,7 @@ export default function UserProfile() {
         <FormControl id="userName">
           <Stack direction={["column", "row"]} spacing={6}>
             <Center>
-              <Avatar size="xl" src="https://bit.ly/sage-adebayo">
+              <Avatar size="xl" src={image}>
                 <AvatarBadge
                   as={IconButton}
                   size="sm"
@@ -49,24 +160,20 @@ export default function UserProfile() {
               </Avatar>
             </Center>
             <Center w="full">
-              <Button w="30%">Change Image</Button>
+              <Flex gap={4}>
+                <Input type={'file'} py={1} onchange={convertToBase64} accept={'image/*'}></Input>
+                <Button
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                  onClick={convertToBase64}
+                >Add Photo</Button>
+              </Flex>
             </Center>
           </Stack>
         </FormControl>
-        <HStack>
-          <Box>
-            <FormControl id="firstName" isRequired>
-              <FormLabel>First Name</FormLabel>
-              <Input type="text" />
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControl id="lastName" isRequired>
-              <FormLabel>Last Name</FormLabel>
-              <Input type="text" />
-            </FormControl>
-          </Box>
-        </HStack>
 
         <FormControl id="firstName" isRequired>
           <FormLabel>First name</FormLabel>
@@ -74,6 +181,8 @@ export default function UserProfile() {
             placeholder="First Name"
             _placeholder={{ color: "gray.500" }}
             type="text"
+            defaultValue={userData.fname}
+            onchange={(e) => setUserData({ ...userData, fname: e.target.value })}
           />
         </FormControl>
         <FormControl id="lastName" isRequired>
@@ -82,6 +191,8 @@ export default function UserProfile() {
             placeholder="Last Name"
             _placeholder={{ color: "gray.500" }}
             type="text"
+            defaultValue={userData.lname}
+            onchange={(e) => setUserData({ ...userData, lname: e.target.value })}
           />
         </FormControl>
         <FormControl id="Numbrer" isRequired>
@@ -90,6 +201,8 @@ export default function UserProfile() {
             placeholder="Phone Number"
             _placeholder={{ color: "gray.500" }}
             type="text"
+            defaultValue={userData.phone}
+            onchange={(e) => setUserData({ ...userData, phone: e.target.value })}
           />
         </FormControl>
         <FormControl id="email">
@@ -98,6 +211,8 @@ export default function UserProfile() {
             placeholder="your-email@example.com"
             _placeholder={{ color: "gray.500" }}
             type="email"
+            defaultValue={userData.email}
+            onchange={(e) => setUserData({ ...userData, email: e.target.value })}
           />
         </FormControl>
 
@@ -109,6 +224,7 @@ export default function UserProfile() {
             _hover={{
               bg: "blue.500",
             }}
+            type="submit"
           >
             Update
           </Button>

@@ -21,6 +21,9 @@ app.use(express.json());
 app.use(cors());
 app.use("/", userRoute);
 
+
+app.use('/controller/uploads', express.static(__dirname + 'controller/uploads'));
+
 app.listen(5000, () => {
   console.log("Server is loading");
 });

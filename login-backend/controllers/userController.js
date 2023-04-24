@@ -3,26 +3,80 @@ const OTP = require("../models/otpModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const imageDownloader = require("image-downloader");
 const JWT_SECRET = process.env.JWT_SECRET;
 
 
+// tried to use this code to upload images from the frontend
+const uplod_by_link = async (req, res) => {
+    const { link } = req.body;
+    console.log("this is link")
+    console.log(link);
+    console.log({ __dirname })
+    const newName = Date.now() + ".jpg";
+    await imageDownloader.image({
+        url: link,
+        dest: __dirname + "/uplods/" + newName,
+    })
+    res.json({ status: "ok", data: newName });
+
+}
+
+
+// const login = async (req, res) => {
+//     const { email, password } = req.body;
+//     const user = await User.findOne({ email });
+//     if (!user) {
+//         return res.json({ error: "User not found" });
+//     }
+//     if (bcrypt.compare(password, user.password)) {
+//         const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "2h" });
+//         console.log(user);
+
+//         if (res.status(201)) {
+//             return res.json({ status: "ok", data: token });
+//         } else {
+//             return res.json({ error: "error" });
+//         }
+//     }
+//     res.json({ satus: "error", error: "Invalid Password" });
+// }
+
 const login = async (req, res) => {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-        return res.json({ error: "User not found" });
-    }
-    if (bcrypt.compare(password, user.password)) {
-        const token = jwt.sign({ id: user._id }, JWT_SECRET);
-        console.log(user);
 
-        if (res.status(201)) {
-            return res.json({ status: "ok", data: token });
-        } else {
-            return res.json({ error: "error" });
-        }
+    try {
+
+        User.findOne({ email })
+            .then(user => {
+                bcrypt.compare(password, user.password)
+                    .then(passwordCheck => {
+
+                        if (!passwordCheck) return res.status(400).send({ error: "Don't have Password" });
+
+                        // create jwt token
+                        const token = jwt.sign({
+                            id: user._id
+
+                        }, JWT_SECRET, { expiresIn: "24h" });
+
+                        return res.json({
+                            status: "ok",
+                            data: token
+                        });
+
+                    })
+                    .catch(error => {
+                        return res.status(400).send({ error: "Password does not Match" })
+                    })
+            })
+            .catch(error => {
+                return res.status(404).send({ error: "Username not Found" });
+            })
+
+    } catch (error) {
+        return res.status(500).send({ error });
     }
-    res.json({ satus: "error", error: "Invalid Password" });
 }
 
 const register = async (req, res) => {
@@ -47,7 +101,104 @@ const register = async (req, res) => {
     }
 }
 
+// fetch user data
+const userGet = async (req, res) => {
+    const { id } = req.body;
+    console.log(id);
 
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+
+
+        res.send({ status: "ok", data: user });
+    }
+
+    catch (error) {
+        res.send({ status: "error vayo" });
+    }
+
+}
+
+
+
+const userEdit = async (req, res) => {
+    const { fname, lname, email, phone, id } = req.body;
+
+    console.log(req.body);
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+
+        user.fname = fname;
+        user.lname = lname;
+        user.email = email;
+        user.phone = phone;
+
+        await user.save();
+        res.send({ status: "updated" });
+    } catch (error) {
+        res.send({ status: "error" });
+    }
+}
+
+// const userEdit = async (req, res) => {
+
+//     try {
+
+//         console.log(id);
+
+//         if (id) {
+//             const body = req.body;
+
+//             User.updateOne({ _id: id }, body, function (err, data) {
+//                 if (err) throw err;
+//                 return res.json({ status: "updated success" });
+//             })
+//         } else {
+//             return res.json({ status: "user not found" });
+//         }
+
+//     } catch (error) {
+//         res.send({ status: "error" });
+//     }
+// }
+
+
+// api for password change
+const changeUserPass = async (req, res) => {
+    const { id, oldPass, newPass, newPassConf } = req.body;
+
+    try {
+        console.log(req.body);
+        const user = await User.findById(id);
+        if (!user) {
+            return res.json({ error: "User not found" });
+        }
+        if (newPass !== newPassConf) {
+            return res.json({ error: "Password not matched" });
+        }
+        if (bcrypt.compare(oldPass, user.password)) {
+            const encryptPass = await bcrypt.hash(newPass, 10);
+            user.password = encryptPass;
+            await user.save();
+            res.send({ status: "ok" });
+        } else {
+            res.send({ status: "error could not change password" });
+
+        }
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+// api for otp
 const otp = async (req, res) => {
     const { phone } = req.body;
     console.log(phone);
@@ -391,6 +542,9 @@ const deleteService = async (req, res) => {
 module.exports = {
     login,
     register,
+    userGet,
+    userEdit,
+    changeUserPass,
     otp,
     addPack,
     editPack,
@@ -402,5 +556,6 @@ module.exports = {
     getService,
     getServiceAll,
     deleteService,
+    uplod_by_link,
 
 };

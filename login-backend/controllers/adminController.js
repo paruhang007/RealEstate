@@ -9,19 +9,22 @@ const jwt = require("jsonwebtoken");
 
 // get all users
 
-const getAllUsers = async (req, res) => {
+// Get all packages
+const getAllUser = async (req, res) => {
+
     try {
         const user = await User.find();
+        console.log(user);
         if (!user) {
             return res.json({ error: "Users not found" });
         }
-        // res.json(user);
+
         res.send({ status: "ok", data: user });
-        console.log(user);
-    } catch (error) {
-        res.json({ message: error });
     }
-};
+    catch (error) {
+        console.log(error);
+    }
+}
 
 
 // get all packages
