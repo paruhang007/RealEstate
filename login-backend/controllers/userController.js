@@ -113,9 +113,8 @@ const userGet = async (req, res) => {
         if (!user) {
             return res.json({ error: "User not found" });
         }
-        const { password, service, package, ...rest } = assign({}, user.toJSON());
 
-        res.send({ status: "ok", data: rest });
+        res.send({ status: "ok", data: user });
     }
 
     catch (error) {
@@ -227,6 +226,7 @@ const otp = async (req, res) => {
 // Add package
 const addPack = async (req, res) => {
     const {
+        imageLink,
         propName,
         propState,
         propDist,
@@ -253,6 +253,7 @@ const addPack = async (req, res) => {
         }
 
         user.package.push({
+            img: imageLink,
             propName,
             propState,
             propDist,
@@ -282,7 +283,9 @@ const addPack = async (req, res) => {
 
 // Edit package
 const editPack = async (req, res) => {
+
     const {
+        imageLink,
         propName,
         propState,
         propDist,
@@ -302,6 +305,7 @@ const editPack = async (req, res) => {
         id,
         packId
     } = req.body;
+
 
     console.log(req.body);
 
@@ -328,6 +332,7 @@ const editPack = async (req, res) => {
         pack.selectedPropertyUnit = selectedPropertyUnit;
         pack.selectedPayment = selectedPayment;
         pack.checkboxValues = checkboxValues;
+        pack.img = imageLink;
 
         await user.save();
         res.send({ status: "updated" });
@@ -395,6 +400,7 @@ const deletePack = async (req, res) => {
 // Add service
 const addService = async (req, res) => {
     const {
+        imageLink,
         serName,
         serState,
         serDist,
@@ -417,6 +423,7 @@ const addService = async (req, res) => {
             return res.json({ error: "User not found" });
         }
         user.service.push({
+            img: imageLink,
             serName,
             serState,
             serDist,
@@ -444,6 +451,7 @@ const addService = async (req, res) => {
 // Edit service
 const editService = async (req, res) => {
     const {
+        imageLink,
         serName,
         serState,
         serDist,
@@ -478,6 +486,7 @@ const editService = async (req, res) => {
         serv.serProd = serProd;
         serv.serDesc = serDesc;
         serv.selectedServiceType = selectedServiceType;
+        serv.img = imageLink;
         console.log(serv);
         await user.save();
         res.send({ status: "ok" });

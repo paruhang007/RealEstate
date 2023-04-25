@@ -76,34 +76,34 @@ export default function AddProperty() {
   }
 
   // usestate for images 
-  const [images, setImages] = useState([]);
-  const [imageUrl, setImageUrl] = useState('');
+  const [images, setImages] = useState();
+
 
   // handle image upload by link 
-  async function addImageByLink(event) {
-    event.preventDefault();
-    console.log(imageUrl);
-    try {
-      const response = await post("http://localhost:5000/uplod_by_link", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          link: imageUrl,
-        }),
-      });
-      const filename = await response.json();
-      setImages(prev => {
-        return [...prev, filename];
-      });
+  // async function addImageByLink(event) {
+  //   event.preventDefault();
+  //   console.log(imageUrl);
+  //   try {
+  //     const response = await post("http://localhost:5000/uplod_by_link", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         link: imageUrl,
+  //       }),
+  //     });
+  //     const filename = await response.json();
+  //     setImages(prev => {
+  //       return [...prev, filename];
+  //     });
 
-    } catch (error) {
-      console.log(error);
-    }
-    setImageUrl('');
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  //   setImageUrl('');
 
-  };
+  // };
 
 
   // handle image upload by file
@@ -137,41 +137,70 @@ export default function AddProperty() {
   const user = jwt_decode(data);
   console.log(user);
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  // handle image upload by file
+  const uploadImage = async () => {
+    console.log("upload");
+    const data = new FormData();
+    data.append('file', images);
+    data.append('upload_preset', 'sie3kiby');
+
     try {
-      const response = fetch("http://localhost:5000/addPack", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/jason",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          propName,
-          propState,
-          propDist,
-          propMuni,
-          propWard,
-          propStreet,
-          propFace,
-          propRoad,
-          propArea,
-          propDesc,
-          propPrice,
-          selectedFor,
-          selectedPropertyType,
-          selectedPropertyUnit,
-          selectedPayment,
-          checkboxValues,
-          id: user.id,
-        }),
+      const res = await fetch('https://api.cloudinary.com/v1_1/dooohxhvw/image/upload', {
+        method: 'POST',
+        body: data
       })
+      const file = await res.json();
+
+      return file.secure_url;
 
     }
     catch (error) {
       console.log(error);
+      return null;
     }
+
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const imageLink = await uploadImage();
+    if (imageLink) {
+      try {
+        const response = fetch("http://localhost:5000/addPack", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/jason",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({
+            imageLink,
+            propName,
+            propState,
+            propDist,
+            propMuni,
+            propWard,
+            propStreet,
+            propFace,
+            propRoad,
+            propArea,
+            propDesc,
+            propPrice,
+            selectedFor,
+            selectedPropertyType,
+            selectedPropertyUnit,
+            selectedPayment,
+            checkboxValues,
+            id: user.id,
+          }),
+        })
+
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }
+
   };
 
 
@@ -267,7 +296,7 @@ export default function AddProperty() {
           <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={7}>
             Photos
           </Text>
-          <Flex gap={4}>
+          {/* <Flex gap={4}>
             <Input type='text' placeholder={'Add using a link....'} onChange={(e) => setImageUrl(e.target.value)} />
             <Button
               bg={"blue.400"}
@@ -277,24 +306,14 @@ export default function AddProperty() {
               }}
               onClick={addImageByLink}
             >Add Photo</Button>
-          </Flex>
+          </Flex> */}
 
 
           <Box mt={5}>
 
-
-            <SimpleGrid minChildWidth='120px' spacing='40px'>
-              {images.length > 0 && images.map(link => {
-                <Box  >
-                  {link}
-                </Box>
-              })
-              }
-
-              <Input type={'file'} py={1} ></Input>
-
-
-            </SimpleGrid>
+            <Input type={'file'} py={1} onChange={(e) => {
+              setImages(e.target.files[0]);
+            }}></Input>
 
           </Box>
 

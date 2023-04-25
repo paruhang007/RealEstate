@@ -53,22 +53,22 @@ export default function AllProperty() {
     const [search, setSearch] = useState(false);
 
 
-    // // search handler
-    // const searchHandler = (e) => {
-    //     const search = e.target.value;
-    //     console.log(search);
-    //     setSearch(search);
+    // search handler
+    const searchHandler = (e) => {
+        const search = e.target.value;
+        console.log(search);
+        setSearch(search);
 
-    //     if (search.length === 0) {
-    //         setSelectedUser(service);
-    //     } else {
-    //         setSelectedUser(
-    //             allUsers.filter((serv) => {
-    //                 return allUsers.serName.toLowerCase().includes(search.toLowerCase()) || serv._id.toLowerCase().includes(allUsers.toLowerCase());
-    //             })
-    //         );
-    //     }
-    // };
+        if (search.length === 0) {
+            setSelectedPropertyType(property);
+        } else {
+            setSelectedPropertyType(
+                property.filter((prop) => {
+                    return prop.propName.toLowerCase().includes(search.toLowerCase()) || prop._id.toLowerCase().includes(search.toLowerCase());
+                })
+            );
+        }
+    };
 
 
     // // search handler
@@ -120,13 +120,13 @@ export default function AllProperty() {
                 <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"} ml={5}>
                     All Properties
                 </Text>
-                <Flex m={5} gap={5}>
+                <Flex m={5} gap={5} >
 
                     <InputGroup >
                         <InputLeftElement pointerEvents="none" color={'black'}>
                             <AiOutlineSearch />
                         </InputLeftElement>
-                        <Input type="tel" placeholder="Search..." color={'black'} w={'50%'} />
+                        <Input type="tel" onChange={(e) => searchHandler(e)} placeholder="Search using ID or Property Name..." color={'black'} w={'50%'} />
                     </InputGroup>
 
 
@@ -163,87 +163,99 @@ export default function AllProperty() {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            <Tr>
-                                <Td>inches</Td>
-                                <Td>millimetres (mm)</Td>
-                                <Td >25.4</Td>
-                                <Td>inches</Td>
-                                <Td>millimetres (mm)</Td>
-                                <Td >
-                                    <Flex gap={4}>
-                                        <IconButton
-                                            variant='outline'
-                                            colorScheme='teal'
-                                            aria-label='Call Sage'
-                                            fontSize='20px'
-                                            icon={<AiOutlineEdit />}
-                                            // oepning model
-                                            onClick={onOpen} />
+                            {selectedPropertyType.map((prop) => {
+                                return (
+                                    <Tr>
+                                        <Td>{prop.package._id}</Td>
+                                        <Td>{prop.package.propName}</Td>
+                                        <Td >{prop.package.selectedPropertyType}</Td>
+                                        <Td >{prop.package.selectedFor}</Td>
+                                        <Td>{prop.package.propArea}</Td>
+                                        <Td>{prop.package.verified ? "1" : "0"}</Td>
+                                        <Td >
+                                            <Flex gap={4}>
+                                                <IconButton
+                                                    variant='outline'
+                                                    colorScheme='teal'
+                                                    aria-label='Call Sage'
+                                                    fontSize='20px'
+                                                    icon={<AiOutlineEdit />}
+                                                    onClick={() => {
+                                                        setPropID(prop._id);
+                                                        onEditOpen();
+                                                    }} />
+                                                <IconButton
+                                                    variant='outline'
+                                                    colorScheme='teal'
+                                                    aria-label='Call Sage'
+                                                    fontSize='20px'
+                                                    icon={<AiOutlineDelete />}
+                                                    onClick={() => {
+                                                        setPropID(prop._id);
+                                                        onOpen();
+                                                    }}
+                                                />
 
-                                        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-                                            <ModalOverlay />
-                                            <ModalContent>
-                                                <ModalHeader>Verify Property </ModalHeader>
-                                                <ModalCloseButton />
-                                                <ModalBody>
-                                                    <Text fontWeight='bold' mb='1rem'>
-                                                        Do you want to verify the Property?
-                                                    </Text>
-
-                                                </ModalBody>
-
-                                                <ModalFooter>
-                                                    <Button colorScheme='blue' mr={3} >
-                                                        Verify
-                                                    </Button>
-                                                    <Button colorScheme='blue' mr={3} >
-                                                        Un-Verify
-                                                    </Button>
-                                                    <Button variant='ghost' onClick={onClose} >Close</Button>
-                                                </ModalFooter>
-                                            </ModalContent>
-                                        </Modal>
-
-                                        <IconButton
-                                            variant='outline'
-                                            colorScheme='teal'
-                                            aria-label='Call Sage'
-                                            fontSize='20px'
-                                            icon={<AiOutlineDelete />}
-                                            onClick={onOpen}
-                                        />
-                                        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-                                            <ModalOverlay />
-                                            <ModalContent>
-                                                <ModalHeader>Delete Property </ModalHeader>
-                                                <ModalCloseButton />
-                                                <ModalBody>
-                                                    <Text fontWeight='bold' mb='1rem'>
-                                                        Do you want to Delete the Property?
-                                                    </Text>
-
-                                                </ModalBody>
-
-                                                <ModalFooter>
-                                                    <Button colorScheme='blue' mr={3} >
-                                                        Delete
-                                                    </Button>
-
-                                                    <Button variant='ghost' onClick={onClose} >Close</Button>
-                                                </ModalFooter>
-                                            </ModalContent>
-                                        </Modal>
-                                    </Flex>
-                                </Td>
-                            </Tr>
-
+                                            </Flex>
+                                        </Td>
+                                    </Tr>)
+                            })}
                         </Tbody>
-                        <Tfoot>
 
-                        </Tfoot>
                     </Table>
                 </TableContainer>
             </Box>
+
+            {/* model for edit icon */}
+            <Modal blockScrollOnMount={false} isOpen={isEditOpen} onClose={onEditClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Edit Property </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text fontWeight='bold' mb='1rem'>
+                            Do you want to Edit the Property?
+                        </Text>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={() => {
+                            navigate(`/editproperty/${user.id}/${propID}`);
+                        }}>
+                            Edit
+                        </Button>
+
+                        <Button variant='ghost' onClick={onEditClose} >Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            {/* model for delete icon */}
+            <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Delete Property </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text fontWeight='bold' mb='1rem'>
+                            Do you want to Delete the Property?
+                        </Text>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={() => {
+                            handelDel();
+                        }}>
+
+                            Delete
+                        </Button>
+
+                        <Button variant='ghost' onClick={onClose} >Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
 
         </Flex>
     )

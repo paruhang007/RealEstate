@@ -88,7 +88,7 @@ export default function MyServices() {
 
     const loaddata = async () => {
         try {
-            const response = await fetch('http://localhost:5000/getServiceAll', {
+            const response = await fetch('http://localhost:5000/getAllService', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -194,12 +194,12 @@ export default function MyServices() {
                             {selectedServiceType.map((serv) => {
                                 return (
                                     <Tr>
-                                        <Td>{serv._id}</Td>
-                                        <Td>{serv.serName}</Td>
-                                        <Td>{serv.selectedServiceType}</Td>
-                                        <Td>{serv.serEmail}</Td>
-                                        <Td>{serv.serPhone}</Td>
-                                        <Td>{serv.verifiedService ? "1" : "0"}</Td>
+                                        <Td>{serv.service._id}</Td>
+                                        <Td>{serv.service.serName}</Td>
+                                        <Td>{serv.service.selectedServiceType}</Td>
+                                        <Td>{serv.service.serEmail}</Td>
+                                        <Td>{serv.service.serPhone}</Td>
+                                        <Td>{serv.service.verifiedService ? "1" : "0"}</Td>
                                         <Td >
                                             <Flex gap={4}>
                                                 <IconButton

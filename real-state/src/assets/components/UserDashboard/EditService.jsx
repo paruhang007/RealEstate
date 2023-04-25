@@ -76,34 +76,66 @@ export default function AddService() {
         loadData();
     }, []);
 
+    // usestate for images 
+    const [images, setImages] = useState();
+
+    const uploadImage = async () => {
+        console.log("upload");
+        const data = new FormData();
+        data.append('file', images);
+        data.append('upload_preset', 'sie3kiby');
+
+        try {
+            const res = await fetch('https://api.cloudinary.com/v1_1/dooohxhvw/image/upload', {
+                method: 'POST',
+                body: data
+            })
+            const file = await res.json();
+
+            return file.secure_url;
+
+        }
+        catch (error) {
+            console.log(error);
+            return null;
+        }
+
+    }
+
+
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const imageLink = await uploadImage();
         console.log(service);
         const object = {
             id,
             servId,
+            imageLink,
             ...service,
         }
         console.log(object);
-        try {
-            const response = await fetch("http://localhost:5000/editService", {
-                method: "PATCH",
-                headers: {
-                    "Content-Type": "application/json",
+        if (imageLink) {
+            try {
+                const response = await fetch("http://localhost:5000/editService", {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
 
-                },
-                body: JSON.stringify({
-                    ...object
-                }),
+                    },
+                    body: JSON.stringify({
+                        ...object
+                    }),
 
-            })
-            const data = await response.json();
-            console.log(data);
-        }
+                })
+                const data = await response.json();
+                console.log(data);
+            }
 
-        catch (error) {
-            console.log(error);
+            catch (error) {
+                console.log(error);
+            }
         }
     };
 
@@ -217,6 +249,20 @@ export default function AddService() {
                             </FormControl>
                         </Box>
                     </HStack>
+
+                    {/* for uploding images  */}
+                    <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={7}>
+                        Photos
+                    </Text>
+
+                    <Box mt={5}>
+
+                        <Input type={'file'} py={1} onChange={(e) => {
+                            setImages(e.target.files[0]);
+                        }}></Input>
+
+
+                    </Box>
 
                     <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={7}>
                         Contact Information

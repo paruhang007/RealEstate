@@ -44,7 +44,7 @@ export default function UserProfile() {
         }),
       });
       const data = await response.json();
-
+      console.log(data);
       setUserData(data.rest);
     }
 
@@ -61,38 +61,6 @@ export default function UserProfile() {
 
   const [image, setImage] = useState("");
 
-  // function to add image
-  function convertToBase64(e) {
-
-    console.log('hello');
-    var reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    reader.onload = () => {
-      console.log(reader.result);  // convertToBase64 string
-      setImage(reader.result);
-    };
-    reader.onerror = error => {
-      console.log('Error: ', error);
-    };
-  }
-
-  // let base64 = '';
-  // const onChnage = (e) => {
-  //   const files = e.target.files;
-  //   const file = files[0];
-  //   getImageBase64(file);
-  // }
-
-  // const onLoad = (fileString) => {
-  //   this.base64 = fileString;
-  //   console.log(this.base64);
-  // }
-
-  // const getImageBase64 = (file) => {
-  //   let reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   onLoad(reader.result)
-  // }
 
 
   const handleSubmit = async (event) => {
@@ -161,14 +129,14 @@ export default function UserProfile() {
             </Center>
             <Center w="full">
               <Flex gap={4}>
-                <Input type={'file'} py={1} onchange={convertToBase64} accept={'image/*'}></Input>
+                <Input type={'file'} py={1} accept={'image/*'}></Input>
                 <Button
                   bg={"blue.400"}
                   color={"white"}
                   _hover={{
                     bg: "blue.500",
                   }}
-                  onClick={convertToBase64}
+
                 >Add Photo</Button>
               </Flex>
             </Center>
@@ -182,7 +150,7 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.fname}
-            onchange={(e) => setUserData({ ...userData, fname: e.target.value })}
+          // onchange={(e) => setUserData({ ...userData, fname: e.target.value })}
           />
         </FormControl>
         <FormControl id="lastName" isRequired>
@@ -192,7 +160,7 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.lname}
-            onchange={(e) => setUserData({ ...userData, lname: e.target.value })}
+          // onchange={(e) => setUserData({ ...userData, lname: e.target.value })}
           />
         </FormControl>
         <FormControl id="Numbrer" isRequired>
@@ -202,7 +170,7 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.phone}
-            onchange={(e) => setUserData({ ...userData, phone: e.target.value })}
+          // onchange={(e) => setUserData({ ...userData, phone: e.target.value })}
           />
         </FormControl>
         <FormControl id="email">
@@ -212,7 +180,7 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="email"
             defaultValue={userData.email}
-            onchange={(e) => setUserData({ ...userData, email: e.target.value })}
+          // onchange={(e) => setUserData({ ...userData, email: e.target.value })}
           />
         </FormControl>
 

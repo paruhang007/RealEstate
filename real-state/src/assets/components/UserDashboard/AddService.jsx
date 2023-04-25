@@ -48,37 +48,68 @@ export default function AddService() {
     const user = jwt_decode(data);
     console.log(user);
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
+    // usestate for images 
+    const [images, setImages] = useState();
+
+    // function for uploading images
+    const uploadImage = async () => {
+        console.log("upload");
+        const data = new FormData();
+        data.append('file', images);
+        data.append('upload_preset', 'sie3kiby');
+
         try {
-            const response = fetch("http://localhost:5000/addService", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Accept: "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                },
-                body: JSON.stringify({
-                    serName,
-                    serState,
-                    serDist,
-                    serMuni,
-                    serWard,
-                    serStreet,
-                    serOname,
-                    serPhone,
-                    serEmail,
-                    serProd,
-                    serDesc,
-                    selectedServiceType,
-                    id: user.id,
-                }),
-
+            const res = await fetch('https://api.cloudinary.com/v1_1/dooohxhvw/image/upload', {
+                method: 'POST',
+                body: data
             })
-        }
+            const file = await res.json();
 
+            return file.secure_url;
+
+        }
         catch (error) {
             console.log(error);
+            return null;
+        }
+
+    }
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const imageLink = await uploadImage();
+        if (imageLink) {
+            try {
+                const response = fetch("http://localhost:5000/addService", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                    },
+                    body: JSON.stringify({
+                        imageLink,
+                        serName,
+                        serState,
+                        serDist,
+                        serMuni,
+                        serWard,
+                        serStreet,
+                        serOname,
+                        serPhone,
+                        serEmail,
+                        serProd,
+                        serDesc,
+                        selectedServiceType,
+                        id: user.id,
+                    }),
+
+                })
+            }
+
+            catch (error) {
+                console.log(error);
+            }
         }
     };
 
@@ -169,6 +200,19 @@ export default function AddService() {
                             </FormControl>
                         </Box>
                     </HStack>
+
+                    {/* for uploding images  */}
+                    <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={7}>
+                        Photos
+                    </Text>
+
+                    <Box mt={5}>
+
+                        <Input type={'file'} py={1} onChange={(e) => {
+                            setImages(e.target.files[0]);
+                        }}></Input>
+
+                    </Box>
 
                     <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={7}>
                         Contact Information

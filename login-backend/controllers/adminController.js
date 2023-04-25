@@ -112,39 +112,56 @@ const deleteUser = async (req, res) => {
 
 // get all properties
 const getAllProp = async (req, res) => {
-
     try {
-        const user = await User.find();
-        console.log(user);
-        if (!user) {
-            return res.json({ error: "Packages not found" });
-        }
+        const user = await User.aggregate([
+            {
+                $unwind: "$package"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    package: 1
+                }
+            }
+        ]);
 
-        res.send({ status: "ok", data: user.email });
+        console.log(user);
+        res.send({ status: "ok", data: user });
     }
     catch (error) {
         console.log(error);
     }
 }
+
+
+
 
 
 
 // get all services 
-const getAllService = async (req, res) => {
 
+const getAllService = async (req, res) => {
     try {
-        const user = await User.find();
+        const user = await User.aggregate([
+            {
+                $unwind: "$service"
+            },
+            {
+                $project: {
+                    _id: 0,
+                    service: 1
+                }
+            }
+        ]);
+
         console.log(user);
-        if (!user) {
-            return res.json({ error: "Users not found" });
-        }
-        const serv = user.package.filter((serv) => serv._id == servId);
-        res.send({ status: "ok", data: serv });
+        res.send({ status: "ok", data: user });
     }
     catch (error) {
         console.log(error);
     }
 }
+
 
 module.exports = {
     adminlogin,

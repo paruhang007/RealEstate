@@ -29,12 +29,46 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { GoLocation } from 'react-icons/go'
 import { MdFavoriteBorder } from 'react-icons/md'
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { useState, useEffect } from 'react'
+import jwt_decode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 export default function SearchProp() {
 
+
+    const [property, setProperty] = useState([]);
+    const [selectedPropertyType, setSelectedPropertyType] = useState(property);
+
+    // load data into the table
+    const loaddata = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/getAllProp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+
+            });
+            const prop = await response.json();
+            setProperty(prop.data);
+            console.log(prop.data);
+            setSelectedPropertyType(prop.data);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        loaddata();
+    }, []);
+
+
     // for property card
-    const property = {
+    const propertyCard = {
         imageUrl: 'https://bit.ly/2Z4KKcF',
         // src: "images/calculate.png",
         imageAlt: 'Rear view of modern home with pool',
@@ -76,7 +110,7 @@ export default function SearchProp() {
 
     return (
         <Grid templateColumns='repeat(6, 1fr)' gap={3} py={5} px={10} bg="gray.100">
-            <GridItem colStart={1} colEnd={3}  >
+            <GridItem colStart={1} colEnd={3} bg={'red.100'} >
                 <Flex m={10} minH={'100'} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'} >
 
                     <FormControl m={3}  >
@@ -114,7 +148,7 @@ export default function SearchProp() {
             </GridItem>
 
 
-            <GridItem colStart={3} colEnd={7} minH={'500'} justify={'center'} >
+            <GridItem colStart={3} colEnd={7} minH={'500'} justify={'center'} bg={'blue.100'} >
 
                 <Flex m={5} minH={'300'} direction={'column'} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'}>
 
@@ -149,114 +183,76 @@ export default function SearchProp() {
                     <Flex mt={5}  >
                         <SimpleGrid minChildWidth='200px' spacing='40px' w={"full"} m={5}>
 
-                            <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} >
-                                <Image src={property.imageUrl} alt={property.imageAlt} />
+                            {selectedPropertyType.map((prop) => {
+                                return (
+                                    < Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} >
+                                        <Image src={prop.package.img} alt={"property image"} objectFit={'cover'} />
 
-                                <Box p='6'>
-                                    <Flex align={'center'}>
+                                        <Box p='6'>
+                                            <Flex align={'center'}>
 
-                                        <Box
-                                            mt='1'
-                                            fontWeight='semibold'
-                                            as='h4'
-                                            lineHeight='tight'
-                                            noOfLines={1}
-                                        >
-                                            {property.title}
+                                                <Box
+                                                    mt='1'
+                                                    fontWeight='semibold'
+                                                    as='h4'
+                                                    lineHeight='tight'
+                                                    noOfLines={1}
+                                                >
+                                                    {prop.package.propName}
+                                                </Box>
+
+                                                <IconButton
+                                                    variant='outline'
+                                                    colorScheme='teal'
+                                                    aria-label='favourite'
+                                                    icon={<MdFavoriteBorder />}
+                                                />
+                                            </Flex>
+
+                                            <Flex gap={2}>
+                                                <Box>
+                                                    {prop.package.propPrice}
+                                                </Box>
+
+                                                <Box >
+
+                                                    {prop.package.selectedPayment}
+
+                                                </Box>
+                                            </Flex>
+
+                                            <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
+                                                <GoLocation /> {prop.package.propState}, {prop.package.propDist}, {prop.package.propStreet}
+                                            </Flex>
+
+                                            <Box display='flex' alignItems='baseline' m={3} gap={2}>
+                                                <Badge borderRadius='full' px='2' colorScheme='teal'>
+                                                    {prop.package.selectedFor}
+                                                </Badge>
+
+                                                <Badge borderRadius='full' px='2' colorScheme='teal'>
+                                                    {prop.package.selectedPropertyType}
+                                                </Badge>
+                                                {/* <Box
+                                                    color='gray.500'
+                                                    fontWeight='semibold'
+                                                    letterSpacing='wide'
+                                                    fontSize='xs'
+                                                    textTransform='uppercase'
+                                                    ml='2'
+                                                >
+                                                    {propertyCard.beds} beds &bull; {propertyCard.baths} baths
+                                                </Box> */}
+                                            </Box>
                                         </Box>
 
-                                        <IconButton
-                                            variant='outline'
-                                            colorScheme='teal'
-                                            aria-label='favourite'
-                                            icon={<MdFavoriteBorder />}
-                                        />
-                                    </Flex>
-
-                                    <Box>
-                                        {property.formattedPrice}
-                                        <Box as='span' color='gray.600' fontSize='sm'>
-                                            / wk
-                                        </Box>
                                     </Box>
 
-                                    <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
-                                        <GoLocation /> {property.location}
-                                    </Flex>
 
-                                    <Box display='flex' alignItems='baseline' m={3}>
-                                        <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                            {property.for}
-                                        </Badge>
-                                        <Box
-                                            color='gray.500'
-                                            fontWeight='semibold'
-                                            letterSpacing='wide'
-                                            fontSize='xs'
-                                            textTransform='uppercase'
-                                            ml='2'
-                                        >
-                                            {property.beds} beds &bull; {property.baths} baths
-                                        </Box>
-                                    </Box>
-                                </Box>
+                                )
+                            })}
 
-                            </Box>
 
-                            {/* another box example  */}
-                            <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} >
-                                <Image src={property.imageUrl} alt={property.imageAlt} />
-
-                                <Box p='6'>
-                                    <Flex align={'center'}>
-
-                                        <Box
-                                            mt='1'
-                                            fontWeight='semibold'
-                                            as='h4'
-                                            lineHeight='tight'
-                                            noOfLines={1}
-                                        >
-                                            {property.title}
-                                        </Box>
-
-                                        <IconButton
-                                            variant='outline'
-                                            colorScheme='teal'
-                                            aria-label='favourite'
-                                            icon={<MdFavoriteBorder />}
-                                        />
-                                    </Flex>
-
-                                    <Box>
-                                        {property.formattedPrice}
-                                        <Box as='span' color='gray.600' fontSize='sm'>
-                                            / wk
-                                        </Box>
-                                    </Box>
-
-                                    <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
-                                        <GoLocation /> {property.location}
-                                    </Flex>
-
-                                    <Box display='flex' alignItems='baseline' m={3}>
-                                        <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                            {property.for}
-                                        </Badge>
-                                        <Box
-                                            color='gray.500'
-                                            fontWeight='semibold'
-                                            letterSpacing='wide'
-                                            fontSize='xs'
-                                            textTransform='uppercase'
-                                            ml='2'
-                                        >
-                                            {property.beds} beds &bull; {property.baths} baths
-                                        </Box>
-                                    </Box>
-                                </Box>
-
-                            </Box>
 
 
 

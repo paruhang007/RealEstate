@@ -8,8 +8,10 @@ const UserDetailsSchema = new mongoose.Schema(
     phone: { type: Number, unique: true, required: true },
     password: { type: String, unique: false, required: true },
 
+
     package: [{
       id: mongoose.Schema.Types.ObjectId,
+      img: String,
       propName: String,
       propState: String,
       propDist: String,
@@ -34,6 +36,7 @@ const UserDetailsSchema = new mongoose.Schema(
 
     service: [{
       id: mongoose.Schema.Types.ObjectId,
+      img: String,
       serName: String,
       serState: String,
       serDist: String,

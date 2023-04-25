@@ -31,7 +31,7 @@ import {
     FiChevronDown,
 } from 'react-icons/fi';
 import { Outlet, NavLink, useLocation } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 const LinkItems = [
     { name: 'Home', icon: FiHome },
@@ -40,13 +40,13 @@ const LinkItems = [
     { name: 'Services', icon: FiSettings, path: "allservices" },
     { name: 'Chat', icon: FiStar, path: "adminchat" },
     { name: 'Reset Password', icon: FiSettings, path: "adminreset" },
-
-
 ];
 
 export default function Dash({ children, }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const token = localStorage.getItem("tokenAdmin");
     const location = useLocation();
+    const navigate = useNavigate();
     return (
         <Box minH="100vh" bg={useColorModeValue('red.100', 'gray.900')} >
 
@@ -157,6 +157,7 @@ const NavItem = ({ icon, children, ...rest }) => {
 
 
 const MobileNav = ({ onOpen, ...rest }) => {
+    const navigate = useNavigate();
     return (
         <Flex
             ml={{ base: 0, md: 60 }}
@@ -209,10 +210,8 @@ const MobileNav = ({ onOpen, ...rest }) => {
                                     alignItems="flex-start"
                                     spacing="1px"
                                     ml="2">
-                                    <Text fontSize="sm">Justina Clark</Text>
-                                    <Text fontSize="xs" color="gray.600">
-                                        Admin
-                                    </Text>
+                                    <Text fontSize="sm">Admin</Text>
+
                                 </VStack>
                                 <Box display={{ base: 'none', md: 'flex' }}>
                                     <FiChevronDown />
@@ -222,11 +221,16 @@ const MobileNav = ({ onOpen, ...rest }) => {
                         <MenuList
                             bg={useColorModeValue('white', 'gray.900')}
                             borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                            <MenuItem>Profile</MenuItem>
+                            <MenuItem>Home</MenuItem>
                             {/* <MenuItem>Settings</MenuItem>
                             <MenuItem>Billing</MenuItem> */}
                             <MenuDivider />
-                            <MenuItem>Sign out</MenuItem>
+                            <MenuItem
+                                onClick={() => {
+                                    localStorage.removeItem("token");
+                                    navigate("/loginadmin");
+                                }}
+                            >Sign out</MenuItem>
                         </MenuList>
                     </Menu>
                 </Flex>
