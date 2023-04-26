@@ -65,7 +65,7 @@ export default function MyServices() {
         }
     };
 
-    // search handler
+    // sort handler
     const handelsort = (e) => {
         const select = e.target.value;
         console.log(select);
@@ -94,9 +94,7 @@ export default function MyServices() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    "id": user.id,
-                }),
+
             });
             const serv = await response.json();
             // gets the data from the database by filtering only services from different users 

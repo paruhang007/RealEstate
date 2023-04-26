@@ -41,6 +41,9 @@ export default function SearchProp() {
 
     const [property, setProperty] = useState([]);
     const [selectedPropertyType, setSelectedPropertyType] = useState(property);
+    const [selectedFor, setSelectedFor] = useState("all");
+    const [selectedType, setSelectedType] = useState("all");
+    const [search, setSearch] = useState(false);
 
     // load data into the table
     const loaddata = async () => {
@@ -53,9 +56,18 @@ export default function SearchProp() {
 
             });
             const prop = await response.json();
-            setProperty(prop.data);
+            // gets the data from the database by filtering only property from different users 
             console.log(prop.data);
-            setSelectedPropertyType(prop.data);
+
+            // mapping the data to get only the property
+            const data = prop.data.map(
+                (prop) => {
+                    return prop.package
+                }
+            )
+            console.log(data);
+            setProperty(data);
+            setSelectedPropertyType(data);
         }
         catch (err) {
             console.log(err);
@@ -67,18 +79,79 @@ export default function SearchProp() {
     }, []);
 
 
-    // for property card
-    const propertyCard = {
-        imageUrl: 'https://bit.ly/2Z4KKcF',
-        // src: "images/calculate.png",
-        imageAlt: 'Rear view of modern home with pool',
-        title: 'Modern home in city center in the heart of historic Los Angeles',
-        location: 'Los Angeles, California',
-        formattedPrice: '$1,900.00',
-        beds: 3,
-        baths: 2,
-        for: 'SALE',
-    }
+    // search handler
+    const searchHandler = (e) => {
+        const search = e.target.value;
+        console.log(search);
+        setSearch(search);
+
+        if (search.length === 0) {
+            setSelectedPropertyType(property);
+        } else {
+            setSelectedPropertyType(
+                property.filter((prop) => {
+                    return prop.propName.toLowerCase().includes(search.toLowerCase()) || prop._id.toLowerCase().includes(search.toLowerCase());
+                })
+            );
+        }
+    };
+
+    // Category filter
+    const handlerCate = (e) => {
+        const select = e.target.value;
+        console.log(select);
+
+        if (select === "all") {
+            setSelectedPropertyType(
+                selectedFor !== "all"
+                    ? property.filter((prop) => {
+                        return prop.selectedFor === selectedFor;
+                    })
+                    : property
+            );
+        } else {
+            setSelectedPropertyType(
+                selectedFor !== "all"
+                    ? property.filter((prop) => {
+                        return prop.selectedFor === selectedFor && prop.selectedPropertyType === select;
+                    })
+                    : property.filter((prop) => {
+                        return prop.selectedPropertyType === select;
+                    })
+            );
+        }
+
+        setSelectedType(select);
+    };
+
+    // for filter
+    const handleLeige = (e) => {
+        const select = e.target.value;
+        setSelectedFor(select);
+        console.log(select);
+        console.log(selectedType);
+
+        if (select === "all") {
+            setSelectedPropertyType(
+                selectedType !== "all"
+                    ? property.filter((prop) => {
+                        return prop.selectedPropertyType === selectedType;
+                    })
+                    : property
+            );
+        } else {
+            setSelectedPropertyType(
+                selectedType !== "all"
+                    ? property.filter((prop) => {
+                        return prop.selectedFor === select && prop.selectedPropertyType === selectedType;
+                    })
+                    : property.filter((prop) => {
+                        return prop.selectedFor === select;
+                    })
+            );
+        }
+    };
+
 
     // for pagination buttons
     const PagButton = (props) => {
@@ -110,45 +183,52 @@ export default function SearchProp() {
 
     return (
         <Grid templateColumns='repeat(6, 1fr)' gap={3} py={5} px={10} bg="gray.100">
-            <GridItem colStart={1} colEnd={3} bg={'red.100'} >
-                <Flex m={10} minH={'100'} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'} >
+            <GridItem colStart={1} colEnd={3}  >
+                <Flex m={10} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'} display={'colum'} >
+                    <FormLabel m={3}>
+                        Ease your search
+                    </FormLabel>
 
-                    <FormControl m={3}  >
+                    <Box m={5}  >
                         <FormLabel >
                             Property status
                         </FormLabel>
 
-                        <RadioGroup >
-                            <VStack display={"flex"} spacing='24px' alignItems={"start"}>
-                                <Radio value='Sale'>For Sale</Radio>
-                                <Radio value='Rent'>For Rent</Radio>
-                                <Radio value='Lease'>For Lease</Radio>
-                            </VStack>
-                        </RadioGroup>
+                        <Select onChange={(e) => {
+                            handleLeige(e)
+                        }}>
+                            <option value="all">All </option>
+                            <option value="Rent">Rent </option>
+                            <option value="Sale">Sale </option>
+                            <option value="Lease">Lease </option>
+                        </Select>
 
                         <Divider mt={5} />
 
                         <FormLabel mt={5}>
                             Property Type
                         </FormLabel>
-                        <RadioGroup >
-                            <VStack spacing='24px' display={"flex"} alignItems={"start"}>
-                                <Radio value='Land'>Land</Radio>
-                                <Radio value='Flat'>Flat</Radio>
-                                <Radio value='House'>House</Radio>
-                                <Radio value='Apartment'>Apartment</Radio>
-                                <Radio value='Office'>Office Space</Radio>
-                                <Radio value='Shop'>Shop Space</Radio>
-                            </VStack>
-                        </RadioGroup>
-                    </FormControl>
+                        <Select isrequired onChange={(e) => {
+                            handlerCate(e);
+                        }}>
+                            <option value="all">All </option>
+                            <option value="Land">Land </option>
+                            <option value="Flat">Flat </option>
+                            <option value="House">House </option>
+                            <option value="Apartment">Apartment </option>
+                            <option value="Office space">Office space </option>
+                            <option value="Shop space">Shop space </option>
+                        </Select>
+
+
+                    </Box>
 
 
                 </Flex>
             </GridItem>
 
 
-            <GridItem colStart={3} colEnd={7} minH={'500'} justify={'center'} bg={'blue.100'} >
+            <GridItem colStart={3} colEnd={7} minH={'500'} justify={'center'}  >
 
                 <Flex m={5} minH={'300'} direction={'column'} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'}>
 
@@ -159,7 +239,7 @@ export default function SearchProp() {
                             <InputLeftElement pointerEvents="none" color={'black'}>
                                 <AiOutlineSearch />
                             </InputLeftElement>
-                            <Input type="tel" placeholder="Search..." color={'black'} w={'60%'} />
+                            <Input type="tel" onChange={(e) => searchHandler(e)} placeholder="Search using ID or Property Name..." color={'black'} w={'60%'} />
                         </InputGroup>
 
 
@@ -186,7 +266,7 @@ export default function SearchProp() {
                             {selectedPropertyType.map((prop) => {
                                 return (
                                     < Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} >
-                                        <Image src={prop.package.img} alt={"property image"} objectFit={'cover'} />
+                                        <Image src={prop.img} alt={"property image"} objectFit={'cover'} />
 
                                         <Box p='6'>
                                             <Flex align={'center'}>
@@ -198,7 +278,7 @@ export default function SearchProp() {
                                                     lineHeight='tight'
                                                     noOfLines={1}
                                                 >
-                                                    {prop.package.propName}
+                                                    {prop.propName}
                                                 </Box>
 
                                                 <IconButton
@@ -211,38 +291,29 @@ export default function SearchProp() {
 
                                             <Flex gap={2}>
                                                 <Box>
-                                                    {prop.package.propPrice}
+                                                    {prop.propPrice}
                                                 </Box>
 
                                                 <Box >
 
-                                                    {prop.package.selectedPayment}
+                                                    {prop.selectedPayment}
 
                                                 </Box>
                                             </Flex>
 
                                             <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
-                                                <GoLocation /> {prop.package.propState}, {prop.package.propDist}, {prop.package.propStreet}
+                                                <GoLocation /> {prop.propState}, {prop.propDist}, {prop.propStreet}
                                             </Flex>
 
                                             <Box display='flex' alignItems='baseline' m={3} gap={2}>
                                                 <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                                    {prop.package.selectedFor}
+                                                    {prop.selectedFor}
                                                 </Badge>
 
                                                 <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                                    {prop.package.selectedPropertyType}
+                                                    {prop.selectedPropertyType}
                                                 </Badge>
-                                                <Box
-                                                    color='gray.500'
-                                                    fontWeight='semibold'
-                                                    letterSpacing='wide'
-                                                    fontSize='xs'
-                                                    textTransform='uppercase'
-                                                    ml='2'
-                                                >
-                                                    {propertyCard.beds} beds &bull; {propertyCard.baths} baths
-                                                </Box>
+
                                             </Box>
                                         </Box>
 

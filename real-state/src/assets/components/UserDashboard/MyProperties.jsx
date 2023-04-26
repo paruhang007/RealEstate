@@ -1,3 +1,4 @@
+
 import {
     Flex,
     Box,
@@ -26,24 +27,23 @@ import {
     ModalFooter,
     ModalBody,
     ModalCloseButton,
-
-
 } from "@chakra-ui/react";
+import KhaltiCheckout from "khalti-checkout-web";
 import { AiOutlineSearch } from "react-icons/ai";
 import { AiOutlineEdit } from 'react-icons/ai'
 import { AiOutlineDelete } from 'react-icons/ai'
+import { BsCashCoin } from 'react-icons/bs'
 import { useDisclosure } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
-
 export default function MyProperties() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+    const { isOpen: isPayOpen, onOpen: onPayOpen, onClose: onPayClose } = useDisclosure();
+
     const navigate = useNavigate();
-
-
 
     const [property, setProperty] = useState([]);
 
@@ -128,16 +128,6 @@ export default function MyProperties() {
     };
 
 
-    // const handlerCate = (e) => {
-    //     const select = e.target.value;
-    //     console.log(select);
-    //     const filtered = property.filter((prop) => {
-    //         return prop.selectedPropertyType === select;
-    //     });
-    //     setProperty(filtered);
-    // }
-
-
     // getting the token from local storage
     const data = localStorage.getItem('token');
     // decoding the token which is actually holding the user id  
@@ -193,7 +183,30 @@ export default function MyProperties() {
         }
     }
 
+    let config = {
+        // replace this key with yours
+        "publicKey": "test_secret_key_2af2bab52fa641ee818ae8ca381b5491",
+        "productIdentity": "1234567890",
+        "productName": "Drogon",
+        "productUrl": "http://gameofthrones.com/buy/Dragons",
+        "eventHandler": {
+            onSuccess(payload) {
+                // hit merchant api for initiating verfication
+                console.log(payload);
+            },
+            // onError handler is optional
+            onError(error) {
+                // handle errors
+                console.log(error);
+            },
+            onClose() {
+                console.log('widget is closing');
+            }
+        },
+        "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
+    };
 
+    // let checkout = new KhaltiCheckout(config);
 
     return (
         <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
@@ -287,6 +300,18 @@ export default function MyProperties() {
                                                         onOpen();
                                                     }}
                                                 />
+                                                <IconButton
+                                                    variant='outline'
+                                                    colorScheme='teal'
+                                                    aria-label='Call Sage'
+                                                    fontSize='20px'
+                                                    icon={<BsCashCoin />}
+                                                    onClick={() => {
+                                                        setPropID(prop._id);
+
+                                                        onPayOpen();
+                                                    }}
+                                                />
 
                                             </Flex>
                                         </Td>
@@ -350,7 +375,32 @@ export default function MyProperties() {
                 </ModalContent>
             </Modal>
 
-        </Flex>
+            {/* model for pay icon */}
+            <Modal blockScrollOnMount={false} isOpen={isPayOpen} onClose={onPayClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Make Payment </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Text fontWeight='bold' mb='1rem'>
+                            Do you want to make the Payment?
+                        </Text>
+
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button colorScheme='blue' mr={3} onClick={() => {
+                            checkout.show({ amount: 1000 });
+                        }}>
+                            Make  Payment
+                        </Button>
+
+                        <Button variant='ghost' onClick={onPayClose} >Close</Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+        </Flex >
     )
 }
 
