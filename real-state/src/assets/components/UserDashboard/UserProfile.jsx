@@ -31,6 +31,7 @@ export default function UserProfile() {
   // decoding the token which is actually holding the user id  
   const user = jwt_decode(data);
 
+
   const loadData = async () => {
     try {
       const response = await fetch("http://localhost:5000/userGet", {
@@ -44,8 +45,8 @@ export default function UserProfile() {
         }),
       });
       const data = await response.json();
-      console.log(data);
-      setUserData(data.rest);
+      console.log(data.data);
+      setUserData(data.data);
     }
 
     catch (err) {
@@ -68,7 +69,7 @@ export default function UserProfile() {
     console.log(userData);
 
     const object = {
-
+      id: user.id,
       ...userData,
     }
     console.log(object);
@@ -150,7 +151,7 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.fname}
-          // onchange={(e) => setUserData({ ...userData, fname: e.target.value })}
+            onchange={(e) => setUserData({ ...userData, fname: e.target.value })}
           />
         </FormControl>
         <FormControl id="lastName" isRequired>
@@ -160,7 +161,7 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.lname}
-          // onchange={(e) => setUserData({ ...userData, lname: e.target.value })}
+            onchange={(e) => setUserData({ ...userData, lname: e.target.value })}
           />
         </FormControl>
         <FormControl id="Numbrer" isRequired>
@@ -170,7 +171,7 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.phone}
-          // onchange={(e) => setUserData({ ...userData, phone: e.target.value })}
+            onchange={(e) => setUserData({ ...userData, phone: e.target.value })}
           />
         </FormControl>
         <FormControl id="email">
@@ -180,7 +181,7 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="email"
             defaultValue={userData.email}
-          // onchange={(e) => setUserData({ ...userData, email: e.target.value })}
+            onchange={(e) => setUserData({ ...userData, email: e.target.value })}
           />
         </FormControl>
 

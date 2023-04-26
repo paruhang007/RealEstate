@@ -44,13 +44,12 @@ export default function AllProperty() {
 
 
     const [property, setProperty] = useState([]);
-
-    const [selectedFor, setSelectedFor] = useState("all");
-    const [selectedType, setSelectedType] = useState("all");
     const [selectedPropertyType, setSelectedPropertyType] = useState(property);
     const [editProp, setEditProp] = useState("");
 
     const [search, setSearch] = useState(false);
+
+    const [propID, setPropID] = useState("");
 
 
     // search handler
@@ -70,21 +69,24 @@ export default function AllProperty() {
         }
     };
 
+    // sort handler
+    const handelsort = (e) => {
+        const select = e.target.value;
+        console.log(select);
 
-    // // search handler
-    // const handelsort = (e) => {
-    //     const select = e.target.value;
-    //     console.log(select);
+        // sorting the services according to the service type selected 
+        setSelectedPropertyType(
+            select !== "all"
+                ? property.filter((prop) => {
+                    // checking if the property type is equal to the selected property type
 
-    //     // sorting the services according to the service type selected 
-    //     setSelectedServiceType(
-    //         select !== "all"
-    //             ? service.filter((serv) => {
-    //                 return serv.setSelectedUser === select;
-    //             })
-    //             : allUsers
-    //     );
-    // };
+                    return prop.verified.toString() === select;
+                })
+                : property
+        );
+    };
+
+
 
 
     const loaddata = async () => {
@@ -97,9 +99,18 @@ export default function AllProperty() {
 
             });
             const prop = await response.json();
-            setProperty(prop.data);
+            // gets the data from the database by filtering only property from different users 
             console.log(prop.data);
-            setSelectedPropertyType(prop.data);
+
+            // mapping the data to get only the property
+            const data = prop.data.map(
+                (prop) => {
+                    return prop.package
+                }
+            )
+            console.log(data);
+            setProperty(data);
+            setSelectedPropertyType(data);
         }
         catch (err) {
             console.log(err);
@@ -130,23 +141,17 @@ export default function AllProperty() {
                     </InputGroup>
 
 
-                    <Box w={'20%'}>
-                        <Select placeholder="Catogery" isrequired  >
-                            <option value="Rent">Rent </option>
-                            <option value="Sale">Sale </option>
-                            <option value="Lease">Lease </option>
+                    <Box w={'25%'}>
+                        <Select onChange={(e) => {
+                            handelsort(e)
+                        }}  >
+                            <option value="all">All</option>
+                            <option value="true">Paid </option>
+                            <option value="false">Unpaid </option>
+
                         </Select>
                     </Box>
-                    <Box w={'25%'} >
-                        <Select placeholder="Property Type" isrequired>
-                            <option value="Land">Land </option>
-                            <option value="Flat">Flat </option>
-                            <option value="House">House </option>
-                            <option value="Apartment">Apartment </option>
-                            <option value="Office space">Office space </option>
-                            <option value="Shop space">Shop space </option>
-                        </Select>
-                    </Box>
+
                 </Flex>
 
                 <TableContainer m={5}>
@@ -154,9 +159,10 @@ export default function AllProperty() {
                         <Thead>
                             <Tr>
                                 <Th>Property ID</Th>
-                                <Th>User ID</Th>
+
                                 <Th>Property Name</Th>
                                 <Th>Property Type</Th>
+                                <Th>Property Catogery</Th>
                                 <Th>Status</Th>
                                 <Th>Action</Th>
 
@@ -166,12 +172,12 @@ export default function AllProperty() {
                             {selectedPropertyType.map((prop) => {
                                 return (
                                     <Tr>
-                                        <Td>{prop.package._id}</Td>
-                                        <Td>{prop.package.propName}</Td>
-                                        <Td >{prop.package.selectedPropertyType}</Td>
-                                        <Td >{prop.package.selectedFor}</Td>
-                                        <Td>{prop.package.propArea}</Td>
-                                        <Td>{prop.package.verified ? "1" : "0"}</Td>
+                                        <Td>{prop._id}</Td>
+                                        <Td>{prop.propName}</Td>
+                                        <Td >{prop.selectedPropertyType}</Td>
+                                        <Td >{prop.selectedFor}</Td>
+
+                                        <Td>{prop.verified ? "1" : "0"}</Td>
                                         <Td >
                                             <Flex gap={4}>
                                                 <IconButton
@@ -210,11 +216,11 @@ export default function AllProperty() {
             <Modal blockScrollOnMount={false} isOpen={isEditOpen} onClose={onEditClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>Edit Property </ModalHeader>
+                    <ModalHeader>Verify Property </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
                         <Text fontWeight='bold' mb='1rem'>
-                            Do you want to Edit the Property?
+                            Do you want to Verify the Property?
                         </Text>
 
                     </ModalBody>

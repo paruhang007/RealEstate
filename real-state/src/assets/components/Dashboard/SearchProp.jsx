@@ -233,7 +233,7 @@ export default function SearchProp() {
                                                 <Badge borderRadius='full' px='2' colorScheme='teal'>
                                                     {prop.package.selectedPropertyType}
                                                 </Badge>
-                                                {/* <Box
+                                                <Box
                                                     color='gray.500'
                                                     fontWeight='semibold'
                                                     letterSpacing='wide'
@@ -242,7 +242,7 @@ export default function SearchProp() {
                                                     ml='2'
                                                 >
                                                     {propertyCard.beds} beds &bull; {propertyCard.baths} baths
-                                                </Box> */}
+                                                </Box>
                                             </Box>
                                         </Box>
 

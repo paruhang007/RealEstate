@@ -74,7 +74,8 @@ export default function MyServices() {
         setSelectedServiceType(
             select !== "all"
                 ? service.filter((serv) => {
-                    return serv.selectedServiceType === select;
+                    // checking if the service type is equal to the selected service type
+                    return serv.verifiedService.toString() === select;
                 })
                 : service
         );
@@ -98,9 +99,18 @@ export default function MyServices() {
                 }),
             });
             const serv = await response.json();
-            setService(serv.data);
+            // gets the data from the database by filtering only services from different users 
             console.log(serv.data);
-            setSelectedServiceType(serv.data);
+
+            // mapping the data to get only the service 
+            const data = serv.data.map(
+                (serv) => {
+                    return serv.service;
+                }
+            )
+            setService(data);
+            console.log(data);
+            setSelectedServiceType(data);
 
         }
         catch (err) {
@@ -144,7 +154,7 @@ export default function MyServices() {
                 <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"} ml={5}>
                     My Services
                 </Text>
-                <Flex w={'100%'} m={5} gap={5}>
+                <Flex m={5} gap={5}>
 
                     <InputGroup >
                         <InputLeftElement pointerEvents="none" color={'black'}>
@@ -160,18 +170,8 @@ export default function MyServices() {
                         }}
                         >
                             <option value="all">All</option>
-                            <option value="Hardware">Hardware Store</option>
-                            <option value="Plumber">Plumber</option>
-                            <option value="Constructions">Constructions</option>
-                            <option value="Electrician">Electrician</option>
-                            <option value="Carpet">Carpet Fitting</option>
-                            <option value="Marbles">Marbles and Tiles</option>
-                            <option value="Furniture">Furniture</option>
-                            <option value="Solar">Solar Heaters</option>
-                            <option value="Metal">Metal Work</option>
-                            <option value="Paint">Paint Store</option>
-                            <option value="Cleaning">Cleaning Service</option>
-                            <option value="Interior">Interior Design</option>
+                            <option value="true">Paid </option>
+                            <option value="false">Unpaid </option>
                         </Select>
                     </Box>
                 </Flex>
@@ -194,12 +194,12 @@ export default function MyServices() {
                             {selectedServiceType.map((serv) => {
                                 return (
                                     <Tr>
-                                        <Td>{serv.service._id}</Td>
-                                        <Td>{serv.service.serName}</Td>
-                                        <Td>{serv.service.selectedServiceType}</Td>
-                                        <Td>{serv.service.serEmail}</Td>
-                                        <Td>{serv.service.serPhone}</Td>
-                                        <Td>{serv.service.verifiedService ? "1" : "0"}</Td>
+                                        <Td>{serv._id}</Td>
+                                        <Td>{serv.serName}</Td>
+                                        <Td>{serv.selectedServiceType}</Td>
+                                        <Td>{serv.serEmail}</Td>
+                                        <Td>{serv.serPhone}</Td>
+                                        <Td>{serv.verifiedService ? "1" : "0"}</Td>
                                         <Td >
                                             <Flex gap={4}>
                                                 <IconButton

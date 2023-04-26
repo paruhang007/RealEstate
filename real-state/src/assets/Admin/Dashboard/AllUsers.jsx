@@ -37,6 +37,16 @@ import { useNavigate } from 'react-router-dom';
 
 
 export default function AllUsers() {
+
+    // // getting the token from local storage
+    // const data = localStorage.getItem('tokenAdmin');
+    // // decoding the token which is actually holding the user id  
+    // const user = jwt_decode(data);
+    // if (!user) {
+    //     console.log("admin not logged in");
+    //     navigate('/loginadmin')
+    // }
+
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const navigate = useNavigate();

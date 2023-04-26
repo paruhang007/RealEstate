@@ -39,6 +39,11 @@ import {
 
 
 const App = () => {
+
+  // getting the token from local storage
+  const admin = localStorage.getItem('tokenAdmin');
+  const user = localStorage.getItem('token');
+
   const routes = createBrowserRouter([
     // routing for the dashboard
     {

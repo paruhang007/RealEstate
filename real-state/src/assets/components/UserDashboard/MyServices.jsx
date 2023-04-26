@@ -65,7 +65,7 @@ export default function MyServices() {
         }
     };
 
-    // search handler
+    // sort handler
     const handelsort = (e) => {
         const select = e.target.value;
         console.log(select);
