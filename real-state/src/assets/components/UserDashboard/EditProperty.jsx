@@ -20,20 +20,12 @@ import {
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useMemo } from "react";
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 
 
 export default function EditProperty() {
-
-    // const { isloaded } = useLoadScript({
-    //   googleMapApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
-    // });
-
-    // if (!isloaded) return <div>"Loading Maps"</div>;
-    // return <Map />;
 
     const [propName, setPropName] = useState("");
     const [propState, setPropState] = useState("");

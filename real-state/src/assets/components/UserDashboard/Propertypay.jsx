@@ -41,3 +41,5 @@
 //         </Flex>
 //     )
 // }
+
+// npm install khalti-checkout-web

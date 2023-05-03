@@ -36,7 +36,13 @@ import { useDisclosure } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import { BsCashCoin } from 'react-icons/bs'
 
+import KhaltiCheckout from "khalti-checkout-web";
+import config from "../../khalti/KhaltiConfig";
+
+// for khalit payment
+let checkout = new KhaltiCheckout(config);
 
 export default function MyServices() {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -222,6 +228,21 @@ export default function MyServices() {
                                                     onClick={() => {
                                                         setServID(serv._id);
                                                         onOpen();
+                                                    }}
+                                                />
+
+                                                <IconButton
+                                                    variant='outline'
+                                                    colorScheme='teal'
+                                                    aria-label='Call Sage'
+                                                    fontSize='20px'
+                                                    icon={<BsCashCoin />}
+                                                    onClick={() => {
+                                                        setServID(serv._id);
+
+                                                        //onPayOpen();
+
+                                                        checkout.show({ amount: 20000 });
                                                     }}
                                                 />
 

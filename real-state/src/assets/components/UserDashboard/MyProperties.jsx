@@ -38,6 +38,8 @@ import { useState, useEffect } from 'react'
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
+import config from "../../khalti/KhaltiConfig";
+
 export default function MyProperties() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
@@ -183,30 +185,8 @@ export default function MyProperties() {
         }
     }
 
-    let config = {
-        // replace this key with yours
-        "publicKey": "test_secret_key_2af2bab52fa641ee818ae8ca381b5491",
-        "productIdentity": "1234567890",
-        "productName": "Drogon",
-        "productUrl": "http://gameofthrones.com/buy/Dragons",
-        "eventHandler": {
-            onSuccess(payload) {
-                // hit merchant api for initiating verfication
-                console.log(payload);
-            },
-            // onError handler is optional
-            onError(error) {
-                // handle errors
-                console.log(error);
-            },
-            onClose() {
-                console.log('widget is closing');
-            }
-        },
-        "paymentPreference": ["KHALTI", "EBANKING", "MOBILE_BANKING", "CONNECT_IPS", "SCT"],
-    };
-
-    // let checkout = new KhaltiCheckout(config);
+    // for khalit payment
+    let checkout = new KhaltiCheckout(config);
 
     return (
         <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
@@ -309,7 +289,9 @@ export default function MyProperties() {
                                                     onClick={() => {
                                                         setPropID(prop._id);
 
-                                                        onPayOpen();
+                                                        //onPayOpen();
+
+                                                        checkout.show({ amount: 10000 });
                                                     }}
                                                 />
 
@@ -390,7 +372,7 @@ export default function MyProperties() {
 
                     <ModalFooter>
                         <Button colorScheme='blue' mr={3} onClick={() => {
-                            checkout.show({ amount: 1000 });
+                            // checkout.show({ amount: 1000 });
                         }}>
                             Make  Payment
                         </Button>

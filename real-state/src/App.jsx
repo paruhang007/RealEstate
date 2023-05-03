@@ -114,10 +114,10 @@ const App = () => {
               path: "/editservice/:id/:servId",
               element: <EditService />,
             },
-            {
-              path: "/khalti",
-              element: <Khalti />,
-            },
+            // {
+            //   path: "/khalti",
+            //   element: <Khalti />,
+            // },
 
           ],
         },
