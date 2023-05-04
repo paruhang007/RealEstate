@@ -1,6 +1,6 @@
 import myKey from './KhlatiKeys.js';
 
-// const axios = require('axios');
+import axios from 'axios';
 
 let config = {
     // replace this key with yours
@@ -12,16 +12,17 @@ let config = {
         onSuccess(payload) {
             // hit merchant api for initiating verfication
             console.log(payload);
+            alert("Thank you for Pyment")
 
             //for server verification
-            // let data = {
-            //     token: payload.token,
-            //     amount: payload.amount,
-            // };
+            let data = {
+                token: payload.token,
+                amount: payload.amount,
+            };
 
-            // let config = {
-            //     headers: { 'Authorization': myKey.secretKey }
-            // };
+            let config = {
+                headers: { 'Authorization': myKey.secretKey }
+            };
 
             // axios
             //     .post(
@@ -29,11 +30,15 @@ let config = {
             //     )
             //     .then((response) => {
             //         console.log(response.data);
-            //         alert("Thank you for generosity");
+
             //     })
             //     .catch((error) => {
             //         console.log(error);
             //     });
+
+            axios.get('http://localhost:5000/api/khalti/verify/${data.token}/${data.amount}/${myKey.secretKey}')
+                .then(response => console.log(response.data))
+                .catch(error => console.error(error));
 
         },
         // onError handler is optional

@@ -32,16 +32,49 @@ import {
     Center,
     Avatar,
     Link,
+    Spacer,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    useDisclosure,
+    ModalCloseButton,
 
 } from "@chakra-ui/react";
 import { MdLocalShipping } from 'react-icons/md';
 import { GoLocation } from 'react-icons/go'
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { IoBedOutline } from 'react-icons/io5';
+import { MdDinnerDining } from 'react-icons/md';
+import { MdOutlineWaterDrop } from 'react-icons/md';
+import { RiEarthquakeLine } from 'react-icons/ri';
+import { MdOutlineSoupKitchen } from 'react-icons/md';
+import { TbParking } from 'react-icons/tb';
+import { GiWaterfall } from 'react-icons/gi';
+import { MdFavoriteBorder } from 'react-icons/md';
 
 export default function SearchProp() {
 
+    // use state for the product
     const [product, setProduct] = useState({});
+    const [checkbox, setCheckbox] = useState([]);
 
+    // use state for the user
+    const [userData, setUserData] = useState({});
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const navigate = useNavigate();
+
+    // getting the id and packId from the url
+    const { id, packId } = useParams();
+
+    // loading the data from the database
     const loadData = async () => {
         try {
             const response = await fetch('http://localhost:5000/getPack', {
@@ -50,13 +83,15 @@ export default function SearchProp() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "id": "642d1b386e941d8d67492b69",
-                    "packId": "6431146aee3ad9d90330cd75"
+                    id,
+                    packId
                 }),
             });
             const data = await response.json();
             console.log(data);
-            setProduct(data.data[0])
+            setProduct(data.data[0]);
+            console.log(data.data[0].checkboxValues[0]);
+            setCheckbox(data.data[0].checkboxValues[0]);
         }
         catch (err) {
             console.log(err);
@@ -68,6 +103,34 @@ export default function SearchProp() {
     }, []);
 
 
+    // loading the data from the database
+    const loadData2 = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/userGet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id
+                }),
+            });
+            const data = await response.json();
+            console.log(data.data);
+            setUserData(data.data);
+
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    useEffect(() => {
+        loadData2();
+    }, []);
+
+
+
     return (
         <Grid templateColumns='repeat(7, 1fr)' gap={2} py={5} px={10} bg="gray.100">
             <GridItem colStart={1} colEnd={6} >
@@ -75,51 +138,85 @@ export default function SearchProp() {
                     <Stack spacing={{ base: 6, md: 10 }}>
 
                         <Box as={'header'}>
-                            <Heading
-                                lineHeight={1.1}
-                                fontWeight={400}
-                                fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
-                                {
-                                    product.packName
-                                }
-                            </Heading>
-                            <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
-                                <GoLocation /> 1234 Main Street, Los Angeles, CA 90025
+                            <Flex alignItems='center'>
+                                <Heading
+                                    lineHeight={1.1}
+                                    fontWeight={'bold'}
+                                    fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
+                                    {
+                                        product.propName
+                                    }
+                                </Heading>
+                                <Spacer />
+                                <IconButton
+                                    variant='outline'
+                                    colorScheme='teal'
+                                    aria-label='favourite'
+                                    icon={<MdFavoriteBorder />}
+                                    onClick={() => {
+                                        const data = localStorage.getItem("token");
+                                        if (data) {
+                                            alert("Added to favourites");
+                                        } else {
+                                            onOpen();
+                                        }
+                                    }}
+                                />
+                            </Flex>
+
+                            <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose}>
+                                <ModalOverlay />
+                                <ModalContent>
+                                    <ModalHeader as={Flex} justifyContent={"center"}>
+                                        Please Login or Signup to add Property to Favourites
+                                    </ModalHeader>
+                                    <ModalCloseButton />
+
+                                    <ModalFooter>
+                                        <Flex w={"full"} justifyContent={"center"} gap={5}>
+                                            <Button
+                                                colorScheme="blue"
+                                                mr={3}
+                                                onClick={() => navigate("/login")}
+                                            >
+                                                Login
+                                            </Button>
+                                            <Button onClick={onClose} onClick={() => navigate("/signup")}>
+                                                Signup
+                                            </Button>
+                                        </Flex>
+                                    </ModalFooter>
+                                </ModalContent>
+                            </Modal>
+
+                            <Flex as='span' color='gray.600' fontSize='l' direction={'row'} mt={2} align="center" fontWeight={'bold'} >
+                                <GoLocation /> {product.propState},{product.propDist},{product.propMuni},{product.propWard},,{product.propStreet}
                             </Flex>
                             <Text
                                 color={useColorModeValue('gray.900', 'gray.400')}
-                                fontWeight={300}
+                                fontWeight={'bold'}
                                 fontSize={'2xl'}>
-                                $350.00 USD
+                                Rs. {product.propPrice} {product.selectedPayment}
                             </Text>
 
-                            <Box display='flex' alignItems='baseline' mt={3} gap={3}>
-                                <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                    SALE
+                            <Box display='flex' alignItems='baseline' mt={3} gap={3} >
+                                <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
+                                    {product.selectedFor}
                                 </Badge>
 
-                                <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                    ID134
+                                <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
+                                    {product.selectedPropertyType}
+
                                 </Badge>
 
-                                <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                    HOUSE
+                                <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
+                                    Property ID: {product._id}
                                 </Badge>
 
-                                <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                    VERIFIED
+                                <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
+                                    {product.verified}
                                 </Badge>
 
-                                <Box
-                                    color='gray.500'
-                                    fontWeight='semibold'
-                                    letterSpacing='wide'
-                                    fontSize='xs'
-                                    textTransform='uppercase'
-                                    ml='2'
-                                >
-                                    3 beds &bull; 2 baths
-                                </Box>
                             </Box>
                         </Box>
 
@@ -128,7 +225,7 @@ export default function SearchProp() {
                                 rounded={'md'}
                                 alt={'product image'}
                                 src={
-                                    'https://images.unsplash.com/photo-1596516109370-29001ec8ec36?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwyODE1MDl8MHwxfGFsbHx8fHx8fHx8fDE2Mzg5MzY2MzE&ixlib=rb-1.2.1&q=80&w=1080'
+                                    product.img
                                 }
                                 fit={'cover'}
                                 align={'center'}
@@ -155,20 +252,81 @@ export default function SearchProp() {
                                     fontWeight={'500'}
                                     textTransform={'uppercase'}
                                     mb={'4'}>
-                                    Property Highlights
+                                    Ammenities
                                 </Text>
 
                                 <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-                                    <List spacing={2}>
-                                        <ListItem>Area</ListItem>
-                                        <ListItem>Road Size</ListItem>
 
-                                    </List>
-                                    <List spacing={2}>
-                                        <ListItem>Facing</ListItem>
-                                        <ListItem>Posted On</ListItem>
 
-                                    </List>
+                                    {checkbox.Bedroom && <Flex gap={2} alignItems={'center'}>
+                                        <Icon
+                                            as={IoBedOutline}
+                                            boxSize={7}
+                                        />
+                                        Bedroom
+
+                                    </Flex>}
+
+                                    {checkbox.Dining && <Flex gap={2} alignItems={'center'}>
+                                        <Icon
+                                            as={MdDinnerDining}
+                                            boxSize={7}
+                                        />
+                                        Dining
+
+                                    </Flex>}
+
+
+                                    {checkbox.Drainage && <Flex gap={2} alignItems={'center'}>
+                                        <Icon
+                                            as={GiWaterfall}
+                                            boxSize={7}
+                                        />
+                                        Drainage
+
+                                    </Flex>}
+
+                                    {checkbox.Drinking && <Flex gap={2} alignItems={'center'}>
+                                        <Icon
+                                            as={MdOutlineWaterDrop}
+                                            boxSize={7}
+                                        />
+                                        Drinking Water
+
+                                    </Flex>}
+
+
+                                    {checkbox.Earth && <Flex gap={2} alignItems={'center'}>
+                                        <Icon
+                                            as={RiEarthquakeLine}
+                                            boxSize={7}
+                                        />
+                                        Earthquake Resistant
+
+                                    </Flex>}
+
+
+                                    {checkbox.Kitchen && <Flex gap={2} alignItems={'center'}>
+                                        <Icon
+                                            as={MdOutlineSoupKitchen}
+                                            boxSize={7}
+                                        />
+                                        Kitchen
+
+                                    </Flex>}
+
+
+                                    {checkbox.parking && <Flex gap={2} alignItems={'center'}>
+                                        <Icon
+                                            as={TbParking}
+                                            boxSize={7}
+                                        />
+                                        parking
+
+                                    </Flex>}
+
+
+
                                 </SimpleGrid>
                             </Box>
 
@@ -179,68 +337,50 @@ export default function SearchProp() {
                                     fontWeight={'500'}
                                     textTransform={'uppercase'}
                                     mb={'4'}>
-                                    Ammenities
+                                    Property Highlights
                                 </Text>
 
                                 <List spacing={2}>
                                     <ListItem>
                                         <Text as={'span'} fontWeight={'bold'}>
-                                            Drainage:
+                                            Facing :
                                         </Text>{' '}
-                                        20 mm
+                                        {product.propFace}
                                     </ListItem>
                                     <ListItem>
                                         <Text as={'span'} fontWeight={'bold'}>
-                                            Drinking Water:
+                                            Road Size: :
                                         </Text>{' '}
-                                        claen
+                                        {product.propRoad}
                                     </ListItem>
                                     <ListItem>
                                         <Text as={'span'} fontWeight={'bold'}>
-                                            Parking:
+                                            Area :
                                         </Text>{' '}
-                                        yes
+                                        {product.propArea}  {product.selectedPropertyUnit}
                                     </ListItem>
-                                    <ListItem>
-                                        <Text as={'span'} fontWeight={'bold'}>
-                                            Earthquake Resistant:
-                                        </Text>{' '}
-                                        yes
-                                    </ListItem>
+
 
 
                                 </List>
                             </Box>
 
-                            <VStack spacing={{ base: 4, sm: 6 }}>
-                                <Text
-                                    color={useColorModeValue('gray.500', 'gray.400')}
-                                    fontSize={'2xl'}
-                                    fontWeight={'300'}>
-                                    Description of the property
-                                </Text>
-                                <Text fontSize={'lg'}>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad
-                                    aliquid amet at delectus doloribus dolorum expedita hic, ipsum
-                                    maxime modi nam officiis porro, quae, quisquam quos
-                                    reprehenderit velit? Natus, totam.
-                                </Text>
-                            </VStack>
-
-                            <Box>
+                            <Box spacing={{ base: 4, sm: 6 }}>
                                 <Text
                                     fontSize={{ base: '16px', lg: '18px' }}
                                     color={useColorModeValue('yellow.500', 'yellow.300')}
                                     fontWeight={'500'}
                                     textTransform={'uppercase'}
                                     mb={'4'}>
-                                    View On Map
+                                    Description of the property
                                 </Text>
-                                <Button>
-                                    Click me
-                                </Button>
 
+                                <Text fontSize={'lg'}>
+
+                                    {product.propDesc}
+                                </Text>
                             </Box>
+
 
                         </Stack>
 
@@ -276,31 +416,29 @@ export default function SearchProp() {
                                 pos={'relative'}
                             />
                             <Heading fontSize={'2xl'} fontFamily={'body'}>
-                                Lindsey James
+                                {userData.fname} {userData.lname}
                             </Heading>
                             <Text fontWeight={600} color={'gray.500'} mb={4}>
-                                example@gmail.com
+                                {userData.email}
                             </Text>
-
-                            <Stack align={'center'} justify={'center'} direction={'row'} mt={6}>
-                                <Badge
-                                    px={2}
-                                    py={1}
-                                    bg={useColorModeValue('gray.50', 'gray.800')}
-                                    fontWeight={'400'}>
-                                    5 Listings
-                                </Badge>
-
-                            </Stack>
 
                             <Stack mt={8} direction={'row'} spacing={4}>
                                 <Button
                                     flex={1}
                                     fontSize={'sm'}
                                     rounded={'full'}
-                                    _focus={{
-                                        bg: 'gray.200',
-                                    }}>
+                                    bg={"blue.400"}
+                                    color={"white"}
+                                    _hover={{ bg: "blue.500" }}
+                                    onClick={() => {
+                                        const data = localStorage.getItem("token");
+                                        if (data) {
+                                            alert("Message");
+                                        } else {
+                                            onOpen();
+                                        }
+                                    }}
+                                >
                                     Message
                                 </Button>
 

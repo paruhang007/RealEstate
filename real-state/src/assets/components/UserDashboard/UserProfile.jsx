@@ -66,7 +66,7 @@ export default function UserProfile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(userData);
+
 
     const object = {
       id: user.id,
@@ -82,7 +82,7 @@ export default function UserProfile() {
         },
         body: JSON.stringify({
 
-          ...userData
+          ...object
         }),
 
       })
@@ -151,7 +151,9 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.fname}
-            onchange={(e) => setUserData({ ...userData, fname: e.target.value })}
+            onChange={(e) => {
+              setUserData({ ...userData, fname: e.target.value });
+            }}
           />
         </FormControl>
         <FormControl id="lastName" isRequired>
@@ -161,7 +163,9 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.lname}
-            onchange={(e) => setUserData({ ...userData, lname: e.target.value })}
+            onChange={(e) => {
+              setUserData({ ...userData, lname: e.target.value });
+            }}
           />
         </FormControl>
         <FormControl id="Numbrer" isRequired>
@@ -171,7 +175,9 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="text"
             defaultValue={userData.phone}
-            onchange={(e) => setUserData({ ...userData, phone: e.target.value })}
+            onChange={(e) => {
+              setUserData({ ...userData, phone: e.target.value });
+            }}
           />
         </FormControl>
         <FormControl id="email">
@@ -181,7 +187,9 @@ export default function UserProfile() {
             _placeholder={{ color: "gray.500" }}
             type="email"
             defaultValue={userData.email}
-            onchange={(e) => setUserData({ ...userData, email: e.target.value })}
+            onChange={(e) => {
+              setUserData({ ...userData, email: e.target.value });
+            }}
           />
         </FormControl>
 

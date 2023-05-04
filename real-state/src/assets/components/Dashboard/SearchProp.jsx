@@ -45,6 +45,9 @@ export default function SearchProp() {
     const [selectedType, setSelectedType] = useState("all");
     const [search, setSearch] = useState(false);
 
+
+    const navigate = useNavigate();
+
     // load data into the table
     const loaddata = async () => {
         try {
@@ -58,16 +61,18 @@ export default function SearchProp() {
             const prop = await response.json();
             // gets the data from the database by filtering only property from different users 
             console.log(prop.data);
+            setProperty(prop.data);
+            setSelectedPropertyType(prop.data);
 
             // mapping the data to get only the property
-            const data = prop.data.map(
-                (prop) => {
-                    return prop.package
-                }
-            )
-            console.log(data);
-            setProperty(data);
-            setSelectedPropertyType(data);
+            // const data = prop.data.map(
+            //     (prop) => {
+            //         return prop.package
+            //     }
+            // )
+            // console.log(data);
+            // setProperty(data);
+            // setSelectedPropertyType(data);
         }
         catch (err) {
             console.log(err);
@@ -266,7 +271,17 @@ export default function SearchProp() {
                             {selectedPropertyType.map((prop) => {
                                 return (
                                     < Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} >
-                                        <Image src={prop.img} alt={"property image"} objectFit={'cover'} />
+                                        <Image src={prop.package.img}
+                                            alt={"property image"}
+                                            objectFit={'cover'}
+
+                                            onClick={() => {
+
+                                                navigate(`/detail/${prop._id}/${prop.package._id}`);
+
+                                            }}
+
+                                        />
 
                                         <Box p='6'>
                                             <Flex align={'center'}>
@@ -278,40 +293,35 @@ export default function SearchProp() {
                                                     lineHeight='tight'
                                                     noOfLines={1}
                                                 >
-                                                    {prop.propName}
+                                                    {prop.package.propName}
                                                 </Box>
 
-                                                <IconButton
-                                                    variant='outline'
-                                                    colorScheme='teal'
-                                                    aria-label='favourite'
-                                                    icon={<MdFavoriteBorder />}
-                                                />
+
                                             </Flex>
 
                                             <Flex gap={2}>
                                                 <Box>
-                                                    {prop.propPrice}
+                                                    {prop.package.propPrice}
                                                 </Box>
 
                                                 <Box >
 
-                                                    {prop.selectedPayment}
+                                                    {prop.package.selectedPayment}
 
                                                 </Box>
                                             </Flex>
 
                                             <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
-                                                <GoLocation /> {prop.propState}, {prop.propDist}, {prop.propStreet}
+                                                <GoLocation /> {prop.package.propState}, {prop.package.propDist}, {prop.package.propStreet}
                                             </Flex>
 
                                             <Box display='flex' alignItems='baseline' m={3} gap={2}>
                                                 <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                                    {prop.selectedFor}
+                                                    {prop.package.selectedFor}
                                                 </Badge>
 
                                                 <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                                    {prop.selectedPropertyType}
+                                                    {prop.package.selectedPropertyType}
                                                 </Badge>
 
                                             </Box>

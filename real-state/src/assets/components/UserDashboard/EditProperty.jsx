@@ -91,6 +91,7 @@ export default function EditProperty() {
     const [product, setProduct] = useState({});
     const [selectedData, setSelectedData] = useState({});
 
+    // getting the id and packId from the url
     const { id, packId } = useParams();
 
     const loadData = async () => {
@@ -172,7 +173,7 @@ export default function EditProperty() {
                     },
 
                     body: JSON.stringify(
-                        object
+                        ...object
                     ),
                 })
                 console.log(response);

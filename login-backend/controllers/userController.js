@@ -128,7 +128,7 @@ const userGet = async (req, res) => {
 const userEdit = async (req, res) => {
     const { fname, lname, email, phone, id } = req.body;
 
-    console.log(req.body);
+    // console.log(req.body);
 
     try {
         const user = await User.findById(id);
@@ -221,6 +221,39 @@ const otp = async (req, res) => {
         console.log(error);
     }
 }
+
+// api for otp verify
+const otpVerify = async (req, res) => {
+
+    const otp = await OTP.findOne({ number: req.body.phone, status: "pending" });
+    console.log(otp);
+    if (!otp) return res.status(400).send({ message: "Bad Request" });
+
+    const { expireAt } = otp;
+    if (expireAt < Date.now()) {
+        otp.status = "expired";
+        await otp.save();
+        return res.status(400).send({ message: "OTP Expired" });
+    }
+    console.log(otp.otp, req.body.otp);
+    if (otp.otp === req.body.otp) {
+        otp.status = "verified";
+        await otp.save();
+        const user = await User.findOne({ number: req.body.phone });
+        if (user) {
+            if (user.isCompleted) {
+                return res.send({ message: "OTP Verified", profile: true });
+            } else {
+                return res.send({ message: "OTP Verified", profile: false });
+            }
+        }
+    } else {
+        return res.status(400).send({ message: "OTP is incorrect" });
+    }
+
+}
+
+
 
 // CRUD OPERATIONS for package
 // Add package
@@ -557,6 +590,7 @@ module.exports = {
     userEdit,
     changeUserPass,
     otp,
+    otpVerify,
     addPack,
     editPack,
     getPack,

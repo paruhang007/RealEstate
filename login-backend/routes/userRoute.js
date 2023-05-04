@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { login, register, userGet, userEdit, changeUserPass, otp, addPack, editPack, getPack, getPackAll, deletePack, addService, editService, getService, getServiceAll, deleteService, uplod_by_link, } = require("../controllers/userController.js");
+const { login, register, userGet, userEdit, changeUserPass, otp, otpVerify, addPack, editPack, getPack, getPackAll, deletePack, addService, editService, getService, getServiceAll, deleteService, uplod_by_link, } = require("../controllers/userController.js");
 
 router.post("/login", login);
 router.post("/register", register);
@@ -8,6 +8,7 @@ router.post("/userGet", userGet);
 router.patch("/userEdit", userEdit);
 router.patch("/changeUserPass", changeUserPass);
 router.post("/otp", otp);
+router.post("/otpVerify", otpVerify);
 router.post("/addPack", addPack);
 router.patch("/editPack", editPack);
 router.post("/getPack", getPack);

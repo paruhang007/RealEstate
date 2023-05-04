@@ -131,7 +131,7 @@ const App = () => {
           element: <SearchProp />,
         },
         {
-          path: "/detail",
+          path: "/detail/:id/:packId",
           element: <Detail />,
         },
       ],
