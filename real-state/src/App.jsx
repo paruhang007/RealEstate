@@ -14,6 +14,7 @@ import ChangePassword from "./assets/components/UserDashboard/ChangePassword";
 import Favourite from "./assets/components/UserDashboard/Favourite";
 import SearchProp from "./assets/components/Dashboard/SearchProp";
 import Detail from "./assets/components/Dashboard/Detail";
+import DetailService from "./assets/components/Dashboard/DetailService";
 import Sidebar from "./assets/components/UserDashboard/SideBar";
 import UseDashPage from "./assets/pages/UserDashPage";
 import MyProperties from "./assets/components/UserDashboard/MyProperties";
@@ -133,6 +134,10 @@ const App = () => {
         {
           path: "/detail/:id/:packId",
           element: <Detail />,
+        },
+        {
+          path: "/detailservice/:id/:servId",
+          element: <DetailService />,
         },
       ],
     },

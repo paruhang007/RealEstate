@@ -48,16 +48,18 @@ export default function Service() {
             const prop = await response.json();
             // gets the data from the database by filtering only property from different users 
             console.log(prop.data);
+            setProperty(prop.data);
+            setSelectedPropertyType(prop.data);
 
             // mapping the data to get only the property
-            const data = prop.data.map(
-                (prop) => {
-                    return prop.service
-                }
-            )
-            console.log(data);
-            setProperty(data);
-            setSelectedPropertyType(data);
+            // const data = prop.data.map(
+            //     (prop) => {
+            //         return prop.service
+            //     }
+            // )
+            // console.log(data);
+            // setProperty(data);
+            // setSelectedPropertyType(data);
         }
         catch (err) {
             console.log(err);
@@ -79,7 +81,7 @@ export default function Service() {
         } else {
             setSelectedPropertyType(
                 property.filter((prop) => {
-                    return prop.serName.toLowerCase().includes(search.toLowerCase()) || prop._id.toLowerCase().includes(search.toLowerCase()) || prop.serDist.toLowerCase().includes(search.toLowerCase()) || prop.serStreet.toLowerCase().includes(search.toLowerCase()) || prop.serMuni.toLowerCase().includes(search.toLowerCase()) || prop.serState.toLowerCase().includes(search.toLowerCase());
+                    return prop.service.serName.toLowerCase().includes(search.toLowerCase()) || prop.service._id.toLowerCase().includes(search.toLowerCase()) || prop.service.serDist.toLowerCase().includes(search.toLowerCase()) || prop.service.serStreet.toLowerCase().includes(search.toLowerCase()) || prop.service.serMuni.toLowerCase().includes(search.toLowerCase()) || prop.service.serState.toLowerCase().includes(search.toLowerCase());
                 })
             );
         }
@@ -95,7 +97,7 @@ export default function Service() {
             select !== "all"
                 ? property.filter((prop) => {
                     // checking if the service type is equal to the selected service type
-                    return prop.selectedServiceType === select;
+                    return prop.service.selectedServiceType === select;
                 })
                 : property
         );
@@ -220,7 +222,16 @@ export default function Service() {
                                 {selectedPropertyType.map((prop) => {
                                     return (
                                         < Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} >
-                                            <Image src={prop.img} alt={"service image"} objectFit={'cover'} />
+                                            <Image
+                                                src={prop.service.img}
+                                                alt={"service image"}
+                                                objectFit={'cover'}
+                                                onClick={() => {
+
+                                                    navigate(`/detailservice/${prop._id}/${prop.service._id}`);
+
+                                                }}
+                                            />
 
                                             <Box p='6'>
                                                 <Flex align={'center'}>
@@ -232,7 +243,7 @@ export default function Service() {
                                                         lineHeight='tight'
                                                         noOfLines={1}
                                                     >
-                                                        {prop.serName}
+                                                        {prop.service.serName}
                                                     </Box>
 
 
@@ -241,12 +252,12 @@ export default function Service() {
 
 
                                                 <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
-                                                    <GoLocation /> {prop.serState}, {prop.serDist}, {prop.serStreet}
+                                                    <GoLocation /> {prop.service.serState}, {prop.service.serDist}, {prop.service.serStreet}
                                                 </Flex>
 
                                                 <Box display='flex' alignItems='baseline' m={3} gap={2}>
                                                     <Badge borderRadius='full' px='2' colorScheme='teal'>
-                                                        {prop.selectedServiceType}
+                                                        {prop.service.selectedServiceType}
                                                     </Badge>
 
 

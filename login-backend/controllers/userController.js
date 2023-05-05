@@ -126,7 +126,7 @@ const userGet = async (req, res) => {
 
 
 const userEdit = async (req, res) => {
-    const { fname, lname, email, phone, id } = req.body;
+    const { fname, lname, email, phone, id, imageLink } = req.body;
 
     // console.log(req.body);
 
@@ -140,6 +140,7 @@ const userEdit = async (req, res) => {
         user.lname = lname;
         user.email = email;
         user.phone = phone;
+        user.userImg = imageLink;
 
         await user.save();
         res.send({ status: "updated" });

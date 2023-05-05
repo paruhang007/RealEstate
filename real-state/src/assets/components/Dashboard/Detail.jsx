@@ -1,46 +1,46 @@
 import {
-    Flex,
-    Box,
-    Heading,
-    Text,
-    InputGroup,
-    InputLeftElement,
-    Input,
-    HStack,
-    Select,
-    Grid,
-    GridItem,
-    Button,
-    FormControl,
-    FormLabel,
-    SimpleGrid,
-    Image,
-    Badge,
-    IconButton,
-    RadioGroup,
-    VStack,
-    Radio,
-    Stack,
-    Divider,
-    Icon,
-    chakra,
-    useColorModeValue,
-    List,
-    ListItem,
-    Container,
-    StackDivider,
-    Center,
-    Avatar,
-    Link,
-    Spacer,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    useDisclosure,
-    ModalCloseButton,
+   Flex,
+   Box,
+   Heading,
+   Text,
+   InputGroup,
+   InputLeftElement,
+   Input,
+   HStack,
+   Select,
+   Grid,
+   GridItem,
+   Button,
+   FormControl,
+   FormLabel,
+   SimpleGrid,
+   Image,
+   Badge,
+   IconButton,
+   RadioGroup,
+   VStack,
+   Radio,
+   Stack,
+   Divider,
+   Icon,
+   chakra,
+   useColorModeValue,
+   List,
+   ListItem,
+   Container,
+   StackDivider,
+   Center,
+   Avatar,
+   Link,
+   Spacer,
+   Modal,
+   ModalOverlay,
+   ModalContent,
+   ModalHeader,
+   ModalFooter,
+   ModalBody,
+   useDisclosure,
+   ModalCloseButton,
 
 } from "@chakra-ui/react";
 import { MdLocalShipping } from 'react-icons/md';
@@ -60,445 +60,502 @@ import { MdFavoriteBorder } from 'react-icons/md';
 
 export default function SearchProp() {
 
-    // use state for the product
-    const [product, setProduct] = useState({});
-    const [checkbox, setCheckbox] = useState([]);
-
-    // use state for the user
-    const [userData, setUserData] = useState({});
-
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
-    const navigate = useNavigate();
-
-    // getting the id and packId from the url
-    const { id, packId } = useParams();
-
-    // loading the data from the database
-    const loadData = async () => {
-        try {
-            const response = await fetch('http://localhost:5000/getPack', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id,
-                    packId
-                }),
-            });
-            const data = await response.json();
-            console.log(data);
-            setProduct(data.data[0]);
-            console.log(data.data[0].checkboxValues[0]);
-            setCheckbox(data.data[0].checkboxValues[0]);
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-
-    useEffect(() => {
-        loadData();
-    }, []);
-
-
-    // loading the data from the database
-    const loadData2 = async () => {
-        try {
-            const response = await fetch('http://localhost:5000/userGet', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id
-                }),
-            });
-            const data = await response.json();
-            console.log(data.data);
-            setUserData(data.data);
-
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-
-    useEffect(() => {
-        loadData2();
-    }, []);
-
-
-
-    return (
-        <Grid templateColumns='repeat(7, 1fr)' gap={2} py={5} px={10} bg="gray.100">
-            <GridItem colStart={1} colEnd={6} >
-                <Flex m={5} minH={'100'} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'} direction={'column'} p={10} >
-                    <Stack spacing={{ base: 6, md: 10 }}>
-
-                        <Box as={'header'}>
-                            <Flex alignItems='center'>
-                                <Heading
-                                    lineHeight={1.1}
-                                    fontWeight={'bold'}
-                                    fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
-                                    {
-                                        product.propName
-                                    }
-                                </Heading>
-                                <Spacer />
-                                <IconButton
-                                    variant='outline'
-                                    colorScheme='teal'
-                                    aria-label='favourite'
-                                    icon={<MdFavoriteBorder />}
-                                    onClick={() => {
-                                        const data = localStorage.getItem("token");
-                                        if (data) {
-                                            alert("Added to favourites");
-                                        } else {
-                                            onOpen();
-                                        }
-                                    }}
-                                />
-                            </Flex>
-
-                            <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose}>
-                                <ModalOverlay />
-                                <ModalContent>
-                                    <ModalHeader as={Flex} justifyContent={"center"}>
-                                        Please Login or Signup to add Property to Favourites
-                                    </ModalHeader>
-                                    <ModalCloseButton />
-
-                                    <ModalFooter>
-                                        <Flex w={"full"} justifyContent={"center"} gap={5}>
-                                            <Button
-                                                colorScheme="blue"
-                                                mr={3}
-                                                onClick={() => navigate("/login")}
-                                            >
-                                                Login
-                                            </Button>
-                                            <Button onClick={onClose} onClick={() => navigate("/signup")}>
-                                                Signup
-                                            </Button>
-                                        </Flex>
-                                    </ModalFooter>
-                                </ModalContent>
-                            </Modal>
-
-                            <Flex as='span' color='gray.600' fontSize='l' direction={'row'} mt={2} align="center" fontWeight={'bold'} >
-                                <GoLocation /> {product.propState},{product.propDist},{product.propMuni},{product.propWard},,{product.propStreet}
-                            </Flex>
-                            <Text
-                                color={useColorModeValue('gray.900', 'gray.400')}
-                                fontWeight={'bold'}
-                                fontSize={'2xl'}>
-                                Rs. {product.propPrice} {product.selectedPayment}
-                            </Text>
-
-                            <Box display='flex' alignItems='baseline' mt={3} gap={3} >
-                                <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
-                                    {product.selectedFor}
-                                </Badge>
-
-                                <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
-                                    {product.selectedPropertyType}
-
-                                </Badge>
-
-                                <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
-                                    Property ID: {product._id}
-                                </Badge>
-
-                                <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
-                                    {product.verified}
-                                </Badge>
-
-                            </Box>
-                        </Box>
-
-                        <Flex>
-                            <Image
-                                rounded={'md'}
-                                alt={'product image'}
-                                src={
-                                    product.img
-                                }
-                                fit={'cover'}
-                                align={'center'}
-                                w={'100%'}
-                                h={{ base: '100%', sm: '400px', lg: '500px' }}
-                            />
-                        </Flex>
-
-
-
-                        <Stack
-                            spacing={{ base: 4, sm: 6 }}
-                            direction={'column'}
-                            divider={
-                                <StackDivider
-                                    borderColor={useColorModeValue('gray.200', 'gray.600')}
-                                />
-                            }>
-
-                            <Box>
-                                <Text
-                                    fontSize={{ base: '16px', lg: '18px' }}
-                                    color={useColorModeValue('yellow.500', 'yellow.300')}
-                                    fontWeight={'500'}
-                                    textTransform={'uppercase'}
-                                    mb={'4'}>
-                                    Ammenities
-                                </Text>
-
-                                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
-
-
-                                    {checkbox.Bedroom && <Flex gap={2} alignItems={'center'}>
-                                        <Icon
-                                            as={IoBedOutline}
-                                            boxSize={7}
-                                        />
-                                        Bedroom
-
-                                    </Flex>}
-
-                                    {checkbox.Dining && <Flex gap={2} alignItems={'center'}>
-                                        <Icon
-                                            as={MdDinnerDining}
-                                            boxSize={7}
-                                        />
-                                        Dining
-
-                                    </Flex>}
-
-
-                                    {checkbox.Drainage && <Flex gap={2} alignItems={'center'}>
-                                        <Icon
-                                            as={GiWaterfall}
-                                            boxSize={7}
-                                        />
-                                        Drainage
-
-                                    </Flex>}
-
-                                    {checkbox.Drinking && <Flex gap={2} alignItems={'center'}>
-                                        <Icon
-                                            as={MdOutlineWaterDrop}
-                                            boxSize={7}
-                                        />
-                                        Drinking Water
-
-                                    </Flex>}
-
-
-                                    {checkbox.Earth && <Flex gap={2} alignItems={'center'}>
-                                        <Icon
-                                            as={RiEarthquakeLine}
-                                            boxSize={7}
-                                        />
-                                        Earthquake Resistant
-
-                                    </Flex>}
-
-
-                                    {checkbox.Kitchen && <Flex gap={2} alignItems={'center'}>
-                                        <Icon
-                                            as={MdOutlineSoupKitchen}
-                                            boxSize={7}
-                                        />
-                                        Kitchen
-
-                                    </Flex>}
-
-
-                                    {checkbox.parking && <Flex gap={2} alignItems={'center'}>
-                                        <Icon
-                                            as={TbParking}
-                                            boxSize={7}
-                                        />
-                                        parking
-
-                                    </Flex>}
-
-
-
-                                </SimpleGrid>
-                            </Box>
-
-                            <Box>
-                                <Text
-                                    fontSize={{ base: '16px', lg: '18px' }}
-                                    color={useColorModeValue('yellow.500', 'yellow.300')}
-                                    fontWeight={'500'}
-                                    textTransform={'uppercase'}
-                                    mb={'4'}>
-                                    Property Highlights
-                                </Text>
-
-                                <List spacing={2}>
-                                    <ListItem>
-                                        <Text as={'span'} fontWeight={'bold'}>
-                                            Facing :
-                                        </Text>{' '}
-                                        {product.propFace}
-                                    </ListItem>
-                                    <ListItem>
-                                        <Text as={'span'} fontWeight={'bold'}>
-                                            Road Size: :
-                                        </Text>{' '}
-                                        {product.propRoad}
-                                    </ListItem>
-                                    <ListItem>
-                                        <Text as={'span'} fontWeight={'bold'}>
-                                            Area :
-                                        </Text>{' '}
-                                        {product.propArea}  {product.selectedPropertyUnit}
-                                    </ListItem>
-
-
-
-                                </List>
-                            </Box>
-
-                            <Box spacing={{ base: 4, sm: 6 }}>
-                                <Text
-                                    fontSize={{ base: '16px', lg: '18px' }}
-                                    color={useColorModeValue('yellow.500', 'yellow.300')}
-                                    fontWeight={'500'}
-                                    textTransform={'uppercase'}
-                                    mb={'4'}>
-                                    Description of the property
-                                </Text>
-
-                                <Text fontSize={'lg'}>
-
-                                    {product.propDesc}
-                                </Text>
-                            </Box>
-
-
-                        </Stack>
-
-
-
-
-                    </Stack>
-                </Flex>
-            </GridItem>
-
-
-            {/* second portion of the page  */}
-
-            <GridItem colStart={6} colEnd={8} minH={'500'} justify={'center'}  >
-                <Flex m={5} minH={'300'} direction={'column'} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'} p={5}>
-                    {/* Portion for the owner of the post  */}
-                    <Center py={6}>
-                        <Box
-                            maxW={'320px'}
-                            w={'full'}
-                            bg={useColorModeValue('white', 'gray.900')}
-                            boxShadow={'2xl'}
-                            rounded={'lg'}
-                            p={6}
-                            textAlign={'center'}>
-                            <Avatar
-                                size={'xl'}
-                                src={
-                                    'https://images.unsplash.com/photo-1520810627419-35e362c5dc07?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ'
-                                }
-                                alt={'Avatar Alt'}
-                                mb={4}
-                                pos={'relative'}
-                            />
-                            <Heading fontSize={'2xl'} fontFamily={'body'}>
-                                {userData.fname} {userData.lname}
-                            </Heading>
-                            <Text fontWeight={600} color={'gray.500'} mb={4}>
-                                {userData.email}
-                            </Text>
-
-                            <Stack mt={8} direction={'row'} spacing={4}>
-                                <Button
-                                    flex={1}
-                                    fontSize={'sm'}
-                                    rounded={'full'}
-                                    bg={"blue.400"}
-                                    color={"white"}
-                                    _hover={{ bg: "blue.500" }}
-                                    onClick={() => {
-                                        const data = localStorage.getItem("token");
-                                        if (data) {
-                                            alert("Message");
-                                        } else {
-                                            onOpen();
-                                        }
-                                    }}
-                                >
-                                    Message
-                                </Button>
-
-                            </Stack>
-                        </Box>
-                    </Center>
-
-                    {/* portion for Related Properties */}
-                    <Box
-                        maxW={'320px'}
-                        w={'full'}
-                        bg={useColorModeValue('white', 'gray.900')}
-                        boxShadow={'2xl'}
-                        rounded={'lg'}
-                        p={6}
-                    >
-                        <Heading fontSize={'2xl'} fontFamily={'body'}>
-                            Similar Properties
+   // use state for the product
+   const [product, setProduct] = useState({});
+
+   // use state for the product checkbox
+   const [checkbox, setCheckbox] = useState([]);
+
+   // use state for the user
+   const [userData, setUserData] = useState({});
+
+   // use state for the similar properties
+   const [similarProp, setSimilarProp] = useState([]);
+   const [selectedSimilarProp, setSelectedSimilarProp] = useState(similarProp);
+
+   const { isOpen, onOpen, onClose } = useDisclosure();
+
+   const navigate = useNavigate();
+
+   // getting the id and packId from the url
+   const { id, packId } = useParams();
+
+   // loading the data from the database for property
+   const loadData = async () => {
+      try {
+         const response = await fetch('http://localhost:5000/getPack', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               id,
+               packId
+            }),
+         });
+         const data = await response.json();
+         // console.log(data);
+         setProduct(data.data[0]);
+         // console.log(data.data[0].checkboxValues[0]);
+         setCheckbox(data.data[0].checkboxValues[0]);
+      }
+      catch (err) {
+         console.log(err);
+      }
+   }
+
+   useEffect(() => {
+      loadData();
+   }, []);
+
+
+   // loading the data from the database for message tab
+   const loadData2 = async () => {
+      try {
+         const response = await fetch('http://localhost:5000/userGet', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+               id
+            }),
+         });
+         const data = await response.json();
+         // console.log(data.data);
+         setUserData(data.data);
+
+      }
+      catch (err) {
+         console.log(err);
+      }
+   }
+
+   useEffect(() => {
+      loadData2();
+   }, []);
+
+
+   // loading the data from the database for similar properties
+   const loadData3 = async () => {
+      try {
+         const response = await fetch('http://localhost:5000/getAllProp', {
+            method: 'POST',
+            headers: {
+               'Content-Type': 'application/json',
+            },
+         });
+         const prop = await response.json();
+         console.log(prop.data);
+         setSimilarProp(prop.data);
+         console.log(similarProp);
+         setSelectedSimilarProp(prop.data);
+         console.log(selectedSimilarProp);
+      }
+      catch (err) {
+         console.log(err);
+      }
+   }
+
+   useEffect(() => {
+      loadData3();
+   }, []);
+
+
+
+   return (
+      <Grid templateColumns='repeat(7, 1fr)' gap={2} py={5} px={10} bg="gray.100">
+         <GridItem colStart={1} colEnd={6} >
+            <Flex m={5} minH={'100'} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'} direction={'column'} p={10} >
+               <Stack spacing={{ base: 6, md: 10 }}>
+
+                  <Box as={'header'}>
+                     <Flex alignItems='center'>
+                        <Heading
+                           lineHeight={1.1}
+                           fontWeight={'bold'}
+                           fontSize={{ base: '2xl', sm: '4xl', lg: '5xl' }}>
+                           {
+                              product.propName
+                           }
                         </Heading>
+                        <Spacer />
+                        <IconButton
+                           variant='outline'
+                           colorScheme='teal'
+                           aria-label='favourite'
+                           icon={<MdFavoriteBorder />}
+                           onClick={() => {
+                              const data = localStorage.getItem("token");
+                              if (data) {
+                                 alert("Added to favourites");
+                              } else {
+                                 onOpen();
+                              }
+                           }}
+                        />
+                     </Flex>
 
-                        {/* similar properties */}
+                     <Modal closeOnOverlayClick={true} isOpen={isOpen} onClose={onClose}>
+                        <ModalOverlay />
+                        <ModalContent>
+                           <ModalHeader as={Flex} justifyContent={"center"}>
+                              Please Login or Signup to add Property to Favourites
+                           </ModalHeader>
+                           <ModalCloseButton />
 
-                        <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} mt={3}>
-                            <Image src="images/emi.png" alt='house img' />
+                           <ModalFooter>
+                              <Flex w={"full"} justifyContent={"center"} gap={5}>
+                                 <Button
+                                    colorScheme="blue"
+                                    mr={3}
+                                    onClick={() => navigate("/login")}
+                                 >
+                                    Login
+                                 </Button>
+                                 <Button onClick={() => navigate("/signup")}>
+                                    Signup
+                                 </Button>
+                              </Flex>
+                           </ModalFooter>
+                        </ModalContent>
+                     </Modal>
 
-                            <Box p='6' >
+                     <Flex as='span' color='gray.600' fontSize='l' direction={'row'} mt={2} align="center" fontWeight={'bold'} >
+                        <GoLocation /> {product.propState},{product.propDist},{product.propMuni},{product.propWard},,{product.propStreet}
+                     </Flex>
+                     <Text
+                        color={useColorModeValue('gray.900', 'gray.400')}
+                        fontWeight={'bold'}
+                        fontSize={'2xl'}>
+                        Rs. {product.propPrice} {product.selectedPayment}
+                     </Text>
 
-                                <Box
-                                    mt='1'
-                                    fontWeight='semibold'
-                                    as='h4'
-                                    lineHeight='tight'
-                                    noOfLines={1}
-                                >
-                                    Modern House
-                                </Box>
+                     <Box display='flex' alignItems='baseline' mt={3} gap={3} >
+                        <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
+                           {product.selectedFor}
+                        </Badge>
 
-                                <Box>
-                                    45000
-                                    <Box as='span' color='gray.600' fontSize='sm'>
-                                        / wk
-                                    </Box>
-                                </Box>
+                        <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
+                           {product.selectedPropertyType}
 
-                                <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
-                                    <GoLocation /> 1234 Main St
-                                </Flex>
-                            </Box>
+                        </Badge>
 
+                        <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
+                           Property ID: {product._id}
+                        </Badge>
+
+                        <Badge borderRadius='full' px='2' colorScheme='teal' fontSize='l'>
+                           {product.verified}
+                        </Badge>
+
+                     </Box>
+                  </Box>
+
+                  <Flex>
+                     <Image
+                        rounded={'md'}
+                        alt={'product image'}
+                        src={
+                           product.img
+                        }
+                        fit={'cover'}
+                        align={'center'}
+                        w={'100%'}
+                        h={{ base: '100%', sm: '400px', lg: '500px' }}
+                     />
+                  </Flex>
+
+
+
+                  <Stack
+                     spacing={{ base: 4, sm: 6 }}
+                     direction={'column'}
+                     divider={
+                        <StackDivider
+                           borderColor={useColorModeValue('gray.200', 'gray.600')}
+                        />
+                     }>
+
+                     <Box>
+                        <Text
+                           fontSize={{ base: '16px', lg: '18px' }}
+                           color={useColorModeValue('yellow.500', 'yellow.300')}
+                           fontWeight={'500'}
+                           textTransform={'uppercase'}
+                           mb={'4'}>
+                           Ammenities
+                        </Text>
+
+                        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
+
+
+                           {checkbox.Bedroom && <Flex gap={2} alignItems={'center'}>
+                              <Icon
+                                 as={IoBedOutline}
+                                 boxSize={7}
+                              />
+                              Bedroom
+
+                           </Flex>}
+
+                           {checkbox.Dining && <Flex gap={2} alignItems={'center'}>
+                              <Icon
+                                 as={MdDinnerDining}
+                                 boxSize={7}
+                              />
+                              Dining
+
+                           </Flex>}
+
+
+                           {checkbox.Drainage && <Flex gap={2} alignItems={'center'}>
+                              <Icon
+                                 as={GiWaterfall}
+                                 boxSize={7}
+                              />
+                              Drainage
+
+                           </Flex>}
+
+                           {checkbox.Drinking && <Flex gap={2} alignItems={'center'}>
+                              <Icon
+                                 as={MdOutlineWaterDrop}
+                                 boxSize={7}
+                              />
+                              Drinking Water
+
+                           </Flex>}
+
+
+                           {checkbox.Earth && <Flex gap={2} alignItems={'center'}>
+                              <Icon
+                                 as={RiEarthquakeLine}
+                                 boxSize={7}
+                              />
+                              Earthquake Resistant
+
+                           </Flex>}
+
+
+                           {checkbox.Kitchen && <Flex gap={2} alignItems={'center'}>
+                              <Icon
+                                 as={MdOutlineSoupKitchen}
+                                 boxSize={7}
+                              />
+                              Kitchen
+
+                           </Flex>}
+
+
+                           {checkbox.parking && <Flex gap={2} alignItems={'center'}>
+                              <Icon
+                                 as={TbParking}
+                                 boxSize={7}
+                              />
+                              parking
+
+                           </Flex>}
+
+
+
+                        </SimpleGrid>
+                     </Box>
+
+                     <Box>
+                        <Text
+                           fontSize={{ base: '16px', lg: '18px' }}
+                           color={useColorModeValue('yellow.500', 'yellow.300')}
+                           fontWeight={'500'}
+                           textTransform={'uppercase'}
+                           mb={'4'}>
+                           Property Highlights
+                        </Text>
+
+                        <List spacing={2}>
+                           <ListItem>
+                              <Text as={'span'} fontWeight={'bold'}>
+                                 Facing :
+                              </Text>{' '}
+                              {product.propFace}
+                           </ListItem>
+                           <ListItem>
+                              <Text as={'span'} fontWeight={'bold'}>
+                                 Road Size: :
+                              </Text>{' '}
+                              {product.propRoad}
+                           </ListItem>
+                           <ListItem>
+                              <Text as={'span'} fontWeight={'bold'}>
+                                 Area :
+                              </Text>{' '}
+                              {product.propArea}  {product.selectedPropertyUnit}
+                           </ListItem>
+
+
+
+                        </List>
+                     </Box>
+
+                     <Box spacing={{ base: 4, sm: 6 }}>
+                        <Text
+                           fontSize={{ base: '16px', lg: '18px' }}
+                           color={useColorModeValue('yellow.500', 'yellow.300')}
+                           fontWeight={'500'}
+                           textTransform={'uppercase'}
+                           mb={'4'}>
+                           Description of the property
+                        </Text>
+
+                        <Text fontSize={'lg'}>
+
+                           {product.propDesc}
+                        </Text>
+                     </Box>
+
+
+                  </Stack>
+
+               </Stack>
+            </Flex>
+         </GridItem>
+
+
+         {/* second portion of the page  */}
+
+         <GridItem colStart={6} colEnd={8} minH={'500'} justify={'center'}  >
+            <Flex m={5} minH={'300'} direction={'column'} borderWidth='1px' borderColor={'black.200'} bg={'#ffffff'} p={5}>
+               {/* Portion for the owner of the post  */}
+               <Center py={6}>
+                  <Box
+                     maxW={'320px'}
+                     w={'full'}
+                     bg={useColorModeValue('white', 'gray.900')}
+                     boxShadow={'2xl'}
+                     rounded={'lg'}
+                     p={6}
+                     textAlign={'center'}>
+                     <Avatar
+                        size={'xl'}
+                        src={
+                           userData.userImg
+                        }
+                        alt={'Avatar Alt'}
+                        mb={4}
+                        pos={'relative'}
+                     />
+                     <Heading fontSize={'2xl'} fontFamily={'body'}>
+                        {userData.fname} {userData.lname}
+                     </Heading>
+                     <Text fontWeight={600} color={'gray.500'} mb={4}>
+                        {userData.email}
+                     </Text>
+
+                     <Stack mt={8} direction={'row'} spacing={4}>
+                        <Button
+                           flex={1}
+                           fontSize={'sm'}
+                           rounded={'full'}
+                           bg={"blue.400"}
+                           color={"white"}
+                           _hover={{ bg: "blue.500" }}
+                           onClick={() => {
+                              const data = localStorage.getItem("token");
+                              if (data) {
+                                 alert("Message");
+                              } else {
+                                 onOpen();
+                              }
+                           }}
+                        >
+                           Message
+                        </Button>
+
+                     </Stack>
+                  </Box>
+               </Center>
+
+               {/* portion for Related Properties */}
+               <Box
+                  maxW={'320px'}
+                  w={'full'}
+                  bg={useColorModeValue('white', 'gray.900')}
+                  boxShadow={'2xl'}
+                  rounded={'lg'}
+                  p={6}
+               >
+                  <Heading fontSize={'2xl'} fontFamily={'body'}>
+                     Similar Properties
+                  </Heading>
+
+                  {/* similar properties */}
+
+                  {selectedSimilarProp.map((prop) => {
+
+                     <Box maxW='sm' borderWidth='1px' borderRadius='lg' overflow='hidden' borderColor={'blue.200'} mt={3}>
+                        <Image
+                           src={prop.package.img}
+                           alt='house img'
+                           onClick={() => {
+
+                              navigate(`/detail/${prop._id}/${prop.package._id}`);
+
+                           }} />
+
+
+                        <Box p='6' >
+
+                           <Box
+                              mt='1'
+                              fontWeight='semibold'
+                              as='h4'
+                              lineHeight='tight'
+                              noOfLines={1}
+                           >
+                              {prop.package.propName}
+                           </Box>
+
+                           <Flex gap={2}>
+                              <Box>
+                                 {prop.package.propPrice}
+                              </Box>
+
+                              <Box >
+
+                                 {prop.package.selectedPayment}
+
+                              </Box>
+                           </Flex>
+
+                           <Flex as='span' color='gray.600' fontSize='sm' direction={'row'} mt={2} align="center">
+                              <GoLocation /> {prop.package.propState}, {prop.package.propDist}, {prop.package.propStreet}
+                           </Flex>
+
+                           <Box display='flex' alignItems='baseline' m={3} gap={2}>
+                              <Badge borderRadius='full' px='2' colorScheme='teal'>
+                                 {prop.package.selectedFor}
+                              </Badge>
+
+                              <Badge borderRadius='full' px='2' colorScheme='teal'>
+                                 {prop.package.selectedPropertyType}
+                              </Badge>
+
+                           </Box>
 
                         </Box>
 
 
+                     </Box>
+                  })}
 
-                    </Box>
 
-                </Flex>
-            </GridItem>
 
-        </Grid >
+               </Box>
 
-    )
+            </Flex>
+         </GridItem>
+
+      </Grid >
+
+   )
 }

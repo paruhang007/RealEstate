@@ -60,38 +60,65 @@ export default function UserProfile() {
 
 
 
-  const [image, setImage] = useState("");
+  // usestate for images 
+  const [images, setImages] = useState();
+
+  const uploadImage = async () => {
+    console.log("upload");
+    const data = new FormData();
+    data.append('file', images);
+    data.append('upload_preset', 'sie3kiby');
+
+    try {
+      const res = await fetch('https://api.cloudinary.com/v1_1/dooohxhvw/image/upload', {
+        method: 'POST',
+        body: data
+      })
+      const file = await res.json();
+
+      return file.secure_url;
+
+    }
+    catch (error) {
+      console.log(error);
+      return null;
+    }
+
+  }
 
 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    const imageLink = await uploadImage();
 
     const object = {
       id: user.id,
+      imageLink,
       ...userData,
     }
     console.log(object);
-    try {
-      const response = await fetch('http://localhost:5000/userEdit', {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
+    if (imageLink) {
+      try {
+        const response = await fetch('http://localhost:5000/userEdit', {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
 
-        },
-        body: JSON.stringify({
+          },
+          body: JSON.stringify({
 
-          ...object
-        }),
+            ...object
+          }),
 
-      })
-      const data = await response.json();
-      console.log(data);
-    }
+        })
+        const data = await response.json();
+        console.log(data);
+      }
 
-    catch (error) {
-      console.log(error);
+      catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -116,7 +143,7 @@ export default function UserProfile() {
         <FormControl id="userName">
           <Stack direction={["column", "row"]} spacing={6}>
             <Center>
-              <Avatar size="xl" src={image}>
+              <Avatar size="xl" src={userData.userImg} alt={"user image"}>
                 <AvatarBadge
                   as={IconButton}
                   size="sm"
@@ -130,7 +157,9 @@ export default function UserProfile() {
             </Center>
             <Center w="full">
               <Flex gap={4}>
-                <Input type={'file'} py={1} accept={'image/*'}></Input>
+                <Input type={'file'} py={1} onChange={(e) => {
+                  setImages(e.target.files[0]);
+                }}></Input>
                 <Button
                   bg={"blue.400"}
                   color={"white"}

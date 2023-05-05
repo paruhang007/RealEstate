@@ -31,14 +31,48 @@ import Footer from "./Footer";
 
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import React from "react";
-
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import jwt_decode from 'jwt-decode';
 
 export default function NavBar() {
   const token = localStorage.getItem("token");
   const bg = useColorModeValue("white", "gray.800");
   const navigate = useNavigate();
   const mobileNav = useDisclosure();
+
+  const [userData, setUserData] = useState({});
+
+  // // getting the token from local storage
+  // const data = localStorage.getItem('token');
+  // // decoding the token which is actually holding the user id  
+  // const user = jwt_decode(data);
+
+  // const loadData = async () => {
+  //   try {
+  //     const response = await fetch("http://localhost:5000/userGet", {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         "id": user.id,
+
+  //       }),
+  //     });
+  //     const data = await response.json();
+  //     console.log(data.data);
+  //     setUserData(data.data);
+  //   }
+
+  //   catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   loadData();
+  // }, []);
 
   return (
     <React.Fragment>
@@ -96,7 +130,11 @@ export default function NavBar() {
                 <Button variant="ghost">EMI Calculator</Button>
               </NavLink>
               <Menu>
-                {token && <Avatar as={MenuButton} size={"sm"} />}
+                {token && <Avatar
+                  as={MenuButton}
+                  size={"sm"}
+                // src={userData.userImg} 
+                />}
                 <MenuList>
                   <MenuItem
                     onClick={() => {
