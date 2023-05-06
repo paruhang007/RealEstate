@@ -30,13 +30,60 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import jwt_decode from "jwt-decode";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsSend } from "react-icons/bs";
+import axios from "axios";
+import Conversation from "./Conversation";
 
 export default function Chat() {
+  const [conversations, setConversations] = useState([]);
+
   // getting the token from local storage
   const data = localStorage.getItem("token");
   // decoding the token which is actually holding the user id
   const user = jwt_decode(data);
-  console.log(user);
+  // console.log(user);
+
+  // load data into the messages tab
+  // const loaddata = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       "http://localhost:4000/api/conversation/userId",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           userId: user.id,
+  //         }),
+  //       }
+  //     );
+  //     const prop = await response.json();
+  //     // gets the data from the database by filtering only property from different users
+  //     console.log(prop.data);
+  //     setConversations(prop.data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+  // useEffect(() => {
+  //   loaddata();
+  // }, []);
+
+  useEffect(() => {
+    const getConversations = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:4000/api/conversation/" + user.id
+        );
+
+        setConversations(res.data);
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getConversations();
+  }, [user.id]);
 
   return (
     <Flex
@@ -51,7 +98,8 @@ export default function Chat() {
       <Grid templateColumns="repeat(8, 1fr)" gap={4} w={"100%"} m={5}>
         {/* people page */}
         <GridItem colSpan={2} boxShadow={"lg"}>
-          <Flex m={4} direction={"column"}>
+          <Flex m={4} direction={"column"} bg={"red.100"}>
+            {/* search area  */}
             <InputGroup>
               <InputLeftElement pointerEvents="none" color={"black"}>
                 <AiOutlineSearch />
@@ -65,21 +113,21 @@ export default function Chat() {
               />
             </InputGroup>
 
-            <Stack direction={"column"} mt={10}>
-              <Flex direction={"row"} alignItems={"center"} gap={4}>
-                <Avatar size="lg" src={""} alt={"user image"}></Avatar>
-
-                <FormLabel fontSize={18} fontWeight={"bold"}>
-                  First name
-                </FormLabel>
-              </Flex>
-            </Stack>
+            {/* users area for conversation */}
+            {conversations.map((c) => (
+              <Conversation conversation={c} currentUser={user} />
+            ))}
           </Flex>
         </GridItem>
 
         {/* message panel  */}
-        <GridItem colStart={3} colEnd={7} boxShadow={"lg"}>
-          <Flex direction={"column"} bg={"yellow.100"} minH={700}>
+        <GridItem colStart={3} colEnd={7} boxShadow={"lg"} bg={"yellow.200"}>
+          <Flex
+            direction={"column"}
+            bg={"green.100"}
+            h={600}
+            overflow={"scroll"}
+          >
             {/* person 1 message */}
             <Flex m={4} direction={"column"}>
               <Flex direction={"row"} gap={4}>
@@ -99,6 +147,7 @@ export default function Chat() {
                 First name
               </FormLabel>
             </Flex>
+
             {/* person 2 msg */}
             <Flex
               m={4}
@@ -110,7 +159,7 @@ export default function Chat() {
                 <Avatar size="sm" src={""} alt={"user image"}></Avatar>
                 <FormLabel
                   borderRadius="full"
-                  bg="teal.300"
+                  bg="teal.100"
                   px="2"
                   colorScheme="teal"
                   fontSize="l"
@@ -120,7 +169,7 @@ export default function Chat() {
                 </FormLabel>
               </Flex>
               <FormLabel fontSize={12} ml={14}>
-                First name
+                30 sec ago
               </FormLabel>
             </Flex>
 
@@ -143,28 +192,69 @@ export default function Chat() {
               </FormLabel>
             </Flex>
 
-            {/* text area and send button */}
+            {/* person 2 msg */}
             <Flex
               m={4}
-              direction={"row"}
-              gap={4}
-              mt={330}
-              alignItems={"center"}
-              //justifySelf={"flex-end"}
-              //justifyItems={"flex-end"}
+              direction={"column"}
+              alignItems={"flex-end"}
               bg={"red.100"}
             >
-              <Textarea
-                placeholder="Message"
-                _placeholder={{ color: "gray.500" }}
-                type="text"
-                //onChange={(e) => setSerProd(e.target.value)}
-              />
-
-              <Button leftIcon={<BsSend />} colorScheme="teal" variant="solid">
-                Send
-              </Button>
+              <Flex direction={"row"} gap={4} bg={"blue.100"}>
+                <Avatar size="sm" src={""} alt={"user image"}></Avatar>
+                <FormLabel
+                  borderRadius="full"
+                  bg="teal.100"
+                  px="2"
+                  colorScheme="teal"
+                  fontSize="l"
+                  mt={1}
+                >
+                  right message
+                </FormLabel>
+              </Flex>
+              <FormLabel fontSize={12} ml={14}>
+                30 sec ago
+              </FormLabel>
             </Flex>
+
+            <Flex m={4} direction={"column"}>
+              <Flex direction={"row"} gap={4}>
+                <Avatar size="sm" src={""} alt={"user image"}></Avatar>
+                <FormLabel
+                  borderRadius="full"
+                  bg="teal.300"
+                  px="2"
+                  colorScheme="teal"
+                  fontSize="l"
+                  mt={1}
+                >
+                  hello world
+                </FormLabel>
+              </Flex>
+              <FormLabel fontSize={12} ml={14}>
+                First name
+              </FormLabel>
+            </Flex>
+          </Flex>
+          {/* text area and send button */}
+          <Flex
+            m={4}
+            gap={4}
+            alignItems={"flex-end"}
+            //justifySelf={"flex-end"}
+            //justifyItems={"flex-end"}
+            bg={"red.100"}
+          >
+            <Textarea
+              placeholder="Message"
+              _placeholder={{ color: "gray.500" }}
+              type="text"
+              //onChange={(e) => setSerProd(e.target.value)}
+            />
+
+            <Button leftIcon={<BsSend />} colorScheme="teal" variant="solid">
+              Send
+            </Button>
           </Flex>
         </GridItem>
 
