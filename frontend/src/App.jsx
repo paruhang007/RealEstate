@@ -1,0 +1,212 @@
+import LoginPage from "./assets/pages/LoginPage";
+import SignUpPage from "./assets/pages/SignUpPage";
+import ForgotPassPage from "./assets/pages/ForgotPassPage";
+import VerifyEmailNumberPage from "./assets/pages/VerifyEmailNumberPage";
+import ResetPassPage from "./assets/pages/ResetPassPage";
+import HomePage from "./assets/pages/HomePage";
+import Navbar from "./assets/components/Dashboard/Navbar";
+import UnitConverter from "./assets/components/Dashboard/UnitConverter";
+import EmiCalculator from "./assets/components/Dashboard/EmiCalculator";
+import Service from "./assets/components/Dashboard/Service";
+import AddProperty from "./assets/components/UserDashboard/AddProperty";
+import UserProfile from "./assets/components/UserDashboard/UserProfile";
+import ChangePassword from "./assets/components/UserDashboard/ChangePassword";
+import Favourite from "./assets/components/UserDashboard/Favourite";
+import SearchProp from "./assets/components/Dashboard/SearchProp";
+import Detail from "./assets/components/Dashboard/Detail";
+import DetailService from "./assets/components/Dashboard/DetailService";
+import Sidebar from "./assets/components/UserDashboard/SideBar";
+import UseDashPage from "./assets/pages/UserDashPage";
+import MyProperties from "./assets/components/UserDashboard/MyProperties";
+import MyServices from "./assets/components/UserDashboard/MyServices";
+import AddService from "./assets/components/UserDashboard/AddService";
+import EditProperty from "./assets/components/UserDashboard/EditProperty";
+import EditService from "./assets/components/UserDashboard/EditService";
+import LoginAdminPage from "./assets/Admin/LoginAdminPage";
+import DashAdmin from "./assets/Admin/DashAdmin";
+import AllUsers from "./assets/Admin/Dashboard/AllUsers";
+import AllProperty from "./assets/Admin/Dashboard/AllProperty";
+import ChangePassAdmin from "./assets/Admin/Dashboard/ChangePassAdmin";
+import AllServices from "./assets/Admin/Dashboard/AllServices";
+import Chat from "./assets/components/UserDashboard/Chat";
+
+import React from "react";
+import {
+  createBrowserRouter,
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  RouterProvider,
+  //Redirect,
+} from "react-router-dom";
+
+
+const App = () => {
+
+  // getting the token from local storage
+  const admin = localStorage.getItem('tokenAdmin');
+  const user = localStorage.getItem('token');
+
+  const routes = createBrowserRouter([
+    // routing for the dashboard
+    {
+      element: <Navbar />,
+
+      // all the routes the user can navigate to
+      children: [
+        {
+          path: "/",
+          element: <HomePage />,
+        },
+
+        {
+          path: "/unitconvert",
+          element: <UnitConverter />,
+        },
+        {
+          path: "/emical",
+          element: <EmiCalculator />,
+        },
+        {
+          path: "/service",
+          element: <Service />,
+        },
+
+
+        // routing for the user dashboard
+        {
+          element: <Sidebar />,
+          children: [
+            {
+              path: "/dashboard",
+              element: <UseDashPage />,
+            },
+            {
+              path: "/profile",
+              element: <UserProfile />,
+            },
+            {
+              path: "/changepass",
+              element: <ChangePassword />,
+            },
+            {
+              path: "/addproperty",
+              element: <AddProperty />,
+            },
+            {
+              path: "/favourite",
+              element: <Favourite />,
+            },
+            {
+              path: "/userchat",
+              element: <Chat />,
+            },
+            {
+              path: "/myproperties",
+              element: <MyProperties />,
+            },
+            {
+              path: "/myservices",
+              element: <MyServices />,
+            },
+            {
+              path: "/addservice",
+              element: <AddService />,
+            },
+            {
+              path: "/editproperty/:id/:packId",
+              element: <EditProperty />,
+            },
+            {
+              path: "/editservice/:id/:servId",
+              element: <EditService />,
+            },
+            // {
+            //   path: "/khalti",
+            //   element: <Khalti />,
+            // },
+
+          ],
+        },
+
+        {
+          path: "/userprofile",
+          element: <AddProperty />,
+        },
+        {
+          path: "/search",
+          element: <SearchProp />,
+        },
+        {
+          path: "/detail/:id/:packId",
+          element: <Detail />,
+        },
+        {
+          path: "/detailservice/:id/:servId",
+          element: <DetailService />,
+        },
+      ],
+    },
+
+    // routing for the login, signup, forgot password, verify email, reset password for user
+    {
+      path: "/login",
+      element: <LoginPage />,
+    },
+    {
+      path: "/signup",
+      element: <SignUpPage />,
+    },
+    {
+      path: "/forpass",
+      element: <ForgotPassPage />,
+    },
+    {
+      path: "/verify",
+      element: <VerifyEmailNumberPage />,
+    },
+    {
+      path: "/resetpass",
+      element: <ResetPassPage />,
+    },
+
+
+
+    // routing for the admin dashboard
+    {
+      path: "/loginadmin",
+      element: <LoginAdminPage />,
+    },
+    {
+      path: "/admindash",
+      //element: admin ? <DashAdmin /> : <Redirect to="/loginadmin" />,
+      element: <DashAdmin />,
+      children: [
+        { 
+          path: "allusers",
+          element: <AllUsers /> ,
+        }                 
+        ,
+        {
+          path: "allproperties",
+          element: <AllProperty />,
+        },
+        {
+          path: "adminreset",
+          element: <ChangePassAdmin />,
+        },
+        {
+          path: "allservices",
+          element: <AllServices />,
+        },
+
+      ],
+
+    },
+
+  ]);
+
+  return <RouterProvider router={routes} />;
+};
+
+export default App;
