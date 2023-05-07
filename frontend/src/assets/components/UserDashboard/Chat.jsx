@@ -25,16 +25,22 @@ import {
   Badge,
   Textarea,
 } from "@chakra-ui/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import jwt_decode from "jwt-decode";
 import { AiOutlineSearch } from "react-icons/ai";
 import { BsSend } from "react-icons/bs";
 import axios from "axios";
 import Conversation from "./Conversation";
+import Message from "./Message";
 
 export default function Chat() {
   const [conversations, setConversations] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const scrollRef = useRef();
 
   // getting the token from local storage
   const data = localStorage.getItem("token");
@@ -69,6 +75,7 @@ export default function Chat() {
   //   loaddata();
   // }, []);
 
+  // get and load the conversation
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -77,13 +84,70 @@ export default function Chat() {
         );
 
         setConversations(res.data);
-        console.log(res.data);
+        //console.log(res.data);
       } catch (err) {
         console.log(err);
       }
     };
     getConversations();
   }, [user.id]);
+
+  // get and load the messages
+  //console.log(currentChat);
+  useEffect(() => {
+    const getMessages = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:4000/api/message/" + currentChat?._id
+        );
+        setMessages(res.data);
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMessages();
+  }, [currentChat]);
+
+  // send the message to the database and load the message
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const message = {
+      sender: user.id,
+      text: newMessage,
+      convId: currentChat._id,
+    };
+
+    // const receiverId = currentChat.members.find(
+    //   (member) => member !== user._id
+    // );
+
+    // socket.current.emit("sendMessage", {
+    //   senderId: user._id,
+    //   receiverId,
+    //   text: newMessage,
+    // });
+
+    // send the message to the database
+    try {
+      const res = await axios.post(
+        "http://localhost:4000/api/message",
+        message
+      );
+      // sets the message to the message tab after sending the message using spread operator
+      setMessages([...messages, res.data]);
+
+      // set the new message to empty after sending the message
+      setNewMessage("");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // help to scroll down the message tab
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <Flex
@@ -112,150 +176,56 @@ export default function Chat() {
                 w={"100%"}
               />
             </InputGroup>
-
             {/* users area for conversation */}
+
             {conversations.map((c) => (
-              <Conversation conversation={c} currentUser={user} />
+              <Flex direction={"column"} onClick={() => setCurrentChat(c)}>
+                <Conversation conv={c} currentUser={user} />
+              </Flex>
             ))}
           </Flex>
         </GridItem>
 
         {/* message panel  */}
         <GridItem colStart={3} colEnd={7} boxShadow={"lg"} bg={"yellow.200"}>
-          <Flex
-            direction={"column"}
-            bg={"green.100"}
-            h={600}
-            overflow={"scroll"}
-          >
-            {/* person 1 message */}
-            <Flex m={4} direction={"column"}>
-              <Flex direction={"row"} gap={4}>
-                <Avatar size="sm" src={""} alt={"user image"}></Avatar>
-                <FormLabel
-                  borderRadius="full"
-                  bg="teal.300"
-                  px="2"
-                  colorScheme="teal"
-                  fontSize="l"
-                  mt={1}
-                >
-                  hello world
-                </FormLabel>
+          {currentChat ? (
+            <>
+              <Flex
+                direction={"column"}
+                bg={"green.100"}
+                h={600}
+                overflow={"scroll"}
+              >
+                {messages.map((m) => (
+                  <div ref={scrollRef}>
+                    <Message message={m} own={m.sender === user.id} />
+                  </div>
+                ))}
               </Flex>
-              <FormLabel fontSize={12} ml={14}>
-                First name
-              </FormLabel>
-            </Flex>
 
-            {/* person 2 msg */}
-            <Flex
-              m={4}
-              direction={"column"}
-              alignItems={"flex-end"}
-              bg={"red.100"}
-            >
-              <Flex direction={"row"} gap={4} bg={"blue.100"}>
-                <Avatar size="sm" src={""} alt={"user image"}></Avatar>
-                <FormLabel
-                  borderRadius="full"
-                  bg="teal.100"
-                  px="2"
+              {/* text area and send button */}
+              <Flex m={4} gap={4} alignItems={"flex-end"} bg={"red.100"}>
+                <Textarea
+                  placeholder="Message"
+                  _placeholder={{ color: "gray.500" }}
+                  type="text"
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  value={newMessage}
+                />
+
+                <Button
+                  leftIcon={<BsSend />}
                   colorScheme="teal"
-                  fontSize="l"
-                  mt={1}
+                  variant="solid"
+                  onClick={handleSubmit}
                 >
-                  right message
-                </FormLabel>
+                  Send
+                </Button>
               </Flex>
-              <FormLabel fontSize={12} ml={14}>
-                30 sec ago
-              </FormLabel>
-            </Flex>
-
-            <Flex m={4} direction={"column"}>
-              <Flex direction={"row"} gap={4}>
-                <Avatar size="sm" src={""} alt={"user image"}></Avatar>
-                <FormLabel
-                  borderRadius="full"
-                  bg="teal.300"
-                  px="2"
-                  colorScheme="teal"
-                  fontSize="l"
-                  mt={1}
-                >
-                  hello world
-                </FormLabel>
-              </Flex>
-              <FormLabel fontSize={12} ml={14}>
-                First name
-              </FormLabel>
-            </Flex>
-
-            {/* person 2 msg */}
-            <Flex
-              m={4}
-              direction={"column"}
-              alignItems={"flex-end"}
-              bg={"red.100"}
-            >
-              <Flex direction={"row"} gap={4} bg={"blue.100"}>
-                <Avatar size="sm" src={""} alt={"user image"}></Avatar>
-                <FormLabel
-                  borderRadius="full"
-                  bg="teal.100"
-                  px="2"
-                  colorScheme="teal"
-                  fontSize="l"
-                  mt={1}
-                >
-                  right message
-                </FormLabel>
-              </Flex>
-              <FormLabel fontSize={12} ml={14}>
-                30 sec ago
-              </FormLabel>
-            </Flex>
-
-            <Flex m={4} direction={"column"}>
-              <Flex direction={"row"} gap={4}>
-                <Avatar size="sm" src={""} alt={"user image"}></Avatar>
-                <FormLabel
-                  borderRadius="full"
-                  bg="teal.300"
-                  px="2"
-                  colorScheme="teal"
-                  fontSize="l"
-                  mt={1}
-                >
-                  hello world
-                </FormLabel>
-              </Flex>
-              <FormLabel fontSize={12} ml={14}>
-                First name
-              </FormLabel>
-            </Flex>
-          </Flex>
-          {/* text area and send button */}
-          <Flex
-            m={4}
-            gap={4}
-            alignItems={"flex-end"}
-            //justifySelf={"flex-end"}
-            //justifyItems={"flex-end"}
-            bg={"red.100"}
-          >
-            <Textarea
-              placeholder="Message"
-              _placeholder={{ color: "gray.500" }}
-              type="text"
-              //onChange={(e) => setSerProd(e.target.value)}
-            />
-
-            <Button leftIcon={<BsSend />} colorScheme="teal" variant="solid">
-              Send
-            </Button>
-          </Flex>
+            </>
+          ) : (
+            <Text>Select a conversation</Text>
+          )}
         </GridItem>
 
         {/* online area  */}
