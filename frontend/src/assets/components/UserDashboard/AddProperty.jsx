@@ -16,15 +16,15 @@ import {
   Textarea,
   IconButton,
   SimpleGrid,
-  Icon
-
+  Icon,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import jwt_decode from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 import { FiUploadCloud } from "react-icons/fi";
 import { MdOutlineSoupKitchen } from "react-icons/md";
+import { useToast } from "@chakra-ui/react";
 
 export default function AddProperty() {
   const navigate = useNavigate();
@@ -36,24 +36,12 @@ export default function AddProperty() {
   // if (!isloaded) return <div>"Loading Maps"</div>;
   // return <Map />;
 
-  const [propName, setPropName] = useState("");
-  const [propState, setPropState] = useState("");
-  const [propDist, setPropDist] = useState("");
-  const [propMuni, setPropMuni] = useState("");
-  const [propWard, setPropWard] = useState("");
-  const [propStreet, setPropStreet] = useState("");
-  const [propFace, setPropFace] = useState("");
-  const [propRoad, setPropRoad] = useState("");
-  const [propArea, setPropArea] = useState("");
-  const [propDesc, setPropDesc] = useState("");
-  const [propPrice, setPropPrice] = useState("");
+  const [propertyDetails, setPropertyDetails] = useState({});
 
-
-  const [selectedFor, setSelectedFor] = useState('');
-  const [selectedPropertyType, setSelectedPropertyType] = useState('');
-  const [selectedPropertyUnit, setSelectedPropertyUnit] = useState('');
-  const [selectedPayment, setSelectedPayment] = useState('');
-
+  const [selectedFor, setSelectedFor] = useState("");
+  const [selectedPropertyType, setSelectedPropertyType] = useState("");
+  const [selectedPropertyUnit, setSelectedPropertyUnit] = useState("");
+  const [selectedPayment, setSelectedPayment] = useState("");
 
   // handle select change for "For"
   function handleForSelectChange(event) {
@@ -75,11 +63,10 @@ export default function AddProperty() {
     setSelectedPayment(event.target.value);
   }
 
-  // usestate for images 
+  // usestate for images
   const [images, setImages] = useState();
 
-
-  // handle image upload by link 
+  // handle image upload by link
   // async function addImageByLink(event) {
   //   event.preventDefault();
   //   console.log(imageUrl);
@@ -105,9 +92,7 @@ export default function AddProperty() {
 
   // };
 
-
   // handle image upload by file
-
 
   // use state for checkbox
   const [checkboxValues, setCheckboxValues] = useState({
@@ -129,37 +114,36 @@ export default function AddProperty() {
     });
   };
 
-
-
   // getting the token from local storage
-  const data = localStorage.getItem('token');
-  // decoding the token which is actually holding the user id  
+  const data = localStorage.getItem("token");
+  // decoding the token which is actually holding the user id
   const user = jwt_decode(data);
-  console.log(user);
+
+  const toast = useToast();
 
   // handle image upload by file
   const uploadImage = async () => {
     console.log("upload");
     const data = new FormData();
-    data.append('file', images);
-    data.append('upload_preset', 'sie3kiby');
+    data.append("file", images);
+    data.append("upload_preset", "sie3kiby");
 
     try {
-      const res = await fetch('https://api.cloudinary.com/v1_1/dooohxhvw/image/upload', {
-        method: 'POST',
-        body: data
-      })
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dooohxhvw/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
       const file = await res.json();
 
       return file.secure_url;
-
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       return null;
     }
-
-  }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -175,17 +159,7 @@ export default function AddProperty() {
           },
           body: JSON.stringify({
             imageLink,
-            propName,
-            propState,
-            propDist,
-            propMuni,
-            propWard,
-            propStreet,
-            propFace,
-            propRoad,
-            propArea,
-            propDesc,
-            propPrice,
+            ...propertyDetails,
             selectedFor,
             selectedPropertyType,
             selectedPropertyUnit,
@@ -193,16 +167,52 @@ export default function AddProperty() {
             checkboxValues,
             id: user.id,
           }),
-        })
+        });
+        setPropertyDetails({
+          propName: "",
+          propState: "",
+          propDist: "",
+          propMuni: "",
+          propWard: "",
+          propStreet: "",
+          propFace: "",
+          propRoad: "",
+          propArea: "",
+          propDesc: "",
+          propPrice: "",
+        });
+        setSelectedFor("");
+        setSelectedPropertyType("");
+        setSelectedPropertyUnit("");
+        setSelectedPayment("");
+        setCheckboxValues({
+          Drainage: false,
+          Drinking: false,
+          parking: false,
+          Dining: false,
+          Kitchen: false,
+          Bedroom: false,
+          Earth: false,
+        });
 
-      }
-      catch (error) {
+        toast({
+          title: "Property added successfully",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-middle",
+        });
+      } catch (error) {
         console.log(error);
+        toast({
+          title: "Failed to add Property ",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     }
-
   };
-
 
   return (
     <Flex
@@ -230,21 +240,40 @@ export default function AddProperty() {
             <Box>
               <FormControl id="firstName" isRequired>
                 <FormLabel>Property Name / Title</FormLabel>
-                <Input type="text" onChange={(e) => setPropName(e.target.value)} />
+                <Input
+                  type="text"
+                  value={propertyDetails.propName}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propName: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
           </HStack>
 
           <HStack gap={5} align={"center"} mt={5}>
             <Box>
-              <Select placeholder="For" isrequired value={selectedFor} onChange={handleForSelectChange}>
+              <Select
+                placeholder="For"
+                isrequired
+                value={selectedFor}
+                onChange={handleForSelectChange}
+              >
                 <option value="Rent">Rent</option>
                 <option value="Sale">Sale</option>
                 <option value="Lease">Lease</option>
               </Select>
             </Box>
             <Box>
-              <Select placeholder="Property Type" isrequired value={selectedPropertyType} onChange={handlePropertyTypeSelectChange}>
+              <Select
+                placeholder="Property Type"
+                isrequired
+                value={selectedPropertyType}
+                onChange={handlePropertyTypeSelectChange}
+              >
                 <option value="Land">Land</option>
                 <option value="Flat">Flat</option>
                 <option value="House">House</option>
@@ -262,32 +291,77 @@ export default function AddProperty() {
             <Box>
               <FormControl id="state" isRequired>
                 <FormLabel>State/Province</FormLabel>
-                <Input type="text" onChange={(e) => setPropState(e.target.value)} />
+                <Input
+                  type="text"
+                  value={propertyDetails.propState}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propState: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="district" isRequired>
                 <FormLabel>District </FormLabel>
-                <Input type="text" onChange={(e) => setPropDist(e.target.value)} />
+                <Input
+                  value={propertyDetails.propDist}
+                  type="text"
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propDist: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="municipality" isRequired>
                 <FormLabel>Municipality</FormLabel>
-                <Input type="text" onChange={(e) => setPropMuni(e.target.value)} />
+                <Input
+                  type="text"
+                  value={propertyDetails.propMuni}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propMuni: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
 
             <Box>
               <FormControl id="ward" isRequired>
                 <FormLabel>Ward Number</FormLabel>
-                <Input type="text" onChange={(e) => setPropWard(e.target.value)} />
+                <Input
+                  type="text"
+                  value={propertyDetails.propWard}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propWard: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="tol" isRequired>
                 <FormLabel>Area / Street name</FormLabel>
-                <Input type="text" onChange={(e) => setPropStreet(e.target.value)} />
+                <Input
+                  type="text"
+                  value={propertyDetails.propStreet}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propStreet: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
           </HStack>
@@ -308,13 +382,14 @@ export default function AddProperty() {
             >Add Photo</Button>
           </Flex> */}
 
-
           <Box mt={5}>
-
-            <Input type={'file'} py={1} onChange={(e) => {
-              setImages(e.target.files[0]);
-            }}></Input>
-
+            <Input
+              type={"file"}
+              py={1}
+              onChange={(e) => {
+                setImages(e.target.files[0]);
+              }}
+            ></Input>
           </Box>
 
           <Text fontSize={"lg"} color={"gray.600"} fontWeight={"bold"} mt={7}>
@@ -324,26 +399,62 @@ export default function AddProperty() {
             <Box>
               <FormControl id="face" isRequired>
                 <FormLabel>Facing</FormLabel>
-                <Input type="text" onChange={(e) => setPropFace(e.target.value)} />
+                <Input
+                  type="text"
+                  value={propertyDetails.propFace}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propFace: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="road" isRequired>
                 <FormLabel>Road Size </FormLabel>
-                <Input type="text" onChange={(e) => setPropRoad(e.target.value)} />
+                <Input
+                  type="text"
+                  value={propertyDetails.propRoad}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propRoad: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
             <Box>
               <FormControl id="area" isRequired>
                 <FormLabel>Area</FormLabel>
-                <Input type="text" placeholder="Mention Unit" onChange={(e) => setPropArea(e.target.value)} />
+                <Input
+                  type="text"
+                  placeholder="Mention Unit"
+                  value={propertyDetails.propArea}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propArea: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
             <Box>
-              <Select placeholder="Unit Type" isrequired mt={7} value={selectedPropertyUnit} onChange={handleForSelectUnit}>
+              <Select
+                placeholder="Unit Type"
+                isrequired
+                mt={7}
+                value={selectedPropertyUnit}
+                onChange={handleForSelectUnit}
+              >
                 <option value="Hilly Area">Hilly Area </option>
                 <option value="Terai Area">Terai Area </option>
-                <option value="Standard sq meter/ft">Standard sq meter/ft </option>
+                <option value="Standard sq meter/ft">
+                  Standard sq meter/ft{" "}
+                </option>
               </Select>
             </Box>
           </HStack>
@@ -353,7 +464,6 @@ export default function AddProperty() {
           </Text>
 
           <SimpleGrid mt={5} columns={{ sm: 3, md: 4 }}>
-
             <Checkbox
               value="Drainage"
               isChecked={checkboxValues.Drainage}
@@ -403,9 +513,7 @@ export default function AddProperty() {
             >
               Earthquake Resistance
             </Checkbox>
-
-
-          </SimpleGrid >
+          </SimpleGrid>
 
           <FormControl id="oldpassword" isRequired mt={7}>
             <FormLabel>Description</FormLabel>
@@ -414,7 +522,13 @@ export default function AddProperty() {
               _placeholder={{ color: "gray.500" }}
               type="text"
               h={25}
-              onChange={(e) => setPropDesc(e.target.value)}
+              value={propertyDetails.propDesc}
+              onChange={(e) =>
+                setPropertyDetails((prev) => ({
+                  ...prev,
+                  propDesc: e.target.value,
+                }))
+              }
             />
           </FormControl>
 
@@ -426,11 +540,26 @@ export default function AddProperty() {
             <Box>
               <FormControl id="price" isRequired>
                 <FormLabel>Enter Price </FormLabel>
-                <Input type="text" onChange={(e) => setPropPrice(e.target.value)} />
+                <Input
+                  type="text"
+                  value={propertyDetails.propPrice}
+                  onChange={(e) =>
+                    setPropertyDetails((prev) => ({
+                      ...prev,
+                      propPrice: e.target.value,
+                    }))
+                  }
+                />
               </FormControl>
             </Box>
             <Box>
-              <Select placeholder="Payment" isrequired mt={7} value={selectedPayment} onChange={handleForPayment}>
+              <Select
+                placeholder="Payment"
+                isrequired
+                mt={7}
+                value={selectedPayment}
+                onChange={handleForPayment}
+              >
                 <option value="Per Month">Per Month </option>
                 <option value="Per Year">Per Year </option>
                 <option value="For Sale">For Sale </option>
@@ -467,6 +596,6 @@ export default function AddProperty() {
           </Stack>
         </Box>
       </Stack>
-    </Flex >
+    </Flex>
   );
 }
