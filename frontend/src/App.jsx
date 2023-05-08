@@ -40,12 +40,10 @@ import {
   //Redirect,
 } from "react-router-dom";
 
-
 const App = () => {
-
   // getting the token from local storage
-  const admin = localStorage.getItem('tokenAdmin');
-  const user = localStorage.getItem('token');
+  const admin = localStorage.getItem("tokenAdmin");
+  const user = localStorage.getItem("token");
 
   const routes = createBrowserRouter([
     // routing for the dashboard
@@ -71,7 +69,6 @@ const App = () => {
           path: "/service",
           element: <Service />,
         },
-
 
         // routing for the user dashboard
         {
@@ -125,7 +122,6 @@ const App = () => {
             //   path: "/khalti",
             //   element: <Khalti />,
             // },
-
           ],
         },
 
@@ -170,8 +166,6 @@ const App = () => {
       element: <ResetPassPage />,
     },
 
-
-
     // routing for the admin dashboard
     {
       path: "/loginadmin",
@@ -182,11 +176,10 @@ const App = () => {
       //element: admin ? <DashAdmin /> : <Redirect to="/loginadmin" />,
       element: <DashAdmin />,
       children: [
-        { 
+        {
           path: "allusers",
-          element: <AllUsers /> ,
-        }                 
-        ,
+          element: <AllUsers />,
+        },
         {
           path: "allproperties",
           element: <AllProperty />,
@@ -199,11 +192,8 @@ const App = () => {
           path: "allservices",
           element: <AllServices />,
         },
-
       ],
-
     },
-
   ]);
 
   return <RouterProvider router={routes} />;
