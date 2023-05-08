@@ -33,12 +33,14 @@ import { BsSend } from "react-icons/bs";
 import axios from "axios";
 import Conversation from "./Conversation";
 import Message from "./Message";
+import { io } from "socket.io-client";
 
 export default function Chat() {
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const socket = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const scrollRef = useRef();
 
@@ -75,6 +77,46 @@ export default function Chat() {
   //   loaddata();
   // }, []);
 
+  //console.log(socket.current);
+
+  useEffect(() => {
+    // connecting to the socket server
+    socket.current = io("ws://localhost:8900");
+
+    // getting the message from the socket server and setting the arrival message
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  // changing the current chat and loading the messages
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
+
+  // load the socket server
+  useEffect(() => {
+    // sending the user id to the socket server
+    socket.current.emit("addUser", user.id);
+
+    // getting the users from the socket server
+    socket.current.on("getUsers", (users) => {
+      //console.log(users);
+    });
+  }, [user]);
+
+  // useEffect(() => {
+  //   socket?.on("w", (message) => {
+  //     console.log(message);
+  //   });
+  // }, [socket]);
+
   // get and load the conversation
   useEffect(() => {
     const getConversations = async () => {
@@ -101,7 +143,7 @@ export default function Chat() {
           "http://localhost:4000/api/message/" + currentChat?._id
         );
         setMessages(res.data);
-        console.log(res.data);
+        //console.log(res.data);
       } catch (err) {
         console.log(err);
       }
@@ -118,15 +160,15 @@ export default function Chat() {
       convId: currentChat._id,
     };
 
-    // const receiverId = currentChat.members.find(
-    //   (member) => member !== user._id
-    // );
+    // finding the receiver id
+    const receiverId = currentChat.members.find((member) => member !== user.id);
 
-    // socket.current.emit("sendMessage", {
-    //   senderId: user._id,
-    //   receiverId,
-    //   text: newMessage,
-    // });
+    // sending the message to the socket server
+    socket.current.emit("sendMessage", {
+      senderId: user.id,
+      receiverId,
+      text: newMessage,
+    });
 
     // send the message to the database
     try {
@@ -187,15 +229,10 @@ export default function Chat() {
         </GridItem>
 
         {/* message panel  */}
-        <GridItem colStart={3} colEnd={7} boxShadow={"lg"} bg={"yellow.200"}>
+        <GridItem colStart={3} colEnd={7} boxShadow={"lg"}>
           {currentChat ? (
             <>
-              <Flex
-                direction={"column"}
-                bg={"green.100"}
-                h={600}
-                overflow={"scroll"}
-              >
+              <Flex direction={"column"} h={600} overflow={"scroll"}>
                 {messages.map((m) => (
                   <div ref={scrollRef}>
                     <Message message={m} own={m.sender === user.id} />

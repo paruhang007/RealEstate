@@ -22,9 +22,10 @@ export default function Message({ message, own }) {
           <Avatar size="sm" src={""} alt={"user image"}></Avatar>
           <FormLabel
             borderRadius="full"
-            bg="teal.300"
+            bg={own ? "teal.500" : "teal.100"}
             px="2"
             colorScheme="teal"
+            textColor={own ? "white" : "black"}
             fontSize="l"
             mt={1}
           >
