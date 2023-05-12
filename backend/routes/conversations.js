@@ -5,16 +5,44 @@ const router = express.Router();
 
 // new conversation
 
-router.post("/", async (req, res) => {
-  const newConv = new Conv({
-    members: [req.body.senderId, req.body.receiverId],
+// router.post("/", async (req, res) => {
+//   const newConv = new Conv({
+//     members: [req.body.senderId, req.body.receiverId],
+//   });
+
+//   try {
+//     const savedConv = await newConv.save();
+//     res.status(200).json(savedConv);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+
+router.post("/:senderId/:receiverId", async (req, res) => {
+  const senderId = req.params.senderId;
+  const receiverId = req.params.receiverId;
+
+  // Check if conversation already exists
+  const existingConv = await Conv.findOne({
+    members: { $all: [senderId, receiverId] },
   });
 
-  try {
-    const savedConv = await newConv.save();
-    res.status(200).json(savedConv);
-  } catch (err) {
-    res.status(500).json(err);
+  if (existingConv) {
+    console.log("Conversation already exists");
+    res.status(200).json(existingConv);
+  } else {
+    // Create new conversation
+    const newConv = new Conv({
+      members: [senderId, receiverId],
+    });
+
+    try {
+      const savedConv = await newConv.save();
+      res.status(200).json(savedConv);
+      console.log("Conversation Created");
+    } catch (err) {
+      res.status(500).json(err);
+    }
   }
 });
 

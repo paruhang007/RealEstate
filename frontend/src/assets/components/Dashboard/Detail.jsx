@@ -47,6 +47,7 @@ import { GoLocation } from "react-icons/go";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 import { IoBedOutline } from "react-icons/io5";
 import { MdDinnerDining } from "react-icons/md";
@@ -56,6 +57,7 @@ import { MdOutlineSoupKitchen } from "react-icons/md";
 import { TbParking } from "react-icons/tb";
 import { GiWaterfall } from "react-icons/gi";
 import { MdFavoriteBorder } from "react-icons/md";
+import axios from "axios";
 
 export default function SearchProp() {
   // use state for the product
@@ -66,6 +68,11 @@ export default function SearchProp() {
 
   // use state for the user
   const [userData, setUserData] = useState({});
+
+  // getting the token from local storage
+  const data = localStorage.getItem("token");
+  // decoding the token which is actually holding the user id
+  const user = data ? jwt_decode(data) : "";
 
   // use state for the similar properties
   const [similarProp, setSimilarProp] = useState([]);
@@ -92,7 +99,7 @@ export default function SearchProp() {
         }),
       });
       const data = await response.json();
-      // console.log(data);
+      console.log(data);
       setProduct(data.data[0]);
       // console.log(data.data[0].checkboxValues[0]);
       setCheckbox(data.data[0].checkboxValues[0]);
@@ -103,7 +110,7 @@ export default function SearchProp() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [id, packId]);
 
   // loading the data from the database for message tab
   const loadData2 = async () => {
@@ -141,9 +148,7 @@ export default function SearchProp() {
       const prop = await response.json();
       console.log(prop.data);
       setSimilarProp(prop.data);
-      console.log(similarProp);
       setSelectedSimilarProp(prop.data);
-      console.log(selectedSimilarProp);
     } catch (err) {
       console.log(err);
     }
@@ -152,6 +157,32 @@ export default function SearchProp() {
   useEffect(() => {
     loadData3();
   }, []);
+
+  // when the user clicks on the Message button
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const data = localStorage.getItem("token");
+    if (data) {
+      try {
+        const res = await axios.post(
+          "http://localhost:4000/api/conversation/" + user.id + "/" + id
+        );
+        navigate("/userchat");
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      onOpen();
+    }
+  };
+
+  // console.log(similarProp);
+  // console.log(product.selectedFor);
+  // setSelectedSimilarProp(
+  //   similarProp.filter((prop) => {
+  //     return prop.package.selectedFor === product.selectedFor;
+  //   })
+  // );
 
   return (
     <Grid templateColumns="repeat(7, 1fr)" gap={2} py={5} px={10} bg="gray.100">
@@ -426,6 +457,8 @@ export default function SearchProp() {
           borderColor={"black.200"}
           bg={"#ffffff"}
           p={5}
+          as={"form"}
+          onSubmit={handleSubmit}
         >
           {/* Portion for the owner of the post  */}
           <Center py={6}>
@@ -460,14 +493,7 @@ export default function SearchProp() {
                   bg={"blue.400"}
                   color={"white"}
                   _hover={{ bg: "blue.500" }}
-                  onClick={() => {
-                    const data = localStorage.getItem("token");
-                    if (data) {
-                      alert("Message");
-                    } else {
-                      onOpen();
-                    }
-                  }}
+                  type="submit"
                 >
                   Message
                 </Button>
@@ -491,62 +517,67 @@ export default function SearchProp() {
             {/* similar properties */}
 
             {selectedSimilarProp.map((prop) => {
-              <Box
-                maxW="sm"
-                borderWidth="1px"
-                borderRadius="lg"
-                overflow="hidden"
-                borderColor={"blue.200"}
-                mt={3}
-              >
-                <Image
-                  src={prop.package.img}
-                  alt="house img"
-                  onClick={() => {
-                    navigate(`/detail/${prop._id}/${prop.package._id}`);
-                  }}
-                />
+              return (
+                <Box
+                  maxW="sm"
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  borderColor={"blue.200"}
+                  mt={3}
+                >
+                  <Image
+                    src={prop.package.img}
+                    alt="house img"
+                    onClick={() => {
+                      console.log(prop._id);
+                      console.log(prop.package._id);
+                      navigate(`/detail/${prop._id}/${prop.package._id}`);
+                      // history.push(`/detail/${prop._id}/${prop.package._id}`);
+                    }}
+                  />
 
-                <Box p="6">
-                  <Box
-                    mt="1"
-                    fontWeight="semibold"
-                    as="h4"
-                    lineHeight="tight"
-                    noOfLines={1}
-                  >
-                    {prop.package.propName}
-                  </Box>
+                  <Box p="6">
+                    <Box
+                      mt="1"
+                      fontWeight="semibold"
+                      as="h4"
+                      lineHeight="tight"
+                      noOfLines={1}
+                    >
+                      {prop.package.propName}
+                    </Box>
 
-                  <Flex gap={2}>
-                    <Box>{prop.package.propPrice}</Box>
+                    <Flex gap={2}>
+                      <Box>{prop.package.propPrice}</Box>
 
-                    <Box>{prop.package.selectedPayment}</Box>
-                  </Flex>
+                      <Box>{prop.package.selectedPayment}</Box>
+                    </Flex>
 
-                  <Flex
-                    as="span"
-                    color="gray.600"
-                    fontSize="sm"
-                    direction={"row"}
-                    mt={2}
-                    align="center"
-                  >
-                    <GoLocation /> {prop.package.propState},{" "}
-                    {prop.package.propDist}, {prop.package.propStreet}
-                  </Flex>
+                    <Flex
+                      as="span"
+                      color="gray.600"
+                      fontSize="sm"
+                      direction={"row"}
+                      mt={2}
+                      align="center"
+                    >
+                      <GoLocation /> {prop.package.propState},{" "}
+                      {prop.package.propDist}, {prop.package.propStreet}
+                    </Flex>
 
-                  <Box display="flex" alignItems="baseline" m={3} gap={2}>
-                    <Badge borderRadius="full" px="2" colorScheme="teal">
-                      {prop.package.selectedFor}
-                    </Badge>
+                    <Box display="flex" alignItems="baseline" m={3} gap={2}>
+                      <Badge borderRadius="full" px="2" colorScheme="teal">
+                        {prop.package.selectedFor}
+                      </Badge>
 
-                    <Badge borderRadius="full" px="2" colorScheme="teal">
-                      {prop.package.selectedPropertyType}
-                    </Badge>
+                      <Badge borderRadius="full" px="2" colorScheme="teal">
+                        {prop.package.selectedPropertyType}
+                      </Badge>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>;
+              );
             })}
           </Box>
         </Flex>
