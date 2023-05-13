@@ -3,25 +3,14 @@ import {
   Box,
   Heading,
   Text,
-  InputGroup,
-  InputLeftElement,
-  Input,
-  HStack,
-  Select,
   Grid,
   GridItem,
   Button,
-  FormControl,
-  FormLabel,
   SimpleGrid,
   Image,
   Badge,
   IconButton,
-  RadioGroup,
-  VStack,
-  Radio,
   Stack,
-  Divider,
   Icon,
   chakra,
   useColorModeValue,
@@ -149,6 +138,17 @@ export default function SearchProp() {
       console.log(prop.data);
       setSimilarProp(prop.data);
       setSelectedSimilarProp(prop.data);
+
+      //console.log(similarProp);
+      console.log(selectedSimilarProp);
+
+      setSelectedSimilarProp(
+        similarProp.filter((prop) => {
+          return prop.package.selectedFor === product?.selectedFor;
+        })
+      );
+
+      console.log(selectedSimilarProp);
     } catch (err) {
       console.log(err);
     }
@@ -175,14 +175,6 @@ export default function SearchProp() {
       onOpen();
     }
   };
-
-  // console.log(similarProp);
-  // console.log(product.selectedFor);
-  // setSelectedSimilarProp(
-  //   similarProp.filter((prop) => {
-  //     return prop.package.selectedFor === product.selectedFor;
-  //   })
-  // );
 
   return (
     <Grid templateColumns="repeat(7, 1fr)" gap={2} py={5} px={10} bg="gray.100">
@@ -533,7 +525,6 @@ export default function SearchProp() {
                       console.log(prop._id);
                       console.log(prop.package._id);
                       navigate(`/detail/${prop._id}/${prop.package._id}`);
-                      // history.push(`/detail/${prop._id}/${prop.package._id}`);
                     }}
                   />
 
