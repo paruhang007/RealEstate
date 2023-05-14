@@ -37,6 +37,8 @@ export default function AddService() {
   const user = jwt_decode(data);
   console.log(user);
 
+  const toast = useToast();
+
   // usestate for images
   const [images, setImages] = useState();
 

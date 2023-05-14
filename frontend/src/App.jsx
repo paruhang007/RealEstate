@@ -28,7 +28,9 @@ import AllUsers from "./assets/Admin/Dashboard/AllUsers";
 import AllProperty from "./assets/Admin/Dashboard/AllProperty";
 import ChangePassAdmin from "./assets/Admin/Dashboard/ChangePassAdmin";
 import AllServices from "./assets/Admin/Dashboard/AllServices";
+import Grivence from "./assets/Admin/Dashboard/Grivence";
 import Chat from "./assets/components/UserDashboard/Chat";
+import Support from "./assets/components/UserDashboard/Support";
 
 import React from "react";
 import {
@@ -118,6 +120,10 @@ const App = () => {
               path: "/editservice/:id/:servId",
               element: <EditService />,
             },
+            {
+              path: "/support",
+              element: <Support />,
+            },
             // {
             //   path: "/khalti",
             //   element: <Khalti />,
@@ -191,6 +197,10 @@ const App = () => {
         {
           path: "allservices",
           element: <AllServices />,
+        },
+        {
+          path: "grieverance",
+          element: <Grivence />,
         },
       ],
     },

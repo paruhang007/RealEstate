@@ -1,6 +1,28 @@
 const express = require("express");
 const router = express.Router();
-const { login, register, userGet, userEdit, changeUserPass, otp, otpVerify, addPack, editPack, getPack, getPackAll, deletePack, addService, editService, getService, getServiceAll, deleteService, uplod_by_link, } = require("../controllers/userController.js");
+const {
+  login,
+  register,
+  userGet,
+  userEdit,
+  changeUserPass,
+  otp,
+  otpVerify,
+  addPack,
+  editPack,
+  getPack,
+  getPackAll,
+  deletePack,
+  addService,
+  editService,
+  getService,
+  getServiceAll,
+  deleteService,
+  uplod_by_link,
+  addReview,
+  getAllReview,
+  editReview,
+} = require("../controllers/userController.js");
 
 router.post("/login", login);
 router.post("/register", register);
@@ -20,5 +42,8 @@ router.post("/getService", getService);
 router.post("/getServiceAll", getServiceAll);
 router.delete("/deleteService", deleteService);
 router.post("/uplod_by_link", uplod_by_link);
+router.post("/addReview", addReview);
+router.post("/getAllReview", getAllReview);
+router.patch("/editReview", editReview);
 
 module.exports = router;

@@ -12,25 +12,25 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import {
-  FiHome,
-  FiTrendingUp,
-  FiCompass,
-  FiStar,
-  FiSettings,
-  FiMenu,
-} from "react-icons/fi";
+import { FiHome, FiCompass, FiStar, FiSettings, FiMenu } from "react-icons/fi";
+import { BsHouseAdd } from "react-icons/bs";
+import { BsHouseGear } from "react-icons/bs";
+import { BsShopWindow } from "react-icons/bs";
+import { RiLockPasswordLine } from "react-icons/ri";
+import { BsChatDots } from "react-icons/bs";
+import { BiSupport } from "react-icons/bi";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
 
 const LinkItems = [
   { name: "Profile", icon: FiHome, path: "/profile" },
-  { name: "Add properties", icon: FiCompass, path: "/addproperty" },
-  { name: "Add Services", icon: FiCompass, path: "/addservice" },
-  { name: "My properties", icon: FiTrendingUp, path: "/myproperties" },
-  { name: "My Services", icon: FiTrendingUp, path: "/myservices" },
+  { name: "Add properties", icon: BsHouseAdd, path: "/addproperty" },
+  { name: "Add Services", icon: BsShopWindow, path: "/addservice" },
+  { name: "My properties", icon: BsHouseGear, path: "/myproperties" },
+  { name: "My Services", icon: FiSettings, path: "/myservices" },
   { name: "Favourites", icon: FiStar, path: "/favourite" },
-  { name: "Chat", icon: FiCompass, path: "/userchat" },
-  { name: "Change Password", icon: FiSettings, path: "/changepass" },
+  { name: "Chat", icon: BsChatDots, path: "/userchat" },
+  { name: "Support", icon: BiSupport, path: "/support" },
+  { name: "Change Password", icon: RiLockPasswordLine, path: "/changepass" },
 ];
 
 export default function Sidebar({ children }) {

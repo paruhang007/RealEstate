@@ -204,7 +204,7 @@ export default function Chat() {
       <Grid templateColumns="repeat(8, 1fr)" gap={4} w={"100%"} m={5}>
         {/* people page */}
         <GridItem colSpan={2} boxShadow={"lg"}>
-          <Flex m={4} direction={"column"} bg={"red.100"}>
+          <Flex m={4} direction={"column"}>
             {/* search area  */}
             <InputGroup>
               <InputLeftElement pointerEvents="none" color={"black"}>
@@ -229,7 +229,7 @@ export default function Chat() {
         </GridItem>
 
         {/* message panel  */}
-        <GridItem colStart={3} colEnd={7} boxShadow={"lg"}>
+        <GridItem colStart={3} colEnd={9} boxShadow={"lg"}>
           {currentChat ? (
             <>
               <Flex direction={"column"} h={600} overflow={"scroll"}>
@@ -241,7 +241,7 @@ export default function Chat() {
               </Flex>
 
               {/* text area and send button */}
-              <Flex m={4} gap={4} alignItems={"flex-end"} bg={"red.100"}>
+              <Flex m={4} gap={4} alignItems={"flex-end"}>
                 <Textarea
                   placeholder="Message"
                   _placeholder={{ color: "gray.500" }}
@@ -263,35 +263,6 @@ export default function Chat() {
           ) : (
             <Text>Select a conversation</Text>
           )}
-        </GridItem>
-
-        {/* online area  */}
-        <GridItem colStart={7} colEnd={9} boxShadow={"lg"}>
-          <Flex m={4} direction={"column"}>
-            <Text fontSize={"xl"} color={"gray.600"} fontWeight={"bold"} ml={5}>
-              Online
-            </Text>
-
-            <Stack direction={"column"} mt={10}>
-              <Flex direction={"row"} alignItems={"center"} gap={4}>
-                <Avatar size="lg" src={""} alt={"user image"}>
-                  <AvatarBadge
-                    as={IconButton}
-                    size="sm"
-                    rounded="full"
-                    top="-15px"
-                    left="25px"
-                    colorScheme="green"
-                    aria-label="remove Image"
-                  />
-                </Avatar>
-
-                <FormLabel fontSize={18} fontWeight={"bold"}>
-                  First name
-                </FormLabel>
-              </Flex>
-            </Stack>
-          </Flex>
         </GridItem>
       </Grid>
     </Flex>

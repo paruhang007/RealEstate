@@ -1,5 +1,6 @@
 const User = require("../models/userDetail.js");
 const OTP = require("../models/otpModel.js");
+const Review = require("../models/reviewModel.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -550,6 +551,60 @@ const deleteService = async (req, res) => {
   }
 };
 
+// add review
+const addReview = async (req, res) => {
+  const { imageLink, serOname, serDesc, serType, status, id } = req.body;
+  console.log(req.body);
+  try {
+    await Review.create({
+      img: imageLink,
+      userId: id,
+      serOname,
+      serDesc,
+      serType,
+      status,
+    });
+
+    res.send({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+    res.send({ status: "error" });
+  }
+};
+
+// Get all reviews
+const getAllReview = async (req, res) => {
+  try {
+    const review = await Review.find();
+    console.log(review);
+    if (!review) {
+      return res.json({ error: "Grievance not found" });
+    }
+
+    res.send({ status: "ok", data: review });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Edit review
+const editReview = async (req, res) => {
+  const { id } = req.body;
+  try {
+    console.log(req.body);
+    const review = await Review.findOne({ _id: id });
+    if (!review) {
+      return res.json({ error: "Grievance not found" });
+    }
+    review.status = "Resolved"; // update the serType property to "Resolved"
+    console.log(review);
+    await review.save(); // save the updated review to the database
+    res.send({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 // Exporting all the functions
 module.exports = {
   login,
@@ -570,4 +625,7 @@ module.exports = {
   getServiceAll,
   deleteService,
   uplod_by_link,
+  addReview,
+  getAllReview,
+  editReview,
 };
