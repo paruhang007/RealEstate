@@ -20,7 +20,6 @@ import {
   StackDivider,
   Center,
   Avatar,
-  Link,
   Spacer,
   Modal,
   ModalOverlay,
@@ -142,11 +141,12 @@ export default function SearchProp() {
       //console.log(similarProp);
       console.log(selectedSimilarProp);
 
-      setSelectedSimilarProp(
-        similarProp.filter((prop) => {
-          return prop.package.selectedFor === product?.selectedFor;
-        })
-      );
+      // building logic for similar properties
+      // setSelectedSimilarProp(
+      //   similarProp.filter((prop) => {
+      //     return prop.package.selectedFor === product?.selectedFor;
+      //   })
+      // );
 
       console.log(selectedSimilarProp);
     } catch (err) {
@@ -508,68 +508,82 @@ export default function SearchProp() {
 
             {/* similar properties */}
 
-            {selectedSimilarProp.map((prop) => {
-              return (
-                <Box
-                  maxW="sm"
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  overflow="hidden"
-                  borderColor={"blue.200"}
-                  mt={3}
-                >
-                  <Image
-                    src={prop.package.img}
-                    alt="house img"
-                    onClick={() => {
-                      console.log(prop._id);
-                      console.log(prop.package._id);
-                      navigate(`/detail/${prop._id}/${prop.package._id}`);
-                    }}
-                  />
+            {/* This code applies the filter condition before the map function, which ensures that only 
+            the prop objects that meet the condition will be mapped and rendered. */}
+            {selectedSimilarProp
+              .filter((prop) => {
+                return (
+                  (prop.package.selectedFor === product.selectedFor ||
+                    prop.package.selectedPropertyType ===
+                      product.selectedPropertyType ||
+                    prop.package.propDist === product.propDist ||
+                    prop.package.propMuni === product.propMuni ||
+                    prop.package.propStreet === product.propStreet) &&
+                  prop.package._id !== product._id
+                );
+              })
+              .map((prop) => {
+                return (
+                  <Box
+                    maxW="sm"
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                    borderColor={"blue.200"}
+                    mt={3}
+                  >
+                    <Image
+                      src={prop.package.img}
+                      alt="house img"
+                      onClick={() => {
+                        console.log(prop._id);
+                        console.log(prop.package._id);
+                        navigate(`/detail/${prop._id}/${prop.package._id}`);
+                      }}
+                    />
 
-                  <Box p="6">
-                    <Box
-                      mt="1"
-                      fontWeight="semibold"
-                      as="h4"
-                      lineHeight="tight"
-                      noOfLines={1}
-                    >
-                      {prop.package.propName}
-                    </Box>
+                    <Box p="6">
+                      <Box
+                        mt="1"
+                        fontWeight="semibold"
+                        as="h4"
+                        lineHeight="tight"
+                        noOfLines={1}
+                      >
+                        {prop.package.propName}
+                      </Box>
 
-                    <Flex gap={2}>
-                      <Box>{prop.package.propPrice}</Box>
+                      <Flex gap={2}>
+                        <Box>{prop.package.propPrice}</Box>
 
-                      <Box>{prop.package.selectedPayment}</Box>
-                    </Flex>
+                        <Box>{prop.package.selectedPayment}</Box>
+                      </Flex>
 
-                    <Flex
-                      as="span"
-                      color="gray.600"
-                      fontSize="sm"
-                      direction={"row"}
-                      mt={2}
-                      align="center"
-                    >
-                      <GoLocation /> {prop.package.propState},{" "}
-                      {prop.package.propDist}, {prop.package.propStreet}
-                    </Flex>
+                      <Flex
+                        as="span"
+                        color="gray.600"
+                        fontSize="sm"
+                        direction={"row"}
+                        mt={2}
+                        align="center"
+                      >
+                        <GoLocation /> {prop.package.propState},{" "}
+                        {prop.package.propDist}, {prop.package.propStreet}
+                      </Flex>
 
-                    <Box display="flex" alignItems="baseline" m={3} gap={2}>
-                      <Badge borderRadius="full" px="2" colorScheme="teal">
-                        {prop.package.selectedFor}
-                      </Badge>
+                      <Box display="flex" alignItems="baseline" m={3} gap={2}>
+                        <Badge borderRadius="full" px="2" colorScheme="teal">
+                          {prop.package.selectedFor}
+                        </Badge>
 
-                      <Badge borderRadius="full" px="2" colorScheme="teal">
-                        {prop.package.selectedPropertyType}
-                      </Badge>
+                        <Badge borderRadius="full" px="2" colorScheme="teal">
+                          {prop.package.selectedPropertyType}
+                        </Badge>
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-              );
-            })}
+                );
+              })}
           </Box>
         </Flex>
       </GridItem>

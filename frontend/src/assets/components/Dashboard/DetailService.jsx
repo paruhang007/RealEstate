@@ -435,67 +435,78 @@ export default function SearchProp() {
             p={6}
           >
             <Heading fontSize={"2xl"} fontFamily={"body"}>
-              Similar Properties
+              Similar Services
             </Heading>
 
             {/* similar properties */}
 
-            {selectedSimilarProp.map((prop) => {
-              return (
-                <Box
-                  maxW="sm"
-                  borderWidth="1px"
-                  borderRadius="lg"
-                  overflow="hidden"
-                  borderColor={"blue.200"}
-                  mt={3}
-                >
-                  <Image
-                    src={prop.service.img}
-                    alt="house img"
-                    onClick={() => {
-                      console.log(prop._id);
-                      console.log(prop.service._id);
-                      navigate(
-                        `/detailservice/${prop._id}/${prop.service._id}`
-                      );
-                    }}
-                  />
+            {selectedSimilarProp
+              .filter((prop) => {
+                return (
+                  (prop.service.selectedServiceType ===
+                    product.selectedServiceType ||
+                    prop.service.serDist === product.serDist ||
+                    prop.service.serMuni === product.serMuni ||
+                    prop.service.serStreet === product.serStreet) &&
+                  prop.service._id !== product._id
+                );
+              })
+              .map((prop) => {
+                return (
+                  <Box
+                    maxW="sm"
+                    borderWidth="1px"
+                    borderRadius="lg"
+                    overflow="hidden"
+                    borderColor={"blue.200"}
+                    mt={3}
+                  >
+                    <Image
+                      src={prop.service.img}
+                      alt="house img"
+                      onClick={() => {
+                        console.log(prop._id);
+                        console.log(prop.service._id);
+                        navigate(
+                          `/detailservice/${prop._id}/${prop.service._id}`
+                        );
+                      }}
+                    />
 
-                  <Box p="6">
-                    <Flex align={"center"}>
-                      <Box
-                        mt="1"
-                        fontWeight="semibold"
-                        as="h4"
-                        lineHeight="tight"
-                        noOfLines={1}
+                    <Box p="6">
+                      <Flex align={"center"}>
+                        <Box
+                          mt="1"
+                          fontWeight="semibold"
+                          as="h4"
+                          lineHeight="tight"
+                          noOfLines={1}
+                        >
+                          {prop.service.serName}
+                        </Box>
+                      </Flex>
+
+                      <Flex
+                        as="span"
+                        color="gray.600"
+                        fontSize="sm"
+                        direction={"row"}
+                        mt={2}
+                        align="center"
                       >
-                        {prop.service.serName}
+                        <GoLocation /> {prop.service.serState},{" "}
+                        {prop.service.serDist}, {prop.service.serStreet}
+                      </Flex>
+
+                      <Box display="flex" alignItems="baseline" m={3} gap={2}>
+                        <Badge borderRadius="full" px="2" colorScheme="teal">
+                          {prop.service.selectedServiceType}
+                        </Badge>
                       </Box>
-                    </Flex>
-
-                    <Flex
-                      as="span"
-                      color="gray.600"
-                      fontSize="sm"
-                      direction={"row"}
-                      mt={2}
-                      align="center"
-                    >
-                      <GoLocation /> {prop.service.serState},{" "}
-                      {prop.service.serDist}, {prop.service.serStreet}
-                    </Flex>
-
-                    <Box display="flex" alignItems="baseline" m={3} gap={2}>
-                      <Badge borderRadius="full" px="2" colorScheme="teal">
-                        {prop.service.selectedServiceType}
-                      </Badge>
                     </Box>
                   </Box>
-                </Box>
-              );
-            })}
+                );
+              })}
           </Box>
         </Flex>
       </GridItem>
