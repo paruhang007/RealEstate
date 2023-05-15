@@ -16,17 +16,19 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import jwt_decode from 'jwt-decode';
+import jwt_decode from "jwt-decode";
+import { useToast } from "@chakra-ui/react";
 
 export default function ChangePassword() {
-
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [newPassConf, setNewPassConf] = useState("");
 
+  const toast = useToast();
+
   // getting the token from local storage
-  const data = localStorage.getItem('token');
-  // decoding the token which is actually holding the user id  
+  const data = localStorage.getItem("token");
+  // decoding the token which is actually holding the user id
   const user = jwt_decode(data);
   console.log(user);
 
@@ -35,21 +37,45 @@ export default function ChangePassword() {
 
     try {
       const response = await fetch("http://localhost:4000/changeUserPass", {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "id": user.id,
-          "oldPass": oldPass,
-          "newPass": newPass,
-          "newPassConf": newPassConf,
+          id: user.id,
+          oldPass: oldPass,
+          newPass: newPass,
+          newPassConf: newPassConf,
         }),
       });
       const data = await response.json();
       console.log(data);
+      if (!data.error) {
+        toast({
+          title: "Password updated successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-middle",
+        });
+      } else {
+        toast({
+          title: "Password does not match .",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top-middle",
+        });
+      }
     } catch (err) {
       console.log(err);
+      toast({
+        title: " Unexpected Error .",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-middle",
+      });
     }
   }
 
@@ -58,7 +84,7 @@ export default function ChangePassword() {
       minH={"100vh"}
       bg={useColorModeValue("gray.50", "gray.800")}
       w={"full"}
-      as={'form'}
+      as={"form"}
       onSubmit={handleSubmit}
     >
       <Stack spacing={8} w={"full"}>

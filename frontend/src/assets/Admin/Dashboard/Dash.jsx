@@ -50,11 +50,11 @@ export default function Dash({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   return (
-    <Box minH="100vh" bg={useColorModeValue("red.100", "gray.900")}>
+    <Box minH="100vh" bg={useColorModeValue("grey.100", "gray.900")}>
       <SidebarContent
         onClose={() => onClose}
         display={{ base: "none", md: "block" }}
-        bg={useColorModeValue("green.100", "gray.900")}
+        //bg={useColorModeValue("green.100", "gray.900")}
       />
 
       <Drawer
@@ -72,7 +72,7 @@ export default function Dash({ children }) {
       </Drawer>
 
       {/* mobilenav */}
-      <MobileNav onOpen={onOpen} bg={"orange.200"} />
+      <MobileNav onOpen={onOpen} />
 
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}

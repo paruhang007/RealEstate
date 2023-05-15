@@ -141,7 +141,7 @@ export default function MyServices() {
     <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
       <Box m={2} w={"full"}>
         <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"} ml={5}>
-          My Services
+          Support and Grivence
         </Text>
         <Flex m={5} gap={5}>
           <InputGroup>
