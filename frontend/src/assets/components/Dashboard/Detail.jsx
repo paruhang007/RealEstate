@@ -176,6 +176,43 @@ export default function SearchProp() {
     }
   };
 
+  // when the user clicks on the Like button
+  const handelFavourite = async (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+    const data = localStorage.getItem("token");
+
+    if (data) {
+      try {
+        const response = await fetch("http://localhost:4000/addFavourite", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({
+            userId: user.id, // logged in usser id
+            poprId: packId, // package id
+            propUserId: id, // user id of the property owner
+            img: product?.img,
+            propName: product?.propName,
+            propDist: product?.propDist,
+            propMuni: product?.propMuni,
+            propStreet: product?.propStreet,
+            propPrice: product?.propPrice,
+            selectedPayment: product?.selectedPayment,
+          }),
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      onOpen();
+    }
+  };
+
   return (
     <Grid templateColumns="repeat(7, 1fr)" gap={2} py={5} px={10} bg="gray.100">
       <GridItem colStart={1} colEnd={6}>
@@ -207,7 +244,7 @@ export default function SearchProp() {
                   onClick={() => {
                     const data = localStorage.getItem("token");
                     if (data) {
-                      alert("Added to favourites");
+                      handelFavourite();
                     } else {
                       onOpen();
                     }

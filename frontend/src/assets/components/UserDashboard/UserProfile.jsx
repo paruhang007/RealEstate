@@ -16,77 +16,69 @@ import {
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
-import jwt_decode from 'jwt-decode';
+import jwt_decode from "jwt-decode";
+import { useToast } from "@chakra-ui/react";
 
 export default function UserProfile() {
-
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [userData, setUserData] = useState({});
+  const toast = useToast();
 
   // getting the token from local storage
-  const data = localStorage.getItem('token');
-  // decoding the token which is actually holding the user id  
+  const data = localStorage.getItem("token");
+  // decoding the token which is actually holding the user id
   const user = jwt_decode(data);
-
 
   const loadData = async () => {
     try {
       const response = await fetch("http://localhost:4000/userGet", {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          "id": user.id,
-
+          id: user.id,
         }),
       });
       const data = await response.json();
       console.log(data.data);
       setUserData(data.data);
-    }
-
-    catch (err) {
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   useEffect(() => {
     loadData();
   }, []);
 
-
-
-  // usestate for images 
+  // usestate for images
   const [images, setImages] = useState();
 
   const uploadImage = async () => {
     console.log("upload");
     const data = new FormData();
-    data.append('file', images);
-    data.append('upload_preset', 'sie3kiby');
+    data.append("file", images);
+    data.append("upload_preset", "sie3kiby");
 
     try {
-      const res = await fetch('https://api.cloudinary.com/v1_1/dooohxhvw/image/upload', {
-        method: 'POST',
-        body: data
-      })
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dooohxhvw/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
       const file = await res.json();
-
       return file.secure_url;
-
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       return null;
     }
-
-  }
-
-
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -96,29 +88,48 @@ export default function UserProfile() {
       id: user.id,
       imageLink,
       ...userData,
-    }
+    };
     console.log(object);
-    if (imageLink) {
-      try {
-        const response = await fetch('http://localhost:4000/userEdit', {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
 
-          },
-          body: JSON.stringify({
-
-            ...object
-          }),
-
-        })
-        const data = await response.json();
-        console.log(data);
+    try {
+      const response = await fetch("http://localhost:4000/userEdit", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...object,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      // condition for checking the response from backend and showing the toast message accordingly
+      if (!data.error) {
+        toast({
+          title: "Profile updated successfully.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-middle",
+        });
+      } else {
+        toast({
+          title: "Profile updated unsuccessfully.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+          position: "top-middle",
+        });
       }
-
-      catch (error) {
-        console.log(error);
-      }
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: " Unexpected Error .",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-middle",
+      });
     }
   };
 
@@ -127,7 +138,7 @@ export default function UserProfile() {
       minH={"100vh"}
       w={"full"}
       bg={useColorModeValue("gray.50", "gray.800")}
-      as={'form'}
+      as={"form"}
       onSubmit={handleSubmit}
     >
       <Stack
@@ -157,17 +168,22 @@ export default function UserProfile() {
             </Center>
             <Center w="full">
               <Flex gap={4}>
-                <Input type={'file'} py={1} onChange={(e) => {
-                  setImages(e.target.files[0]);
-                }}></Input>
+                <Input
+                  type={"file"}
+                  py={1}
+                  onChange={(e) => {
+                    setImages(e.target.files[0]);
+                  }}
+                ></Input>
                 <Button
                   bg={"blue.400"}
                   color={"white"}
                   _hover={{
                     bg: "blue.500",
                   }}
-
-                >Add Photo</Button>
+                >
+                  Add Photo
+                </Button>
               </Flex>
             </Center>
           </Stack>

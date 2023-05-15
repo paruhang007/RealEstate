@@ -1,6 +1,7 @@
 const User = require("../models/userDetail.js");
 const OTP = require("../models/otpModel.js");
 const Review = require("../models/reviewModel.js");
+const Fav = require("../models/favouriteModel.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
@@ -58,7 +59,7 @@ const login = async (req, res) => {
                 id: user._id,
               },
               JWT_SECRET,
-              { expiresIn: "24h" }
+              { expiresIn: "2h" }
             );
 
             return res.json({
@@ -133,7 +134,9 @@ const userEdit = async (req, res) => {
     user.lname = lname;
     user.email = email;
     user.phone = phone;
-    user.userImg = imageLink;
+    if (imageLink) {
+      user.userImg = imageLink;
+    }
 
     await user.save();
     res.send({ status: "updated" });
@@ -605,6 +608,47 @@ const editReview = async (req, res) => {
   }
 };
 
+// adding to favourite
+const addFavourite = async (req, res) => {
+  const {
+    userId,
+    poprId,
+    propUserId,
+    img,
+    propName,
+    propDist,
+    propMuni,
+    propStreet,
+    propPrice,
+    selectedPayment,
+  } = req.body;
+  console.log(req.body);
+  try {
+    const user = await Fav.findOne({ userId: userId });
+    const prop = await Fav.findOne({ poprId: poprId });
+    if (user && prop) {
+      return res.json({ error: "Already added to favourite" });
+    }
+    const newFav = new Fav({
+      userId,
+      poprId,
+      propUserId,
+      img,
+      propName,
+      propDist,
+      propMuni,
+      propStreet,
+      propPrice,
+      selectedPayment,
+    });
+    await newFav.save();
+    res.send({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+    res.send({ status: "error" });
+  }
+};
+
 // Exporting all the functions
 module.exports = {
   login,
@@ -628,4 +672,5 @@ module.exports = {
   addReview,
   getAllReview,
   editReview,
+  addFavourite,
 };
