@@ -13,12 +13,72 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import jwt_decode from 'jwt-decode';
+import jwt_decode from "jwt-decode";
+import { useToast } from "@chakra-ui/react";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const toast = useToast();
+
+  // const submitHandler = async (event) => {
+  //   event.preventDefault();
+
+  //   try {
+  //     const response = await fetch("http://localhost:4000/login", {
+  //       method: "POST",
+  //       crossDomain: true,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Accept: "application/json",
+  //         "Access-Control-Allow-Origin": "*",
+  //       },
+  //       body: JSON.stringify({
+  //         email: email,
+  //         password: password,
+  //       }),
+  //     });
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+
+  //       if (data.status === "ok") {
+  //         window.localStorage.setItem("token", data.data);
+  //         navigate("/");
+  //       } else {
+  //         //Display an error toast
+  //         toast({
+  //           title: "Login failed. Please check your credentials.",
+  //           status: "error",
+  //           duration: 3000,
+  //           isClosable: true,
+  //           position: "top-middle",
+  //         });
+  //       }
+  //     } else {
+  //       // Display an error toast
+  //       toast({
+  //         title: "Something went wrong. Please try again later.",
+  //         status: "error",
+  //         duration: 3000,
+  //         isClosable: true,
+  //         position: "top-middle",
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //     // Display an error toast
+  //     toast({
+  //       title: "An error occurred. Please try again later.",
+  //       status: "error",
+  //       duration: 3000,
+  //       isClosable: true,
+  //       position: "top-middle",
+  //     });
+  //   }
+  // };
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -29,7 +89,7 @@ export default function LoginForm() {
         crossDomain: true,
         headers: {
           "Content-Type": "application/json",
-          Acceept: "application/jason",
+          Accept: "application/json",
           "Access-Control-Allow-Origin": "*",
         },
         body: JSON.stringify({
@@ -41,14 +101,27 @@ export default function LoginForm() {
       if (response.ok) {
         const data = await response.json();
 
-        if (data.status == "ok") {
+        if (data.status === "ok") {
           window.localStorage.setItem("token", data.data);
-
           navigate("/");
         }
+      } else {
+        const errorResponse = await response.json();
+        const errorMessage = errorResponse.error;
+
+        // Handle the error message
+        console.log(errorMessage);
+        toast({
+          title: errorMessage,
+          //status: "success",
+          duration: 3000,
+          isClosable: true,
+          position: "top-middle",
+        });
       }
     } catch (err) {
       console.log(err);
+      // Handle the network or other errors
     }
   };
 
