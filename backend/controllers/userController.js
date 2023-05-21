@@ -628,24 +628,73 @@ const addFavourite = async (req, res) => {
     const prop = await Fav.findOne({ poprId: poprId });
     if (user && prop) {
       return res.json({ error: "Already added to favourite" });
+    } else {
+      const newFav = new Fav({
+        userId,
+        poprId,
+        propUserId,
+        img,
+        propName,
+        propDist,
+        propMuni,
+        propStreet,
+        propPrice,
+        selectedPayment,
+      });
+      await newFav.save();
+      res.send({ hello: "ok" });
     }
-    const newFav = new Fav({
-      userId,
-      poprId,
-      propUserId,
-      img,
-      propName,
-      propDist,
-      propMuni,
-      propStreet,
-      propPrice,
-      selectedPayment,
-    });
-    await newFav.save();
-    res.send({ status: "ok" });
   } catch (error) {
     console.log(error);
     res.send({ status: "error" });
+  }
+};
+
+const getFavourite = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const userFav = await Fav.aggregate([
+      {
+        $match: {
+          userId: userId,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          id: 1,
+          poprId: 1,
+          propUserId: 1,
+          img: 1,
+          propName: 1,
+          propDist: 1,
+          propMuni: 1,
+          propStreet: 1,
+          propPrice: 1,
+          selectedPayment: 1,
+        },
+      },
+    ]);
+    res.send(userFav);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Delete service
+const deleteFav = async (req, res) => {
+  const { packId } = req.body;
+  console.log(packId);
+  try {
+    const user = await Fav.findById({ _id: packId });
+    if (!user) {
+      return res.json({ error: "Property not found" });
+    }
+    user.remove();
+    await user.save();
+    res.send({ status: "ok" });
+  } catch (error) {
+    console.log(error);
   }
 };
 
@@ -673,4 +722,6 @@ module.exports = {
   getAllReview,
   editReview,
   addFavourite,
+  getFavourite,
+  deleteFav,
 };

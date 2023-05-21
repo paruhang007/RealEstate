@@ -47,6 +47,8 @@ import { GiWaterfall } from "react-icons/gi";
 import { MdFavoriteBorder } from "react-icons/md";
 import axios from "axios";
 
+import { useToast } from "@chakra-ui/react";
+
 export default function SearchProp() {
   // use state for the product
   const [product, setProduct] = useState({});
@@ -72,6 +74,8 @@ export default function SearchProp() {
 
   // getting the id and packId from the url
   const { id, packId } = useParams();
+
+  const toast = useToast();
 
   // loading the data from the database for property
   const loadData = async () => {
@@ -205,6 +209,28 @@ export default function SearchProp() {
             selectedPayment: product?.selectedPayment,
           }),
         });
+        const data = await response.json();
+
+        if (data.hello === "ok") {
+          toast({
+            title: "Added to Favourites",
+            description: "We've added this property to your favourites.",
+            status: "success",
+            duration: 6000,
+            isClosable: true,
+            position: "top-middle",
+          });
+        }
+        if (data.error === "Already added to favourite") {
+          toast({
+            title: "Already added to Favourites",
+            description: "This property is already added to your favourites.",
+            status: "info",
+            duration: 6000,
+            isClosable: true,
+            position: "top-middle",
+          });
+        }
       } catch (err) {
         console.log(err);
       }
@@ -242,12 +268,13 @@ export default function SearchProp() {
                   aria-label="favourite"
                   icon={<MdFavoriteBorder />}
                   onClick={() => {
-                    const data = localStorage.getItem("token");
-                    if (data) {
-                      handelFavourite();
-                    } else {
-                      onOpen();
-                    }
+                    // const data = localStorage.getItem("token");
+                    // if (data) {
+                    //   handelFavourite();
+                    // } else {
+                    //   onOpen();
+                    // }
+                    handelFavourite();
                   }}
                 />
               </Flex>

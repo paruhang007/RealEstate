@@ -23,6 +23,8 @@ const {
   getAllReview,
   editReview,
   addFavourite,
+  getFavourite,
+  deleteFav,
 } = require("../controllers/userController.js");
 
 router.post("/login", login);
@@ -47,5 +49,7 @@ router.post("/addReview", addReview);
 router.post("/getAllReview", getAllReview);
 router.patch("/editReview", editReview);
 router.post("/addFavourite", addFavourite);
+router.post("/getFavourite/:userId", getFavourite);
+router.delete("/deleteFav", deleteFav);
 
 module.exports = router;

@@ -18,6 +18,7 @@ import {
   FormControl,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 
 function Smbox({ title, desc }) {
   return (
@@ -38,6 +39,8 @@ export default function UnitConverter() {
   const [val1, setval1] = useState("");
   const [val2, setval2] = useState("");
   const [result, setResult] = useState("");
+
+  const toast = useToast();
 
   const divide = () => {
     // Convert the inputs from strings to numbers
@@ -315,7 +318,14 @@ export default function UnitConverter() {
       const result = (parsedNum1 * 16.93) / 185.25;
       setResult(result.toFixed(3));
     } else {
-      setResult("please select the options and enter number");
+      toast({
+        title: "please select the options and enter number ",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top-middle",
+      });
+      //setResult("please select the options and enter number");
     }
   };
 

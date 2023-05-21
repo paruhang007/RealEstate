@@ -24,6 +24,7 @@ import {
   Divider,
   Badge,
   Textarea,
+  Image,
 } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
@@ -261,7 +262,19 @@ export default function Chat() {
               </Flex>
             </>
           ) : (
-            <Text>Select a conversation</Text>
+            <Flex alignItems={"center"} direction={"column"}>
+              <Image src={"public/images/chat.png"} />
+              <Text
+                fontSize={"2xl"}
+                backgroundColor={"blue.200"}
+                borderRadius={"lg"}
+                color={"white"}
+                w={"60%"}
+                textAlign={"center"}
+              >
+                Select a conversation to start chatting
+              </Text>
+            </Flex>
           )}
         </GridItem>
       </Grid>

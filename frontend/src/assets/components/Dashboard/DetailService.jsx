@@ -196,7 +196,7 @@ export default function SearchProp() {
                   {product.serName}
                 </Heading>
                 <Spacer />
-                <IconButton
+                {/* <IconButton
                   variant="outline"
                   colorScheme="teal"
                   aria-label="favourite"
@@ -209,7 +209,7 @@ export default function SearchProp() {
                       onOpen();
                     }
                   }}
-                />
+                /> */}
               </Flex>
 
               <Modal
