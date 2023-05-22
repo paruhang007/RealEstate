@@ -20,6 +20,9 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { BsChatDots } from "react-icons/bs";
 import { BiSupport } from "react-icons/bi";
 import { Outlet, NavLink, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import { useToast } from "@chakra-ui/react";
 
 const LinkItems = [
   { name: "Profile", icon: FiHome, path: "/profile" },
@@ -36,6 +39,31 @@ const LinkItems = [
 export default function Sidebar({ children }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const location = useLocation();
+
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  // getting the token from local storage
+  const data = localStorage.getItem("token");
+  // decoding the token which is actually holding the user id
+  const user = jwt_decode(data);
+  console.log(user);
+  const start = user.iat;
+  const end = user.exp;
+
+  // if the token is expired then navigate to the login page
+  if (Date.now() >= end * 1000) {
+    toast({
+      title: "session expired",
+      description: "Your session has been expired. Please login again",
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+      position: "top-middle",
+    });
+    navigate("/login");
+    localStorage.removeItem("token");
+  }
 
   return (
     <Box bg={useColorModeValue("gray.100", "gray.900")}>

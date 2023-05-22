@@ -20,11 +20,15 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import jwt_decode from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 export default function Support() {
   const [serviceDetails, setServiceDetails] = useState({});
 
   const [selectedServiceType, setSelectedServiceType] = useState("");
+
+  const toast = useToast();
+  const navigate = useNavigate();
 
   // handel service type select change
   function handleServiceTypeSelectChange(event) {
@@ -35,9 +39,22 @@ export default function Support() {
   const data = localStorage.getItem("token");
   // decoding the token which is actually holding the user id
   const user = jwt_decode(data);
-  console.log(user);
+  const start = user.iat;
+  const end = user.exp;
 
-  const toast = useToast();
+  // if the token is expired then navigate to the login page
+  if (Date.now() >= end * 1000) {
+    toast({
+      title: "session expired",
+      description: "Your session has been expired. Please login again",
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+      position: "top-middle",
+    });
+    navigate("/login");
+    localStorage.removeItem("token");
+  }
 
   // usestate for images
   const [images, setImages] = useState();

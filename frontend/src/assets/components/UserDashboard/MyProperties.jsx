@@ -36,6 +36,7 @@ import { useDisclosure } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@chakra-ui/react";
 
 import config from "../../khalti/KhaltiConfig";
 
@@ -51,6 +52,8 @@ export default function MyProperties() {
     onOpen: onPayOpen,
     onClose: onPayClose,
   } = useDisclosure();
+
+  const toast = useToast();
 
   const navigate = useNavigate();
 
@@ -148,8 +151,24 @@ export default function MyProperties() {
   // getting the token from local storage
   const data = localStorage.getItem("token");
   // decoding the token which is actually holding the user id
-  const user = jwt_decode(data);
+  const user = data ? jwt_decode(data) : "";
+  console.log(user);
+  const start = user.iat;
+  const end = user.exp;
 
+  // if the token is expired then navigate to the login page
+  if (Date.now() >= end * 1000) {
+    toast({
+      title: "session expired",
+      description: "Your session has been expired. Please login again",
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+      position: "top-middle",
+    });
+    navigate("/login");
+    //localStorage.removeItem("token");
+  }
   const loaddata = async () => {
     try {
       const response = await fetch("http://localhost:4000/getPackAll", {

@@ -23,6 +23,7 @@ import { useMemo } from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useToast } from "@chakra-ui/react";
+import jwt_decode from "jwt-decode";
 
 export default function EditProperty() {
   const [propName, setPropName] = useState("");
@@ -38,11 +39,34 @@ export default function EditProperty() {
   const [propPrice, setPropPrice] = useState("");
 
   const toast = useToast();
+  const navigate = useNavigate();
 
   const [selectedFor, setSelectedFor] = useState("");
   const [selectedPropertyType, setSelectedPropertyType] = useState("");
   const [selectedPropertyUnit, setSelectedPropertyUnit] = useState("");
   const [selectedPayment, setSelectedPayment] = useState("");
+
+  // getting the token from local storage
+  const data = localStorage.getItem("token");
+  // decoding the token which is actually holding the user id
+  const user = jwt_decode(data);
+  console.log(user);
+  const start = user.iat;
+  const end = user.exp;
+
+  // if the token is expired then navigate to the login page
+  if (Date.now() >= end * 1000) {
+    toast({
+      title: "session expired",
+      description: "Your session has been expired. Please login again",
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+      position: "top-middle",
+    });
+    navigate("/login");
+    localStorage.removeItem("token");
+  }
 
   // handle select change for "For"
   function handleForSelectChange(event) {
@@ -85,7 +109,7 @@ export default function EditProperty() {
   };
 
   // for viewng the data from the database
-  const navigate = useNavigate();
+
   const [product, setProduct] = useState({});
   const [selectedData, setSelectedData] = useState({});
 

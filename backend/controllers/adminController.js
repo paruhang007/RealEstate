@@ -26,7 +26,7 @@ const adminlogin = async (req, res) => {
                 id: user._id,
               },
               JWT_SECRET,
-              { expiresIn: "24h" }
+              { expiresIn: "2h" }
             );
 
             return res.json({

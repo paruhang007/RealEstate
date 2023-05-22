@@ -39,7 +39,6 @@ import {
   Route,
   Routes,
   RouterProvider,
-  //Redirect,
 } from "react-router-dom";
 
 const App = () => {
@@ -185,6 +184,7 @@ const App = () => {
         {
           path: "allusers",
           element: <AllUsers />,
+          //element: admin ? <AllUsers /> : <navigate to="/loginadmin" />,
         },
         {
           path: "allproperties",

@@ -18,6 +18,7 @@ import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 export default function UserProfile() {
   const [fname, setFname] = useState("");
@@ -26,11 +27,28 @@ export default function UserProfile() {
   const [phone, setPhone] = useState("");
   const [userData, setUserData] = useState({});
   const toast = useToast();
+  const navigate = useNavigate();
 
   // getting the token from local storage
   const data = localStorage.getItem("token");
   // decoding the token which is actually holding the user id
   const user = jwt_decode(data);
+  const start = user.iat;
+  const end = user.exp;
+
+  // if the token is expired then navigate to the login page
+  if (Date.now() >= end * 1000) {
+    toast({
+      title: "session expired",
+      description: "Your session has been expired. Please login again",
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+      position: "top-middle",
+    });
+    navigate("/login");
+    localStorage.removeItem("token");
+  }
 
   const loadData = async () => {
     try {

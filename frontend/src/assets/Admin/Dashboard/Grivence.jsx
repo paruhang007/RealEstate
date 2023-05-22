@@ -52,6 +52,17 @@ export default function MyServices() {
   const [search, setSearch] = useState(false);
   const [servImg, setServImg] = useState("");
 
+  // getting the token from local storage
+  const data = localStorage.getItem("tokenAdmin");
+  useEffect(() => {
+    if (data) {
+      navigate("/admindash/grieverance");
+    }
+    if (!data) {
+      navigate("/loginadmin");
+    }
+  }, [data]);
+
   // search handler
   const searchHandler = (e) => {
     const search = e.target.value;
@@ -87,11 +98,6 @@ export default function MyServices() {
         : service
     );
   };
-
-  // getting the token from local storage
-  const data = localStorage.getItem("token");
-  // decoding the token which is actually holding the user id
-  const user = jwt_decode(data);
 
   const loaddata = async () => {
     try {

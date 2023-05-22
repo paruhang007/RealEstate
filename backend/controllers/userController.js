@@ -681,10 +681,10 @@ const getFavourite = async (req, res) => {
   }
 };
 
-// Delete service
+// Remove from favourite
 const deleteFav = async (req, res) => {
   const { packId } = req.body;
-  console.log(packId);
+
   try {
     const user = await Fav.findById({ _id: packId });
     if (!user) {

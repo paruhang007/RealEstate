@@ -34,6 +34,7 @@ import { BsHouses } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { BsShopWindow } from "react-icons/bs";
 import { FiUsers } from "react-icons/fi";
+import { useEffect } from "react";
 
 const LinkItems = [
   { name: "Home", icon: FiHome },
@@ -49,6 +50,16 @@ export default function Dash({ children }) {
   const token = localStorage.getItem("tokenAdmin");
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token) {
+      navigate("/admindash");
+    }
+    if (!token) {
+      navigate("/loginadmin");
+    }
+  }, [token]);
+
   return (
     <Box minH="100vh" bg={useColorModeValue("grey.100", "gray.900")}>
       <SidebarContent

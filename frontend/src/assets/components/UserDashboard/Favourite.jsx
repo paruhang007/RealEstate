@@ -40,17 +40,34 @@ export default function Favourite() {
   // set the property id to the state
   const [propID, setPropID] = useState("");
 
-  const data = localStorage.getItem("token");
-  const user = jwt_decode(data);
-
   const navigate = useNavigate();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const toast = useToast();
 
+  const data = localStorage.getItem("token");
+  const user = jwt_decode(data);
+  const start = user.iat;
+  const end = user.exp;
+
+  // if the token is expired then navigate to the login page
+  if (Date.now() >= end * 1000) {
+    toast({
+      title: "session expired",
+      description: "Your session has been expired. Please login again",
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+      position: "top-middle",
+    });
+    navigate("/login");
+    localStorage.removeItem("token");
+  }
+
   // load data into the table
-  const loaddata = async () => {
+  const loaddata = async (e) => {
+    //e.preventDefault();
     try {
       const response = await fetch(
         "http://localhost:4000/getFavourite/" + user.id,
@@ -121,6 +138,15 @@ export default function Favourite() {
     >
       <Text fontSize={"2xl"} color={"gray.600"} fontWeight={"bold"} ml={5}>
         Favourite Properties
+      </Text>
+      <Text
+        fontSize={"xl"}
+        color={"gray.600"}
+        fontWeight={"bold"}
+        alignSelf={"center"}
+        mt={40}
+      >
+        {selectedFavoutite.length === 0 ? "No Favourite Properties" : ""}
       </Text>
       <SimpleGrid minChildWidth="200px" spacing="40px" m={5}>
         {selectedFavoutite.map((prop) => {
@@ -196,7 +222,6 @@ export default function Favourite() {
           );
         })}
       </SimpleGrid>
-
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
