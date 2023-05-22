@@ -541,6 +541,7 @@ const getServiceAll = async (req, res) => {
 // Delete service
 const deleteService = async (req, res) => {
   const { id, servId } = req.body;
+  console.log(req.body);
   try {
     const user = await User.findById({ _id: id });
     if (!user) {

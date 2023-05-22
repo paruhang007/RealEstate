@@ -49,16 +49,24 @@ export default function MyServices() {
 
   const [search, setSearch] = useState(false);
 
-  // getting the token from local storage
   const data = localStorage.getItem("tokenAdmin");
-  useEffect(() => {
-    if (data) {
-      navigate("/admindash/allservices");
-    }
-    if (!data) {
-      navigate("/loginadmin");
-    }
-  }, [data]);
+  const user = data ? jwt_decode(data) : "";
+  const start = user.iat;
+  const end = user.exp;
+
+  // if the token is expired then navigate to the login page
+  if (Date.now() >= end * 1000) {
+    toast({
+      title: "session expired",
+      description: "Your session has been expired. Please login again",
+      status: "error",
+      duration: 6000,
+      isClosable: true,
+      position: "top-middle",
+    });
+    navigate("/login");
+    localStorage.removeItem("token");
+  }
 
   // search handler
   const searchHandler = (e) => {
@@ -107,14 +115,16 @@ export default function MyServices() {
       const serv = await response.json();
       // gets the data from the database by filtering only services from different users
       console.log(serv.data);
+      setService(serv.data);
+      setSelectedServiceType(serv.data);
 
       // mapping the data to get only the service
-      const data = serv.data.map((serv) => {
-        return serv.service;
-      });
-      setService(data);
-      console.log(data);
-      setSelectedServiceType(data);
+      // const data = serv.data.map((serv) => {
+      //   return serv.service;
+      // });
+      // setService(data);
+      // console.log(data);
+      // setSelectedServiceType(data);
     } catch (err) {
       console.log(err);
     }
@@ -126,6 +136,7 @@ export default function MyServices() {
 
   // set the property id to the state
   const [servID, setServID] = useState("");
+  const [userID, setUserID] = useState("");
 
   const handelDel = async () => {
     try {
@@ -135,12 +146,50 @@ export default function MyServices() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: user.id,
+          id: userID,
           servId: servID,
         }),
       });
       const serv = await response.json();
-      console.log(serv);
+      // console.log(serv);
+      toast({
+        title: "Service Deleted",
+        description: "Service has been deleted successfully",
+        status: "success",
+        duration: 6000,
+        isClosable: true,
+        position: "top-middle",
+      });
+      loaddata();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // edit handler
+  const handel = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/verifyService", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: userID,
+          servId: servID,
+        }),
+      });
+      const serv = await response.json();
+
+      toast({
+        title: "Service Verified",
+        description: "Service has been verified",
+        status: "success",
+        duration: 6000,
+        isClosable: true,
+        position: "top-middle",
+      });
+
       loaddata();
     } catch (err) {
       console.log(err);
@@ -197,12 +246,12 @@ export default function MyServices() {
               {selectedServiceType.map((serv) => {
                 return (
                   <Tr>
-                    <Td>{serv._id}</Td>
-                    <Td>{serv.serName}</Td>
-                    <Td>{serv.selectedServiceType}</Td>
-                    <Td>{serv.serEmail}</Td>
-                    <Td>{serv.serPhone}</Td>
-                    <Td>{serv.verifiedService ? "1" : "0"}</Td>
+                    <Td>{serv.service._id}</Td>
+                    <Td>{serv.service.serName}</Td>
+                    <Td>{serv.service.selectedServiceType}</Td>
+                    <Td>{serv.service.serEmail}</Td>
+                    <Td>{serv.service.serPhone}</Td>
+                    <Td>{serv.service.verifiedService ? "1" : "0"}</Td>
                     <Td>
                       <Flex gap={4}>
                         <IconButton
@@ -212,7 +261,8 @@ export default function MyServices() {
                           fontSize="20px"
                           icon={<AiOutlineEdit />}
                           onClick={() => {
-                            setServID(serv._id);
+                            setServID(serv.service._id);
+                            setUserID(serv._id);
                             onEditOpen();
                           }}
                         />
@@ -224,7 +274,8 @@ export default function MyServices() {
                           fontSize="20px"
                           icon={<AiOutlineDelete />}
                           onClick={() => {
-                            setServID(serv._id);
+                            setServID(serv.service._id);
+                            setUserID(serv._id);
                             onOpen();
                           }}
                         />
@@ -246,11 +297,11 @@ export default function MyServices() {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit Service </ModalHeader>
+          <ModalHeader>Verify Service </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Text fontWeight="bold" mb="1rem">
-              Do you want to Edit the Service?
+              Do you want to Verify the Service?
             </Text>
           </ModalBody>
 
@@ -259,7 +310,8 @@ export default function MyServices() {
               colorScheme="blue"
               mr={3}
               onClick={() => {
-                navigate(`/editservice/${user.id}/${servID}`);
+                handel();
+                onEditClose();
               }}
             >
               Edit
@@ -290,6 +342,7 @@ export default function MyServices() {
               mr={3}
               onClick={() => {
                 handelDel();
+                onClose();
               }}
             >
               Delete

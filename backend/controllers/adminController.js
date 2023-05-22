@@ -4,6 +4,8 @@ require("dotenv").config();
 const JWT_SECRET = process.env.JWT_SECRET;
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { ObjectId } = require("mongodb");
+const mongoose = require("mongoose");
 
 // FOR ADMIN PANEL
 
@@ -118,7 +120,7 @@ const getAllProp = async (req, res) => {
       },
     ]);
 
-    console.log(user);
+    //console.log(user);
     res.send({ status: "ok", data: user });
   } catch (error) {
     console.log(error);
@@ -190,6 +192,61 @@ const getAllService = async (req, res) => {
   }
 };
 
+// verify property by admin
+const verifyProp = async (req, res) => {
+  const { id, packId } = req.body;
+  console.log(req.body);
+  try {
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return res.json({ error: "User not found" });
+    }
+
+    const pack = user.package.filter((pack) => {
+      const new_pack = new mongoose.Types.ObjectId(packId);
+      // console.log(typeof new_pack);
+      // console.log(typeof pack._id);
+      return pack._id.toString() === new_pack.toString();
+    });
+
+    console.log(pack);
+    pack[0].verified = true; // update the verified property to true
+
+    await user.save(); // save the updated status to the database
+    console.log(pack);
+    res.send({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const verifyService = async (req, res) => {
+  const { id, servId } = req.body;
+  console.log(req.body);
+  try {
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return res.json({ error: "User not found" });
+    }
+
+    const pack = user.service.filter((pack) => {
+      const new_pack = new mongoose.Types.ObjectId(servId);
+      // console.log(typeof new_pack);
+      // console.log(typeof pack._id);
+      return pack._id.toString() === new_pack.toString();
+    });
+
+    //console.log(pack);
+    pack[0].verifiedService = true; // update the verified property to true
+
+    await user.save(); // save the updated status to the database
+    console.log(pack);
+    res.send({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   adminlogin,
   changeAdminPass,
@@ -197,4 +254,6 @@ module.exports = {
   deleteUser,
   getAllProp,
   getAllService,
+  verifyProp,
+  verifyService,
 };

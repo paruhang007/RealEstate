@@ -40,7 +40,7 @@ export default function AllUsers() {
   const data = localStorage.getItem("tokenAdmin");
   useEffect(() => {
     if (data) {
-      navigate("/aadmindash/allusers");
+      navigate("/admindash/allusers");
     }
     if (!data) {
       navigate("/loginadmin");

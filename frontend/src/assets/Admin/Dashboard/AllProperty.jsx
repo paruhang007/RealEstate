@@ -52,6 +52,7 @@ export default function AllProperty() {
   const [search, setSearch] = useState(false);
 
   const [propID, setPropID] = useState("");
+  const [userID, setUserID] = useState("");
 
   const toast = useToast();
 
@@ -122,14 +123,16 @@ export default function AllProperty() {
       const prop = await response.json();
       // gets the data from the database by filtering only property from different users
       console.log(prop.data);
+      setProperty(prop.data);
+      setSelectedPropertyType(prop.data);
 
       // mapping the data to get only the property
-      const data = prop.data.map((prop) => {
-        return prop.package;
-      });
-      console.log(data);
-      setProperty(data);
-      setSelectedPropertyType(data);
+      // const data = prop.data.map((prop) => {
+      //   return prop.package;
+      // });
+      // console.log(data);
+      // setProperty(data);
+      // setSelectedPropertyType(data);
     } catch (err) {
       console.log(err);
     }
@@ -138,6 +141,65 @@ export default function AllProperty() {
   useEffect(() => {
     loaddata();
   }, []);
+
+  // edit handler for the property to delete
+  const handelDel = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/deletePack", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: userID,
+          packId: propID,
+        }),
+      });
+      const prop = await response.json();
+      //console.log(prop);
+      toast({
+        title: "Property Deleted",
+        description: "Property has been deleted",
+        status: "success",
+        duration: 6000,
+        isClosable: true,
+        position: "top-middle",
+      });
+      loaddata();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // edit handler
+  const handel = async () => {
+    try {
+      const response = await fetch("http://localhost:4000/verifyProp", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: userID,
+          packId: propID,
+        }),
+      });
+      const serv = await response.json();
+
+      toast({
+        title: "Property Verified",
+        description: "Property has been verified",
+        status: "success",
+        duration: 6000,
+        isClosable: true,
+        position: "top-middle",
+      });
+
+      loaddata();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Flex w={"full"} bg={useColorModeValue("white", "gray.700")}>
@@ -189,12 +251,12 @@ export default function AllProperty() {
               {selectedPropertyType.map((prop) => {
                 return (
                   <Tr>
-                    <Td>{prop._id}</Td>
-                    <Td>{prop.propName}</Td>
-                    <Td>{prop.selectedPropertyType}</Td>
-                    <Td>{prop.selectedFor}</Td>
+                    <Td>{prop.package._id}</Td>
+                    <Td>{prop.package.propName}</Td>
+                    <Td>{prop.package.selectedPropertyType}</Td>
+                    <Td>{prop.package.selectedFor}</Td>
 
-                    <Td>{prop.verified ? "1" : "0"}</Td>
+                    <Td>{prop.package.verified ? "1" : "0"}</Td>
                     <Td>
                       <Flex gap={4}>
                         <IconButton
@@ -204,7 +266,8 @@ export default function AllProperty() {
                           fontSize="20px"
                           icon={<AiOutlineEdit />}
                           onClick={() => {
-                            setPropID(prop._id);
+                            setPropID(prop.package._id);
+                            setUserID(prop._id);
                             onEditOpen();
                           }}
                         />
@@ -215,7 +278,8 @@ export default function AllProperty() {
                           fontSize="20px"
                           icon={<AiOutlineDelete />}
                           onClick={() => {
-                            setPropID(prop._id);
+                            setPropID(prop.package._id);
+                            setUserID(prop._id);
                             onOpen();
                           }}
                         />
@@ -250,7 +314,8 @@ export default function AllProperty() {
               colorScheme="blue"
               mr={3}
               onClick={() => {
-                navigate(`/editproperty/${user.id}/${propID}`);
+                handel();
+                onEditClose();
               }}
             >
               Edit
@@ -281,6 +346,7 @@ export default function AllProperty() {
               mr={3}
               onClick={() => {
                 handelDel();
+                onClose();
               }}
             >
               Delete

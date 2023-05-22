@@ -171,7 +171,7 @@ export default function MyServices() {
             >
               <option value="all">All</option>
               <option value="Resolved">Resolved </option>
-              <option value="Unresolved">Unresolved </option>
+              <option value="unresolved">Unresolved </option>
             </Select>
           </Box>
         </Flex>
