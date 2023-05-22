@@ -49,8 +49,6 @@ export default function AllUsers() {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const navigate = useNavigate();
-
   const [allUsers, setAllUser] = useState([]);
   const [selectedUser, setSelectedUser] = useState(allUsers);
 

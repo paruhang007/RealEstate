@@ -31,6 +31,7 @@ import AllServices from "./assets/Admin/Dashboard/AllServices";
 import Grivence from "./assets/Admin/Dashboard/Grivence";
 import Chat from "./assets/components/UserDashboard/Chat";
 import Support from "./assets/components/UserDashboard/Support";
+import Error404 from "./assets/components/Error404";
 
 import React from "react";
 import {
@@ -40,6 +41,7 @@ import {
   Routes,
   RouterProvider,
 } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 const App = () => {
   // getting the token from local storage
@@ -77,10 +79,12 @@ const App = () => {
           children: [
             {
               path: "/dashboard",
+              //element: user ? <UseDashPage /> : <Navigate to="/login" />,
               element: <UseDashPage />,
             },
             {
               path: "/profile",
+              //element: user ? <UserProfile /> : <Navigate to="/login" />,
               element: <UserProfile />,
             },
             {
@@ -203,6 +207,10 @@ const App = () => {
           element: <Grivence />,
         },
       ],
+    },
+    {
+      path: "/*",
+      element: <Error404 />,
     },
   ]);
 

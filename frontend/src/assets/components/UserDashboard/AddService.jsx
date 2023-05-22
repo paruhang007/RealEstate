@@ -21,6 +21,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import jwt_decode from "jwt-decode";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { useDisclosure } from "@chakra-ui/react";
 
 export default function AddService() {
   const [serviceDetails, setServiceDetails] = useState({});
@@ -29,6 +30,7 @@ export default function AddService() {
 
   const toast = useToast();
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   // handel service type select change
   function handleServiceTypeSelectChange(event) {
@@ -389,7 +391,15 @@ export default function AddService() {
               <CheckboxGroup colorScheme="green">
                 <Stack spacing={[5]} direction={["column", "row"]}>
                   <Checkbox value="policy" size="md">
-                    I Agree To Listing Policy*
+                    I Agree To Listing{" "}
+                    <Text
+                      onClick={() => {
+                        onOpen();
+                      }}
+                      color="blue.500"
+                    >
+                      Policy*
+                    </Text>
                   </Checkbox>
                 </Stack>
               </CheckboxGroup>
@@ -412,6 +422,75 @@ export default function AddService() {
           </Stack>
         </Box>
       </Stack>
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <Flex w={"auto"}>
+          <ModalContent>
+            <ModalHeader>
+              Terms and Plolicies for Listing Property and Services
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Text mb="1rem">
+                <UnorderedList>
+                  <ListItem>
+                    Accurate and Complete Information: Users are responsible for
+                    providing accurate, up-to-date, and complete information
+                    about the properties and services they list. This includes
+                    details such as property descriptions, specifications,
+                    location, pricing, availability, service descriptions,
+                    service scope, and any other relevant information.
+                  </ListItem>
+                  <ListItem>
+                    Compliance with Laws and Regulations: Users must comply with
+                    all applicable laws, regulations, and licensing requirements
+                    related to the listing and provision of properties and
+                    services. This includes adherence to real estate laws,
+                    property disclosure requirements, zoning regulations,
+                    licensing requirements for specific services, and any other
+                    relevant legal obligations.
+                  </ListItem>
+                  <ListItem>
+                    Intellectual Property Rights: Users must have the necessary
+                    rights and permissions to list any content related to the
+                    properties and services. It is prohibited to infringe upon
+                    the intellectual property rights of others, including
+                    copyrights, trademarks, or any other proprietary
+                    information.
+                  </ListItem>
+                  <ListItem>
+                    Quality and Safety: Listings should meet quality and safety
+                    standards. Users should ensure that the properties and
+                    services listed are in good condition, meet relevant safety
+                    regulations, and adhere to industry standards.
+                  </ListItem>
+                  <ListItem>
+                    Privacy and Data Protection: The user information is
+                    collected, stored, and used in accordance with applicable
+                    privacy laws and regulations.
+                  </ListItem>
+                  <ListItem>
+                    Liability Limitations: Users enter into transactions at
+                    their own risk and should exercise due diligence in their
+                    decision-making process. The user is solely responsible for
+                    any risks associated with the use of the platform.
+                  </ListItem>
+                </UnorderedList>
+              </Text>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button
+                variant="ghost"
+                onClick={onClose}
+                backgroundColor={"grey.100"}
+              >
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Flex>
+      </Modal>
     </Flex>
   );
 }
