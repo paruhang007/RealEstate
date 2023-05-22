@@ -73,7 +73,7 @@ export default function SearchProp() {
   // search handler
   const searchHandler = (e) => {
     const search = e.target.value;
-    console.log(search);
+    //console.log(search);
     setSearch(search);
 
     if (search.length === 0) {
@@ -253,7 +253,7 @@ export default function SearchProp() {
               />
             </InputGroup>
 
-            <Flex w={"50%"} align={"center"}>
+            {/* <Flex w={"50%"} align={"center"}>
               <Text fontSize={"sm"} color={"gray.600"} w={"30%"}>
                 Sort By:
               </Text>
@@ -268,7 +268,7 @@ export default function SearchProp() {
                 <option value="high">Price high to low </option>
                 <option value="low">Price low to high </option>
               </Select>
-            </Flex>
+            </Flex> */}
           </Flex>
 
           {/* another div for viewing products */}

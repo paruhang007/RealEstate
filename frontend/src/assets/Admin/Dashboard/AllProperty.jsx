@@ -56,24 +56,16 @@ export default function AllProperty() {
 
   const toast = useToast();
 
+  // getting the token from local storage
   const data = localStorage.getItem("tokenAdmin");
-  const user = data ? jwt_decode(data) : "";
-  const start = user.iat;
-  const end = user.exp;
-
-  // if the token is expired then navigate to the login page
-  if (Date.now() >= end * 1000) {
-    toast({
-      title: "session expired",
-      description: "Your session has been expired. Please login again",
-      status: "error",
-      duration: 6000,
-      isClosable: true,
-      position: "top-middle",
-    });
-    navigate("/login");
-    localStorage.removeItem("token");
-  }
+  useEffect(() => {
+    if (data) {
+      navigate("/admindash/allproperties");
+    }
+    if (!data) {
+      navigate("/loginadmin");
+    }
+  }, [data]);
 
   // search handler
   const searchHandler = (e) => {

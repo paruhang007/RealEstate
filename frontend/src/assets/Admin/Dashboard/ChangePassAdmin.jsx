@@ -24,6 +24,7 @@ export default function ChangePassAdmin() {
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [newPassConf, setNewPassConf] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -92,21 +93,45 @@ export default function ChangePassAdmin() {
             </FormControl>
             <FormControl id="newpassword" isRequired>
               <FormLabel>New Password</FormLabel>
-              <Input
-                placeholder="new password"
-                _placeholder={{ color: "gray.500" }}
-                type="password"
-                onChange={(e) => setNewPass(e.target.value)}
-              />
+              <InputGroup>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="new password"
+                  _placeholder={{ color: "gray.500" }}
+                  onChange={(e) => setNewPass(e.target.value)}
+                />
+                <InputRightElement h={"full"}>
+                  <Button
+                    variant={"ghost"}
+                    onClick={() =>
+                      setShowPassword((showPassword) => !showPassword)
+                    }
+                  >
+                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
             </FormControl>
             <FormControl id="confirmpassword" isRequired>
               <FormLabel>Confirm New Password</FormLabel>
-              <Input
-                placeholder="confirm new password"
-                _placeholder={{ color: "gray.500" }}
-                type="password"
-                onChange={(e) => setNewPassConf(e.target.value)}
-              />
+              <InputGroup>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="confirm new password"
+                  _placeholder={{ color: "gray.500" }}
+                  onChange={(e) => setNewPassConf(e.target.value)}
+                />
+                <InputRightElement h={"full"}>
+                  <Button
+                    variant={"ghost"}
+                    onClick={() =>
+                      setShowPassword((showPassword) => !showPassword)
+                    }
+                  >
+                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
             </FormControl>
             <Stack spacing={10} pt={2}>
               <Button

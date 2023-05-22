@@ -33,7 +33,7 @@ import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import jwt_decode from 'jwt-decode';
+import jwt_decode from "jwt-decode";
 
 export default function NavBar() {
   const token = localStorage.getItem("token");
@@ -45,7 +45,7 @@ export default function NavBar() {
 
   // // getting the token from local storage
   // const data = localStorage.getItem('token');
-  // // decoding the token which is actually holding the user id  
+  // // decoding the token which is actually holding the user id
   // const user = jwt_decode(data);
 
   // const loadData = async () => {
@@ -130,11 +130,13 @@ export default function NavBar() {
                 <Button variant="ghost">EMI Calculator</Button>
               </NavLink>
               <Menu>
-                {token && <Avatar
-                  as={MenuButton}
-                  size={"sm"}
-                // src={userData.userImg} 
-                />}
+                {token && (
+                  <Avatar
+                    as={MenuButton}
+                    size={"sm"}
+                    // src={userData.userImg}
+                  />
+                )}
                 <MenuList>
                   <MenuItem
                     onClick={() => {
@@ -154,12 +156,16 @@ export default function NavBar() {
                     onClick={() => {
                       navigate("/myproperties");
                     }}
-                  >My Property</MenuItem>
+                  >
+                    My Property
+                  </MenuItem>
                   <MenuItem
                     onClick={() => {
                       navigate("/favourite");
                     }}
-                  >Favourite</MenuItem>
+                  >
+                    Favourite
+                  </MenuItem>
 
                   <MenuItem
                     onClick={() => {
@@ -180,7 +186,16 @@ export default function NavBar() {
                 </MenuList>
               </Menu>
 
-              {!token && <Button variant="ghost">Sign up</Button>}
+              {!token && (
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    navigate("/signup");
+                  }}
+                >
+                  Sign up
+                </Button>
+              )}
             </HStack>
             {!token && (
               <Button
