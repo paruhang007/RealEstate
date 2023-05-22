@@ -6,6 +6,7 @@ const {
   userGet,
   userEdit,
   changeUserPass,
+  changeUserPassEmail,
   otp,
   otpVerify,
   addPack,
@@ -32,6 +33,7 @@ router.post("/register", register);
 router.post("/userGet", userGet);
 router.patch("/userEdit", userEdit);
 router.patch("/changeUserPass", changeUserPass);
+router.patch("/changeUserPassEmail", changeUserPassEmail);
 router.post("/otp", otp);
 router.post("/otpVerify", otpVerify);
 router.post("/addPack", addPack);

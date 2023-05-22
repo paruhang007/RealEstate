@@ -4,9 +4,92 @@ const Review = require("../models/reviewModel.js");
 const Fav = require("../models/favouriteModel.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../mailer/mail.js");
 require("dotenv").config();
 const imageDownloader = require("image-downloader");
 const JWT_SECRET = process.env.JWT_SECRET;
+
+const otp = async (req, res) => {
+  const { email } = req.body;
+  console.log(email);
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  const expireAt = new Date() + 5 * 60 * 1000;
+  try {
+    await OTP.create({
+      email,
+      otp,
+      status: "pending",
+      expireAt,
+    });
+    sendMail(email, otp);
+    res.send({ status: "ok", data: otp });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const otpVerify = async (req, res) => {
+  const { email, otp } = req.body;
+  console.log(email, otp);
+  try {
+    // Find the OTP document in the database
+    const otpDocument = await OTP.findOne({ email, otp, status: "pending" });
+    console.log(otpDocument);
+
+    // Check if OTP document exists
+    if (!otpDocument) {
+      return res.status(400).json({ error: "OTP does not exist" });
+    }
+
+    // Check if OTP has expired
+    if (otpDocument.expireAt > new Date()) {
+      otpDocument.status = "expired";
+      await otpDocument.save();
+      return res.status(400).json({ error: "OTP expired." });
+    }
+
+    // Check if the provided OTP matches the OTP in the database
+    if (otpDocument.otp !== otp) {
+      return res.status(400).json({ error: "Invalid OTP." });
+    }
+
+    // Update the status of the OTP document (if required)
+    otpDocument.status = "verified";
+    await otpDocument.save();
+
+    // Return success response
+    res.json({ status: "ok", message: "OTP verified successfully." });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
+const changeUserPassEmail = async (req, res) => {
+  const { email, newPass, newPassConf } = req.body;
+
+  try {
+    console.log(req.body);
+    const user = await User.findOne({ email });
+    console.log(user);
+    if (!user) {
+      return res.json({ error: "User not found" });
+    }
+    if (newPass !== newPassConf) {
+      return res.json({ error: "Password not matched" });
+    }
+    if (newPass === newPassConf) {
+      const encryptPass = await bcrypt.hash(newPass, 10);
+      user.password = encryptPass;
+      await user.save();
+      res.send({ status: "ok" });
+    } else {
+      res.send({ status: "error could not change password" });
+    }
+  } catch (error) {
+    res.send({ status: "error" });
+  }
+};
 
 // tried to use this code to upload images from the frontend
 const uplod_by_link = async (req, res) => {
@@ -194,56 +277,56 @@ const changeUserPass = async (req, res) => {
 };
 
 // api for otp
-const otp = async (req, res) => {
-  const { phone } = req.body;
-  console.log(phone);
-  const otp = Math.floor(1000 + Math.random() * 9000);
-  try {
-    // const response = await axios.post("https://sms.aakashsms.com/sms/v3/send", {
-    //   auth_token: process.env.SMS,
-    //   to: phone,
-    //   text: `Your otp code is ${otp}`,
-    // });
-    // console.log(response.data);
-    await OTP.create({
-      phone,
-      otp,
-      expire: Date.now() + 300000,
-    });
-    res.send({ status: "ok", data: otp });
-  } catch (error) {
-    console.log(error);
-  }
-};
+// const otp = async (req, res) => {
+//   const { phone } = req.body;
+//   console.log(phone);
+//   const otp = Math.floor(1000 + Math.random() * 9000);
+//   try {
+//     // const response = await axios.post("https://sms.aakashsms.com/sms/v3/send", {
+//     //   auth_token: process.env.SMS,
+//     //   to: phone,
+//     //   text: `Your otp code is ${otp}`,
+//     // });
+//     // console.log(response.data);
+//     await OTP.create({
+//       phone,
+//       otp,
+//       expire: Date.now() + 300000,
+//     });
+//     res.send({ status: "ok", data: otp });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
 
 // api for otp verify
-const otpVerify = async (req, res) => {
-  const otp = await OTP.findOne({ number: req.body.phone, status: "pending" });
-  console.log(otp);
-  if (!otp) return res.status(400).send({ message: "Bad Request" });
+// const otpVerify = async (req, res) => {
+//   const otp = await OTP.findOne({ number: req.body.phone, status: "pending" });
+//   console.log(otp);
+//   if (!otp) return res.status(400).send({ message: "Bad Request" });
 
-  const { expireAt } = otp;
-  if (expireAt < Date.now()) {
-    otp.status = "expired";
-    await otp.save();
-    return res.status(400).send({ message: "OTP Expired" });
-  }
-  console.log(otp.otp, req.body.otp);
-  if (otp.otp === req.body.otp) {
-    otp.status = "verified";
-    await otp.save();
-    const user = await User.findOne({ number: req.body.phone });
-    if (user) {
-      if (user.isCompleted) {
-        return res.send({ message: "OTP Verified", profile: true });
-      } else {
-        return res.send({ message: "OTP Verified", profile: false });
-      }
-    }
-  } else {
-    return res.status(400).send({ message: "OTP is incorrect" });
-  }
-};
+//   const { expireAt } = otp;
+//   if (expireAt < Date.now()) {
+//     otp.status = "expired";
+//     await otp.save();
+//     return res.status(400).send({ message: "OTP Expired" });
+//   }
+//   console.log(otp.otp, req.body.otp);
+//   if (otp.otp === req.body.otp) {
+//     otp.status = "verified";
+//     await otp.save();
+//     const user = await User.findOne({ number: req.body.phone });
+//     if (user) {
+//       if (user.isCompleted) {
+//         return res.send({ message: "OTP Verified", profile: true });
+//       } else {
+//         return res.send({ message: "OTP Verified", profile: false });
+//       }
+//     }
+//   } else {
+//     return res.status(400).send({ message: "OTP is incorrect" });
+//   }
+// };
 
 // CRUD OPERATIONS for package
 // Add package
@@ -706,6 +789,7 @@ module.exports = {
   userGet,
   userEdit,
   changeUserPass,
+  changeUserPassEmail,
   otp,
   otpVerify,
   addPack,
